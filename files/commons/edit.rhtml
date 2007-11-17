@@ -1,0 +1,17 @@
+<%= render_action_label %>
+
+<%= error_messages_for :resource %>
+
+<% logger.info controller.model_name %>
+<% form_for(controller.model_name, @resource,
+            :url => edit_url, 
+            :html => { :method => :put }) do |f| %>
+
+  <%= render :partial => "form", :locals => {:f => f} %>
+
+  <p>
+    <%= submit_tag "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', "javascript:history.back()" %>

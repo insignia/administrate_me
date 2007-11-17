@@ -1,0 +1,15 @@
+<%= render_action_label %>
+ 
+<%= error_messages_for :resource %>
+
+<% form_for(controller.model_name, @resource,
+           :url => eval("#{controller.model_name.pluralize}_path")) do |f| %>
+
+  <%= render :partial => "form", :locals => {:f => f} %>
+
+  <p>
+    <%= submit_tag "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', productos_path %>s
