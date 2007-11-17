@@ -82,7 +82,7 @@ module AdminView
     else
       render_empty_msg
     end
-  end
+  end 
   
   def generate_grid_table_heads(fields) 
     heads = ""
