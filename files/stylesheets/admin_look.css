@@ -496,3 +496,16 @@ div.section_label {
     background: #FEE2E2 url("/images/icon_error.png") no-repeat 5px;
     color: #A30505;    
 }
+
+.float_left {
+    clear: both;
+}
+
+.float_left div {
+    float: left;
+    margin-right: 10px;
+}
+
+#center #paper_sheet #content form div.actions {
+    clear: both;
+}
