@@ -597,3 +597,8 @@ div.group div.more a {
 	padding-left: 20px;
 	background: transparent url('/images/more.png') no-repeat;
 }
+
+#center #paper_sheet #content form div.check_box label.label {
+	color: #333333;
+	font-size: 12px;
+}
