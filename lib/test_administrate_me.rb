@@ -13,16 +13,11 @@ module TestAdministrateMe
       end
     end
   
-    def test_administrate_me(controller_class, options = {})
-      @controller_class = controller_class
+    def test_administrate_me(options = {})
       @options = options
       @test_options = TestOptions.new
       yield test_options if block_given?
       include TestAdministrateMe::InstanceMethods
-    end
-    
-    def controller_class
-      @controller_class
     end
     
     def options
