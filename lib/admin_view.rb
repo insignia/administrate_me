@@ -19,7 +19,10 @@ module AdminView
   end
   
   def show_section_label
-    label = "Administración de #{controller.controller_name.humanize}"
+    show_label("Administración de #{controller.controller_name.humanize}")
+  end
+  
+  def show_label(label)
     content_tag('div', label, :class => 'section_label')
   end
   

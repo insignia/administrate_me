@@ -72,13 +72,15 @@ module AdminView::ElegantPresentation
     link_to 'Volver', eval(str), :class => 'neutro'
   end
   
-  def render_resource_context
+  def render_resource_context(options={})
     html = ""
     unless controller.options[:parent].blank?
       html << content_tag('span', controller.options[:parent].to_s.humanize, :class => 'context')
       html << content_tag('h3', @parent.send(controller.context[:highlight]))
       html << content_tag('span', @parent.send(controller.context[:description]), :class => 'body' )
-      html << content_tag('div', link_to('volver', eval("#{controller.options[:parent]}_path(@parent)")), :class => 'actions') 
+      unless options[:no_back]
+        html << content_tag('div', link_to('volver', eval("#{controller.options[:parent]}_path(@parent)")), :class => 'actions') 
+      end
       html  = content_tag('div', html, :class => 'resource_context')
     else
       html = ""
