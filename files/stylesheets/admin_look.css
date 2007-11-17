@@ -551,8 +551,8 @@ div.group {
 
 div.group div.header {
 	margin: 0px;
-	padding: 3px;
-	background-color: #CFCFCF;
+	padding: 3px 3px 3px 20px;
+	background: #CFCFCF url(/images/group.png) no-repeat 2px 3px;
 	border-bottom: 1px solid #BBBBBB;
 	color: #333333;
 	font-weight: bold;
