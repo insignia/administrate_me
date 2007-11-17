@@ -188,15 +188,16 @@ module AdminView
     html
   end 
   
-  def list_for(group, collection, field, ltmore = "")
-    header  = group.to_s.humanize
-    html    = content_tag(:div, header, :class => 'header')
-    collection.each do |item|
-      link  = link_to(item.send(field), eval("#{group.to_s.singularize}_#{generate_path(item)}"))
+  def list_for(group, settings = {})
+    header  = (settings[:label]) ? settings[:label] : group.to_s.humanize
+    html    = content_tag(:div, header, :class => 'header')    
+    settings[:collection].each do |item|
+      link_to_show = (settings[:to_show]) ? eval("#{group.to_s.singularize}_#{generate_path(item)}") : "#"
+      link  = link_to(item.send(settings[:field]), link_to_show)
       html << content_tag(:li, link, :class => cycle('odd', 'even') )
     end
     html  = content_tag(:ul, html, :id => 'list')
-    html << link_to_more(ltmore) unless ltmore.blank?
+    html << link_to_more(settings[:link]) if settings[:link]
     html
   end
   
