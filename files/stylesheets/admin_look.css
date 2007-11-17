@@ -182,6 +182,15 @@ div.section_label {
 	margin-bottom: 10px;
 }
 
+#list_area #mini_flash a {
+    color: #FF6600;
+    text-decoration: none;
+    border:1px solid #FF6600;
+    padding: 1px 5px 1px 5px;
+    float: right;
+    margin-top: -17px;
+}
+
 #center #paper_sheet #content #actions {	
 	margin-bottom: 5px;
 	text-align: center;

@@ -118,7 +118,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def search_message(search_key)
-      "la búsqueda de '#{search_key}' produjo #{count_selected} resultados"
+      "se encontraron #{count_selected} resultados con \"<b>#{search_key}</b>\""
     end
     
     def get_resource

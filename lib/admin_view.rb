@@ -43,10 +43,18 @@ module AdminView
     
   def show_mini_flash
     unless session[:mini].blank?      
-      content_tag('div', 
-                  content_tag('span', session[:mini]), 
-                  :id => 'mini_flash')
+      html  = content_tag('span', session[:mini])
+      html << link_to('ver todos', path_to_index)
+      content_tag('div', html, :id => 'mini_flash')
     end
+  end
+  
+  def path_to_index
+    path  = "#{controller.controller_name}_path"
+    unless controller.options[:parent].blank?
+      path << "(params[:#{controller.options[:parent].to_s}_id])"
+    end
+    eval(path)
   end
       
   def generate_grid_table_for(options = {})
