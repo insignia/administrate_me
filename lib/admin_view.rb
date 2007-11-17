@@ -2,7 +2,7 @@ module AdminView
   def generate_navigation
     html = ""
     controller.modules.each do |tab|
-      selector = (controller.controller_name == tab) ? 'selected' : 'available'        
+      selector = (controller.controller_name == tab || controller.options[:parent].to_s.pluralize == tab) ? 'selected' : 'available'        
       html << content_tag('li', 
                           link_to(tab.humanize, :controller => tab), 
                           :class => selector )
@@ -77,13 +77,13 @@ module AdminView
     html = ""
     if actions
       if actions.include?('show')
-        html << link_to(image_tag('show.png'), eval("#{name_space}_#{generate_path}"), :title => 'ver más...')
+        html << link_to(image_tag('show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver más...')
       end
       if actions.include?('edit')
-        html << link_to(image_tag('edit.png'), eval("edit_#{name_space}_#{generate_path}"), :title => 'editar este registro')
+        html << link_to(image_tag('edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
       end
       if actions.include?('destroy')
-        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path}"), :confirm => 'Are you sure?', :method => :delete, :title => 'eliminar este registro')
+        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'Are you sure?', :method => :delete, :title => 'eliminar este registro')
       end
       unless html.blank?
         html = content_tag('div', html, :align => 'right')     
@@ -93,7 +93,7 @@ module AdminView
     html
   end
   
-  def generate_path
+  def generate_path(item)
     path = "path("
     unless controller.options[:parent].blank?
       path << "item.send('#{controller.options[:parent]}_id'),"
@@ -108,6 +108,15 @@ module AdminView
       str << ":#{controller.options[:parent].to_s}_id => params[:#{controller.options[:parent].to_s}_id],"
     end
     str << ":only_path => false}"
+    eval(str)
+  end
+  
+  def edit_url
+    str  = "#{controller.model_name}_path("
+    unless controller.options[:parent].blank?
+      str << "@resource.send('#{controller.options[:parent]}_id'),"
+    end
+    str << "@resource)"
     eval(str)
   end
 end
