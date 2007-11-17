@@ -5,11 +5,14 @@
 <head>
     <title><%= controller.title %> :: <%= controller.app_name %></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <style type="text/css" media="all">
-        @import "/stylesheets/admin_look.css";
-    </style>
-    
-    <%= javascript_include_tag :defaults %>
+
+    <% bundle do %>      
+      <%= stylesheet_link_tag 'admin_look.css'%>
+      <%= stylesheet_link_tag 'admin_campus.css'%>
+      
+      <%= javascript_include_tag :defaults %>
+      <%= javascript_include_tag 'admin_ui.js' %>
+    <% end %>
 </head>
 
 <body>
@@ -18,16 +21,39 @@
             <span class="owner"><%= controller.owner %></span> <br />
             <span class="app_name"><%= controller.app_name %></span> 
         </div>
+        <div id="navigation">
+            <%= generate_navigation %>
+        </div>
         <div id="session">
-            <%= render :partial => 'commons/session' %>      
+            <% unless controller.options[:secured] == false %>
+                <%= render :partial => 'commons/session' %>      
+            <% end %>
         </div>
     </div>
     <div id="center">
-        <div id="paper_sheet">
-            <%= generate_navigation %>
-            <div id="content">
-                <%= render_flash_message %>
-                <%= yield %>
+    	<% if false %>
+        <% #render_flash_message %>
+		<% end %>
+		
+		<% if !flash.blank? %>
+			<div id="flash" class="alert">
+				<% flash.each do |key, msg| %>
+					<%= content_tag :div, msg, :id => key %>
+				<% end %>
+			</div>
+		<% end %>
+		
+        <div id="shadow-container">
+            <div class="shadow1">
+                <div class="shadow2">
+                    <div class="shadow3">
+                        <div id="paper_sheet">            
+                            <div id="content" class="container">                                
+                                <%= yield %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="support">
@@ -37,8 +63,7 @@
     </div>
     <div id="footer">
         <div id="credits">
-            <span>powered by</span> <br />
-            <a href="http://www.insignia4u.com" target="_blank">(in)signia</a>
+            <span>powered by</span> <a href="http://www.insignia4u.com" target="_blank">(in)signia</a> <span>&</span> <a href="http://www.rubyonrails.org" target="_blank">ruby on rails</a>
         </div>
     </div>
 </body>

@@ -7,6 +7,10 @@ namespace :admin do
     stylesheets = Dir["./vendor/plugins/administrate_me/files/stylesheets/*.css"]
     FileUtils.cp(stylesheets, path_to_css)
     
+    path_to_js = RAILS_ROOT + "/public/javascripts/"
+    javascripts = Dir["./vendor/plugins/administrate_me/files/javascripts/*.js"]
+    FileUtils.cp(javascripts, path_to_js)
+
     path_to_images = RAILS_ROOT + "/public/images/admin_ui/"
     FileUtils.mkdir(path_to_images) unless File.exist?(path_to_images)
     images = Dir["./vendor/plugins/administrate_me/files/images/*.*"]

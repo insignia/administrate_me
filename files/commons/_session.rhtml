@@ -1,3 +1,2 @@
-<span class="user">Usuario</span> | 
-<a href="#">Mis datos</a> |
-<a href="#">Salir</a>      
+<span class="user"><%= @current_user.nombre %></span> | 
+<%= link_to 'Salir', :controller => 'login', :action => 'close' %>
