@@ -174,6 +174,29 @@ module AdminView
     aux[:method] = :put if controller.action_name == 'edit'
     aux
   end
+  
+  def show_filters_for(filters = [])
+    html = ""
+    lis  = ""
+    unless filters.blank?
+      html << content_tag(:div, 'Filtrar registros por...', :class => 'f_header')     
+      filters.each do |filter|
+        link = link_to(filter[:caption], filter[:url])
+        lis << content_tag(:li, link, :class => set_current(filter[:name_space]))
+      end
+      html << content_tag(:ul, lis, :class => 'filters')
+    end
+    html
+  end 
+  
+  def set_current(name_space)
+    if name_space == session[:c_filter]
+      css = "current"
+    else
+      css = nil
+    end
+    css
+  end
 end
 
 ActionView::Base.send :include, AdminView

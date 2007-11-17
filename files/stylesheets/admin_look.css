@@ -509,3 +509,37 @@ div.section_label {
 #center #paper_sheet #content form div.actions {
     clear: both;
 }
+
+#support div.f_header {
+	margin-top: 15px;
+	font-weight: bold;
+	color: #032E6F;    
+	border-bottom: 1px solid #032E6F;
+}
+
+#support ul.filters {
+	margin: 10px 0px 0px 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+#support ul.filters li {
+	margin-bottom: 3px;
+}
+
+#support ul.filters li a {
+	display: block;
+	text-decoration: none;
+	padding: 3px;
+	color: #032E6F;    
+}
+
+#support ul.filters li a:hover {
+	background-color: #CFCFCF;
+}
+
+#support ul.filters li.current a {
+	background: #0C82F8;
+	font-weight: bold;
+	color: #F4F4F4;
+}

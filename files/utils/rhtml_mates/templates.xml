@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><templates><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me check_box" enabled="true" name="me_fcb">&lt;%= f.check_box ${field},   :label =&gt; "${label}" %&gt;</template><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me div.float_left" enabled="true" name="me_fl">&lt;div class="float_left"&gt;&#13;
+<?xml version="1.0" encoding="UTF-8"?><templates><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me check_box" enabled="true" name="me_fcb">&lt;%= f.check_box ${field},   :label =&gt; "${label}" %&gt;</template><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me filter" enabled="true" name="me_filter">{ :caption =&gt; '${caption}', :url =&gt; ${url} }</template><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me div.float_left" enabled="true" name="me_fl">&lt;div class="float_left"&gt;&#13;
   ${content}&#13;
 &lt;/div&gt;</template><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me div form" enabled="true" name="me_form_div">&lt;div&gt;&#13;
     &lt;span class="label"&gt; ${label} &lt;/span&gt;&#13;
@@ -37,7 +37,9 @@
             r.text back_action&#13;
         end&#13;
     end &#13;
-%&gt;    </template><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me simple_list" enabled="true" name="me_simple">&lt;%= show_mini_flash %&gt;&#13;
+%&gt;    </template><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me show_filters_for" enabled="true" name="me_sff">&lt;% content_for :extras do %&gt;    &#13;
+    &lt;%= show_filters_for [ ${filters} ] %&gt;&#13;
+&lt;% end %&gt;</template><template autoinsert="true" context="org.radrails.rails.ui.templateContextType.rhtml" deleted="false" description="administrate_me simple_list" enabled="true" name="me_simple">&lt;%= show_mini_flash %&gt;&#13;
                                                        &#13;
 &lt;%= simple_list('${highlight}', '${description}') %&gt;&#13;
                                                                          &#13;

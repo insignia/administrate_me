@@ -2,7 +2,7 @@
   { :highlight =&gt; '${highlight_method}', :description =&gt; '${description_method}' }&#13;
 end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me render_context_condition" enabled="true" name="me_ctxtcond">def render_context_condition&#13;
 	#condition...&#13;
-end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me form_settings" enabled="true" name="me_form">def form_settings&#13;
+end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me set_filter_for" enabled="true" name="me_filter_for">set_filter_for ${name_space}, {${conditions}}</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me form_settings" enabled="true" name="me_form">def form_settings&#13;
   { ${key} =&gt; ${value} }&#13;
 end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me full" enabled="true" name="me_full">  administrate_me :parent =&gt; ${parent},&#13;
                 :search   =&gt; [${fields}],&#13;

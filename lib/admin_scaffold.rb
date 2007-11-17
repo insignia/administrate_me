@@ -28,7 +28,13 @@ module AdministrateMe::AdminScaffold
     
     def global_scope
       gc = respond_to?('general_conditions') ? general_conditions : nil
-    end
+      if gc
+        gc.merge(session[:filters]) if session[:filters]  
+      else
+        gc = session[:filters] if session[:filters]  
+      end
+      gc
+    end   
     
     def search_scope
       sc = @search_key.blank? ? nil : conditions_for(options[:search])
@@ -185,6 +191,10 @@ module AdministrateMe::AdminScaffold
       eval("[\"#{predicate.join(' OR ')}\", #{values.join(',')}]")
     end
     
+    def all
+      set_filter_for nil, nil
+    end
+    
     protected
     
       def not_available
@@ -230,9 +240,14 @@ module AdministrateMe::AdminScaffold
         end
         html << "@resource)"
         html
+      end            
+      
+      def set_filter_for(name_space, condition)
+        session[:c_filter] = name_space
+        session[:filters] = condition
+        redirect_to :action => 'index'
       end
       
-    
   end
   
 end
