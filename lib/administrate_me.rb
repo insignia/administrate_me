@@ -4,6 +4,7 @@ module AdministrateMe
   
     def administrate_me(options = {})
       @administrate_me_options = options
+      @administrate_me_options[:except] = [@administrate_me_options[:except]].flatten
       include AdministrateMe::AdminScaffold::InstanceMethods
       layout 'admin_layout'
       before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
@@ -32,6 +33,10 @@ module AdministrateMe
     
     def options
       @administrate_me_options
+    end
+    
+    def accepted_action(action)
+      !options[:except] || !options[:except].include?(action)
     end
     
   end

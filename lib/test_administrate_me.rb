@@ -70,6 +70,9 @@ module TestAdministrateMe
       old_count = @model_class.count
       params = {@model_name.to_sym => {}}
       post :create, params.merge(extra_params(:create))
+      assert_response :success
+      assert assigns(:resource)
+      assert assigns(:resource).valid?, "El registro creado no es válido."
       assert_equal old_count + 1, @model_class.count
       
       assert_redirected_to @controller.path_to_resource(assigns(:resource))

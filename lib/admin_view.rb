@@ -21,7 +21,7 @@ module AdminView
   
   def show_section_header
     html  = show_section_label
-    unless controller.options[:except] && controller.options[:except].include?(:new)
+    if controller.class.accepted_action(:new)
       html << content_tag('div', 
                           link_to( image_tag('add.jpg'), 
                                    eval("new_#{controller.controller_name.singularize}_path")),

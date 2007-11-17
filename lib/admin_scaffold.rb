@@ -54,7 +54,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def show
-      unless options[:except] && options[:except].include?(:show)
+      if self.class.accepted_action(:show)
         respond_to do |format|
           format.html # show.rhtml
           format.xml  { render :xml => @resource.to_xml }      
@@ -65,7 +65,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def new    
-      unless options[:except] && options[:except].include?(:new)
+      if self.class.accepted_action(:new)
         instance_variable_set("@resource", eval("#{controller_name.singularize.capitalize}.new"))
         render :template => 'commons/new'
       else
@@ -74,7 +74,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def edit
-      unless options[:except] && options[:except].include?(:edit)
+      if self.class.accepted_action(:edit)
         render :template => 'commons/edit'
       else
         not_available
@@ -82,7 +82,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def create
-      unless options[:except] && options[:except].include?(:new)
+      if self.class.accepted_action(:new)
         create_params = params[model_name.to_sym]
         if parent = options[:parent]
           create_params[parent_key.to_sym] = @parent.id
@@ -106,7 +106,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def update 
-      unless options[:except] && options[:except].include?(:edit)
+      if self.class.accepted_action(:edit)
         @resource.attributes = params[model_name.to_sym]
         save_model
         respond_to do |format|
@@ -125,7 +125,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def destroy
-      unless options[:except] && options[:except].include?(:destroy)
+      if self.class.accepted_action(:destroy)
         @resource.destroy
     
         respond_to do |format|
