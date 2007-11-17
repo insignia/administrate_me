@@ -192,7 +192,7 @@ module AdminView
     header  = (settings[:label]) ? settings[:label] : group.to_s.humanize
     html    = content_tag(:div, header, :class => 'header')    
     settings[:collection].each do |item|
-      aux   = link_to_show(group, settings[:parent], item)
+      aux   = (settings[:not_show]) ? '#' : link_to_show(group, settings[:parent], item)
       link  = link_to(item.send(settings[:field]), aux)
       html << content_tag(:li, link, :class => cycle('odd', 'even') )
     end
