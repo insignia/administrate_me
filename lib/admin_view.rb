@@ -23,7 +23,7 @@ module AdminView
     html  = show_section_label
     if controller.class.accepted_action(:new)
       html << content_tag('div', 
-                          link_to( image_tag('admin_ui/add.jpg'), 
+                          link_to( image_tag('add.jpg'), 
                                    eval("new_#{controller.controller_name.singularize}_path")),
                           :id => 'actions' )
     end
