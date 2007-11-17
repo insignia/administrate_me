@@ -183,9 +183,9 @@ div.section_label {
 }
 
 #list_area #mini_flash a {
-    color: #FF6600;
+    color: #666;
     text-decoration: none;
-    border:1px solid #FF6600;
+    border:1px solid #C2C2C2;
     padding: 1px 5px 1px 5px;
     float: right;
     margin-top: -17px;
