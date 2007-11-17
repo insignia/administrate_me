@@ -543,3 +543,53 @@ div.section_label {
 	font-weight: bold;
 	color: #F4F4F4;
 }
+
+div.group {
+	margin-bottom: 10px;
+	border: 1px solid #F4F4F4;
+}
+
+div.group div.header {
+	margin: 0px;
+	padding: 3px;
+	background-color: #CFCFCF;
+	border-bottom: 1px solid #BBBBBB;
+	color: #333333;
+	font-weight: bold;
+}
+
+div.group ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+
+div.group li {
+}
+
+div.group li a {
+	display: block;
+	text-decoration: none;
+	color: #333333;
+	padding: 5px;
+}
+
+div.group li a:hover {
+	background-color: #EEF9FD;
+}
+
+div.group li.even {
+	background-color: #F4F4F4;
+}
+
+div.group div.more {
+	padding: 5px;
+	text-align: right;
+}
+
+div.group div.more a {
+	text-decoration: none;
+	color: #032E6F;
+	padding-left: 20px;
+	background: transparent url('/images/more.png') no-repeat;
+}
