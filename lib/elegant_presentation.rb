@@ -24,11 +24,16 @@ module AdminView::ElegantPresentation
   def render_elegant_body(fields)
     html = ""
     fields.each do |field|
-      body  = content_tag('span', field.to_s.humanize, :class => 'label') << "<br />"
-      body << content_tag('div', @resource.send(field.to_s), :class => 'content')
+      body  = render_elegant_field(field.to_s.humanize, @resource.send(field.to_s) ) 
       html << content_tag('div', body)
     end
     content_tag('div', html, :class => 'body')
+  end
+  
+  def render_elegant_field(label, content)
+    body  = content_tag('span', label, :class => 'label') << "<br />"
+    body << content_tag('div', content, :class => 'content')
+    body
   end
   
   def render_elegant_actions(show)
