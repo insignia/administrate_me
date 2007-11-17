@@ -198,7 +198,7 @@ module AdministrateMe::AdminScaffold
       values    = []
       fields.each do |field|
         predicate << "lower(#{field.to_s}) like ?"
-        values    << "@search_key.downcase + '%'"
+        values    << "'%' + @search_key.downcase + '%'"
       end
       eval("[\"#{predicate.join(' OR ')}\", #{values.join(',')}]")
     end
