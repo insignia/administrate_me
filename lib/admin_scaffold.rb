@@ -83,10 +83,11 @@ module AdministrateMe::AdminScaffold
     
     def create
       unless options[:except] && options[:except].include?(:new)
-        @resource = model_class.new(params[model_name.to_sym])      
+        create_params = params[model_name.to_sym]
         if parent = options[:parent]
-          @resource.send("#{parent_key}=", @parent.id)
+          create_params[parent_key.to_sym] = @parent.id
         end
+        @resource = model_class.new(create_params)
         save_model
     
         respond_to do |format|
