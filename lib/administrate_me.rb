@@ -8,6 +8,11 @@ module AdministrateMe
       layout 'admin_layout'
       before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
       before_filter :get_parent
+      before_filter :tab
+      
+      if options[:secured] == true
+        before_filter :secured_access
+      end
     end
     
     def model_name
