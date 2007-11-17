@@ -79,7 +79,7 @@ module AdministrateMe::AdminScaffold
       respond_to do |format|
         if @resource.update_attributes(params[model_name.to_sym])
           flash[:notice] = 'Las cambios fueron guardados exitosamente'
-          format.html { redirect_to eval("#{model_name}_url(@resource)") }
+          format.html { redirect_to eval("#{model_name}_#{generate_url}") }
           format.xml  { head :ok }
         else
           format.html { render "commons/edit" }        
