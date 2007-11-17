@@ -31,7 +31,7 @@ module AdminView
   
   def show_section_links
     links  = link_to( "Agregar nuevo registro", 
-                      eval("new_#{controller.controller_name.singularize}_path"))
+                      path_to_index(:new))
     if controller.options[:excel]
       links << link_to( "Descargar a Excel", eval("excel_#{controller.controller_name}_path"))
     end
@@ -66,12 +66,12 @@ module AdminView
     end
   end
   
-  def path_to_index
-    path  = "#{controller.controller_name}_path"
-    unless controller.options[:parent].blank?
-      path << "(params[:#{controller.options[:parent].to_s}_id])"
-    end
-    eval(path)
+  def path_to_index(prefix=nil)
+    controller.path_to_index(prefix)
+  end
+  
+  def path_to_element(element, prefix=nil)
+    controller.path_to_element(element, prefix)
   end
       
   def generate_grid_table_for(options = {})
@@ -151,16 +151,7 @@ module AdminView
     end
     str << ":only_path => false}"
     eval(str)
-  end
-  
-  def edit_url
-    str  = "#{controller.model_name}_path("
-    unless controller.options[:parent].blank?
-      str << "@resource.send('#{controller.options[:parent]}_id'),"
-    end
-    str << "@resource)"
-    eval(str)
-  end
+  end  
   
   def search_scope
     "(#{controller.options[:search].map{|x| x.to_s.humanize}.join(', ')})"

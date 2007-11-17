@@ -64,34 +64,15 @@ module AdminView::Presenter
   end
   
   def edit_action
-    link_to('Editar este registro', eval(generate_edit_path))
+    link_to('Editar este registro', path_to_element(@resource, :edit))
   end
   
   def destroy_action
-    link_to('Eliminar este registro', eval(generate_target_path), :confirm => 'Eliminará definitivamente este registro. ¿Está seguro?', :method => :delete, :class => 'delete')
+    link_to('Eliminar este registro', path_to_element(@resource), :confirm => 'Eliminará definitivamente este registro. ¿Está seguro?', :method => :delete, :class => 'delete')
   end      
   
   def back_action
-    str = "#{controller.controller_name}_path"
-    unless controller.options[:parent].blank?
-      str << "(@parent.id)"
-    end    
-    link_to 'Volver', eval(str), :class => 'neutro'
-  end
-  
-  def generate_edit_path
-    str  = "edit_"
-    str << generate_target_path
-    str
-  end
-  
-  def generate_target_path
-    str = "#{controller.model_name}_path("
-    unless controller.options[:parent].blank?
-      str << "@parent.id, "
-    end
-    str << "@resource)"
-    str
+    link_to 'Volver', path_to_index, :class => 'neutro'
   end
 end
 

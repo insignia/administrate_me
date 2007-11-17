@@ -34,7 +34,7 @@ module AdminView::ElegantPresentation
         str  = content_tag('h3', item.send(highlight))
         str << content_tag('span', item.send(description)) unless description.blank?
         str  = content_tag('div', str)
-        str  = link_to(str, eval("#{controller.model_name}_#{generate_path(item)}"))
+        str  = link_to(str, path_to_element(item))
         html << content_tag('li', str, :class => cycle('odd', 'even'))
       end
       content_tag('ul', html, :class => 'list')

@@ -35,7 +35,7 @@ module AdministrateMe
     end
 
     def set_parent(parent)
-      @administrate_me_options[:empresa] = parent
+      @administrate_me_options[:parent] = parent
     end
     
     def set_model(model)

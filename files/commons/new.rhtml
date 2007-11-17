@@ -6,13 +6,13 @@
 
 <% form_for(controller.model_name, @resource,
             :builder => AdminBuilder,
-            :url => eval("#{controller.model_name.pluralize}_path"),
+            :url => path_to_index,
             :html => html) do |f| %>
 
   <%= render :partial => "form", :locals => {:f => f} %>
 
   <div class="actions">
     <%= submit_tag "Guardar estos cambios", :class => 'save' %> o 
-    <%= link_to 'Cancelar', eval("#{controller.controller_name}_path") %>
+    <%= link_to 'Cancelar', path_to_index %>
   </div>
 <% end %>

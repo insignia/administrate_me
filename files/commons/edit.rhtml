@@ -6,7 +6,7 @@
 
 <% form_for(controller.model_name, @resource,
             :builder => AdminBuilder,
-            :url => edit_url, 
+            :url => path_to_element(@resource),
             :html => html) do |f| %>
 
   <%= render :partial => "form", :locals => {:f => f} %>

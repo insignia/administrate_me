@@ -109,7 +109,7 @@ module AdministrateMe::AdminScaffold
         respond_to do |format|
           if @success
             flash[:notice] = 'El registro fue creado exitosamente'        
-            format.html { redirect_to eval("#{model_name}_#{generate_url}") }
+            format.html { redirect_to path_to_index }
             format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
           else
             format.html { render :template => "commons/new" }
@@ -128,8 +128,8 @@ module AdministrateMe::AdminScaffold
         call_before_render
         respond_to do |format|
           if @success
-            flash[:notice] = 'Las cambios fueron guardados exitosamente'
-            format.html { redirect_to eval("#{model_name}_#{generate_url}") }
+            flash[:notice] = 'Los cambios fueron guardados exitosamente'
+            format.html { redirect_to path_to_element(@resource) }
             format.xml  { head :ok }
           else
             format.html { render :template => "commons/edit" }        
@@ -155,13 +155,38 @@ module AdministrateMe::AdminScaffold
       end
     end
     
-    def path_to_index
-      unless respond_to?('after_destroy')
-        path = get_index
-      else
-        path = after_destroy
-      end      
-      path
+    #def path_to_index
+    #  unless respond_to?('after_destroy')
+    #    path = get_index
+    #  else
+    #    path = after_destroy
+    #  end      
+    #  path
+    #end
+    
+    def path_to_index(prefix=nil)
+      eval(path_to_index_name(prefix))
+    end
+    
+    def path_to_index_name(prefix=nil)
+      cname = prefix ? controller_name.singularize : controller_name
+      path  = "#{cname}_path"
+      unless options[:parent].blank?
+        path = "#{options[:parent]}_" + path
+        path << "(params[:#{options[:parent].to_s}_id])"
+      end
+      prefix ? "#{prefix}_#{path}" : path
+    end
+    
+    def path_to_element(element, prefix=nil)
+      ids = [element.id]      
+      path  = "#{controller_name.singularize}_path"
+      unless options[:parent].blank?
+        path = "#{options[:parent]}_" + path
+        ids.unshift(@parent.id) unless options[:parent].blank?
+      end
+      path = "#{prefix}_#{path}" if prefix
+      send(path.to_sym, *ids)
     end
     
     def get_index
