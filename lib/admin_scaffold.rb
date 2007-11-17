@@ -4,16 +4,21 @@ module AdministrateMe::AdminScaffold
   
     def get_list    
       session[:mini] = ''
-      options = {:per_page => 15}
       @search_key = params[:search_key]
-      gcond, scond = get_conditions
-      model_class.with_scope(:find => {:conditions => gcond}) do 
-        model_class.with_scope(:find => {:conditions => scond}) do 
-          @pages, @records = paginate(model_name, options) 
+      model_class.with_scope(:find => {:conditions => global_scope}) do 
+        model_class.with_scope(:find => {:conditions => search_scope}) do 
+          @pages, @records = paginate(model_name, get_list_options) 
           set_search_message
         end
       end
     end  
+    
+    def get_list_options
+      list_options = {}
+      list_options[:per_page] = (options[:per_page]) ? options[:per_page] : 15
+      list_options[:order]    = options[:order_by] rescue nil
+      list_options
+    end
     
     def set_search_message
       unless params[:search_key].blank?        
@@ -21,15 +26,13 @@ module AdministrateMe::AdminScaffold
       end
     end
     
-    def get_conditions      
+    def global_scope
       gc = respond_to?('general_conditions') ? general_conditions : nil
-      sc = @search_key.blank? ? nil : search_conditions
-      [gc, sc]
     end
     
-    def search_conditions
-      conditions_for options[:search]
-    end
+    def search_scope
+      sc = @search_key.blank? ? nil : conditions_for(options[:search])
+    end   
   
     def index 
       get_list

@@ -4,7 +4,12 @@ end</template><template autoinsert="true" context="ruby" deleted="false" descrip
 	#condition...&#13;
 end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me form_settings" enabled="true" name="me_form">def form_settings&#13;
   { ${key} =&gt; ${value} }&#13;
-end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me full" enabled="true" name="me_full">administrate_me :parent =&gt; [${parent}], :search =&gt; [${fields}], :except =&gt; [${actions}], :secured =&gt; ${boolean}</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me general_conditions" enabled="true" name="me_gcond">def general_conditions&#13;
+end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me full" enabled="true" name="me_full">  administrate_me :parent =&gt; ${parent},&#13;
+                :search   =&gt; [${fields}],&#13;
+                :except   =&gt; [${actions}],&#13;
+                :order_by =&gt; '${order_criteria}',&#13;
+                :per_page =&gt; ${records_per_page},&#13;
+                :secured =&gt; ${boolean}</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me general_conditions" enabled="true" name="me_gcond">def general_conditions&#13;
 	{ ${key} =&gt; ${value} }&#13;
 end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me modules" enabled="true" name="me_module">{ :name =&gt; ${name_space},  :caption =&gt; '${caption}',  :url =&gt; ${resource_path} }</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me search" enabled="true" name="me_s">administrate_me :search =&gt; [${fields}]</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me search &amp; except" enabled="true" name="me_se">administrate_me :search =&gt; [${fields}], :except =&gt; [${actions}]</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me setup" enabled="true" name="me_setup">def owner&#13;
   "${owner}"&#13;
