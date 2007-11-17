@@ -23,7 +23,7 @@ module AdminView
     html  = show_section_label
     unless controller.options[:except] && controller.options[:except].include?(:new)
       html << content_tag('div', 
-                          link_to( "agregar un nuevo #{controller.controller_name.singularize}", 
+                          link_to( image_tag('add.jpg'), 
                                    eval("new_#{controller.controller_name.singularize}_path")),
                           :id => 'actions' )
     end

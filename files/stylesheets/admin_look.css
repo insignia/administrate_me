@@ -213,6 +213,10 @@ div.section_label {
 	color: #0C82F8;
 }
 
+#center #paper_sheet #content #actions a img {
+	border: none;
+}
+
 #list_area #grid_table {	
 	width: 100%;
 	margin-top: 10px;		
