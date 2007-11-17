@@ -23,11 +23,19 @@ module AdminView
     html  = show_section_label
     if controller.class.accepted_action(:new)
       html << content_tag('div', 
-                          link_to( image_tag('add.jpg'), 
-                                   eval("new_#{controller.controller_name.singularize}_path")),
+                          show_section_links,
                           :id => 'actions' )
     end
     html
+  end
+  
+  def show_section_links
+    links  = link_to( "Agregar nuevo registro", 
+                      eval("new_#{controller.controller_name.singularize}_path"))
+    if controller.options[:excel]
+      links << link_to( "Descargar a Excel", eval("excel_#{controller.controller_name}_path"))
+    end
+    links
   end
   
   def show_section_label

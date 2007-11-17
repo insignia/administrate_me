@@ -1,35 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?><templates><template autoinsert="true" context="ruby" deleted="false" description="administrate_me context" enabled="true" name="me_ctxt">def context&#13;
-  { :highlight =&gt; '${highlight_method}', :description =&gt; '${description_method}' }&#13;
-end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me render_context_condition" enabled="true" name="me_ctxtcond">def render_context_condition&#13;
-	#condition...&#13;
-end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me set_filter_for" enabled="true" name="me_filter_for">set_filter_for ${name_space}, {${conditions}}</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me form_settings" enabled="true" name="me_form">def form_settings&#13;
-  { ${key} =&gt; ${value} }&#13;
-end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me full" enabled="true" name="me_full">  administrate_me :parent =&gt; ${parent},&#13;
-                :search   =&gt; [${fields}],&#13;
-                :except   =&gt; [${actions}],&#13;
-                :order_by =&gt; '${order_criteria}',&#13;
-                :per_page =&gt; ${records_per_page},&#13;
-                :secured =&gt; ${boolean}</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me general_conditions" enabled="true" name="me_gcond">def general_conditions&#13;
-	{ ${key} =&gt; ${value} }&#13;
-end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me modules" enabled="true" name="me_module">{ :name =&gt; ${name_space},  :caption =&gt; '${caption}',  :url =&gt; ${resource_path} }</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me search" enabled="true" name="me_s">administrate_me :search =&gt; [${fields}]</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me search &amp; except" enabled="true" name="me_se">administrate_me :search =&gt; [${fields}], :except =&gt; [${actions}]</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me setup" enabled="true" name="me_setup">def owner&#13;
-  "${owner}"&#13;
-end&#13;
-  &#13;
-def app_name&#13;
-  "${app_name}"&#13;
-end  &#13;
-  &#13;
-def modules&#13;
-  [{ :name =&gt; ${name_space},  :caption =&gt; '${caption}',  :url =&gt; ${resource_path} }]&#13;
-end&#13;
-&#13;
-def secured_access&#13;
-#  if session[:current_user]&#13;
-#    @current_user = ...&#13;
-#  else&#13;
-#    @current_user = nil&#13;
-#    redirect_to :controller =&gt; 'login', :action =&gt; 'index' &#13;
-#  end&#13;
-end</template><template autoinsert="true" context="ruby" deleted="false" description="administrate_me tab" enabled="true" name="me_tab">def tab&#13;
-	${name_space}&#13;
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="ruby" deleted="false" description="else block" enabled="true" id="org.rubypeople.rdt.ui.templates.else" name="else">else ${condition}
+  ${cursor}
 end</template></templates>
