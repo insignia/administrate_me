@@ -5,13 +5,21 @@ module AdministrateMe::AdminScaffold
     def get_list    
       session[:mini] = ''
       @search_key = params[:search_key]
-      model_class.with_scope(:find => {:conditions => global_scope}) do 
-        model_class.with_scope(:find => {:conditions => search_scope}) do 
-          @pages, @records = paginate(model_name, get_list_options) 
+      model_class.send(:with_scope, :find => { :conditions => global_scope }) do
+        model_class.send(:with_scope, :find => { :conditions => search_scope }) do
+          @records = model_class.paginate(:page => params[:page], :per_page => get_per_page, :order => get_order )
           set_search_message
         end
       end
     end  
+    
+    def get_per_page
+      options[:per_page] || 15
+    end
+    
+    def get_order
+      options[:order_by] || nil
+    end
     
     def get_list_options
       list_options = {}
