@@ -41,20 +41,26 @@ module AdminView::ElegantPresentation
   end
 
   def render_edit_action
-    link_to('Editar este registro', generate_edit_path)
+    link_to('Editar este registro', eval(generate_edit_path))
   end
   
   def render_destroy_action
-    link_to('Eliminar este registro', eval("#{controller.model_name}_path(@resource)"), :confirm => 'Are you sure?', :method => :delete, :class => 'delete')
-  end
+    link_to('Eliminar este registro', eval(generate_target_path), :confirm => 'Are you sure?', :method => :delete, :class => 'delete')
+  end  
   
   def generate_edit_path
-    str  = "edit_#{controller.model_name}_path("
+    str  = "edit_"
+    str << generate_target_path
+    str
+  end
+  
+  def generate_target_path
+    str = "#{controller.model_name}_path("
     unless controller.options[:parent].blank?
       str << "@resource.send('#{controller.options[:parent]}_id'), "
     end
     str << "@resource)"
-    eval(str)
+    str
   end
   
   def render_back_action

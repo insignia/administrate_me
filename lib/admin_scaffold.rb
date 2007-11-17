@@ -66,7 +66,7 @@ module AdministrateMe::AdminScaffold
       respond_to do |format|
         if @success
           flash[:notice] = 'El registro fue creado exitosamente'        
-          format.html { redirect_to eval("#{controller_name.singularize}_url(@resource)") }
+          format.html { redirect_to eval("#{model_name}_#{generate_url}") }
           format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
         else
           format.html { render "commons/new" }
@@ -156,6 +156,16 @@ module AdministrateMe::AdminScaffold
             return false
           end
         end
+      end
+      
+      
+      def generate_url
+        html  = "url("
+        unless options[:parent].blank?
+          html << "@resource.send(:#{options[:parent]}_id), "
+        end
+        html << "@resource)"
+        html
       end
       
     
