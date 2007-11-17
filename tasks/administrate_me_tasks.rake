@@ -7,7 +7,7 @@ namespace :admin do
     stylesheets = Dir["./vendor/plugins/administrate_me/files/stylesheets/*.css"]
     FileUtils.cp(stylesheets, path_to_css)
     
-    path_to_images = RAILS_ROOT + "/public/images/"
+    path_to_images = RAILS_ROOT + "/public/images/admin_ui/"
     images = Dir["./vendor/plugins/administrate_me/files/images/*.*"]
     FileUtils.cp(images, path_to_images)
     

@@ -413,7 +413,7 @@ div.section_label {
     font-weight: bold;
     color: #666666;   
     padding-left: 20px;
-    background: transparent url("/images/import_icon.gif") no-repeat;
+    background: transparent url("/images/admin_ui/import_icon.gif") no-repeat;
 }
 
 #center #paper_sheet ul.list {
@@ -505,12 +505,12 @@ div.section_label {
 }
 
 #paper_sheet #content #flash div.success {
-    background: #FFFFC5 url("/images/icon_success.png") no-repeat 5px;
+    background: #FFFFC5 url("/images/admin_ui/icon_success.png") no-repeat 5px;
     color: #333333;
 }
 
 #paper_sheet #content #flash div.error {
-    background: #FEE2E2 url("/images/icon_error.png") no-repeat 5px;
+    background: #FEE2E2 url("/images/admin_ui/icon_error.png") no-repeat 5px;
     color: #A30505;    
 }
 
@@ -569,7 +569,7 @@ div.group {
 div.group div.header {
 	margin: 0px;
 	padding: 3px 3px 3px 20px;
-	background: #CFCFCF url(/images/group.png) no-repeat 2px 3px;
+	background: #CFCFCF url(/images/admin_ui/group.png) no-repeat 2px 3px;
 	border-bottom: 1px solid #BBBBBB;
 	color: #333333;
 	font-weight: bold;
@@ -608,7 +608,7 @@ div.group div.more a {
 	text-decoration: none;
 	color: #032E6F;
 	padding-left: 20px;
-	background: transparent url('/images/more.png') no-repeat;
+	background: transparent url('/images/admin_ui/more.png') no-repeat;
 }
 
 #center #paper_sheet #content form div.check_box label.label {
@@ -625,7 +625,7 @@ table.grid_table {
 }
 
 table.grid_table thead tr th {
-	background: transparent url(/images/bg_head.jpg) repeat-x;
+	background: transparent url(/images/admin_ui/bg_head.jpg) repeat-x;
 	padding: 0px 10px;
 	border-left: 1px solid #F4F4F4;
 	border-right: 1px solid #CFCFCF;
@@ -644,9 +644,9 @@ table.grid_table tbody tr td {
 }
 
 table.grid_table tbody tr.even {
-	background: white url(/images/bg_even.jpg) repeat-x bottom;				
+	background: white url(/images/admin_ui/bg_even.jpg) repeat-x bottom;				
 }			
 
 table.grid_table tbody tr.over {
-	background: white url(/images/bg_over.jpg) repeat-x bottom;				
+	background: white url(/images/admin_ui/bg_over.jpg) repeat-x bottom;				
 }
