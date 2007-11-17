@@ -12,10 +12,13 @@ module AdminView
   
   def show_section_header
     html  = show_section_label
-    html << content_tag('div', 
-                        link_to( "agregar un nuevo #{controller.controller_name.singularize}", 
-                                 eval("new_#{controller.controller_name.singularize}_path")),
-                        :id => 'actions' )
+    if controller.options[:accepted] && controller.options[:accepted].include?(:new)
+      html << content_tag('div', 
+                          link_to( "agregar un nuevo #{controller.controller_name.singularize}", 
+                                   eval("new_#{controller.controller_name.singularize}_path")),
+                          :id => 'actions' )
+    end
+    html
   end
   
   def show_section_label

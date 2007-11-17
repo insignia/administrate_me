@@ -41,19 +41,34 @@ module AdministrateMe::AdminScaffold
     end
     
     def show        
-      respond_to do |format|
-        format.html # show.rhtml
-        format.xml  { render :xml => eval("@#{controller_name.singularize}.to_xml") }
+      if options[:accepted] && options[:accepted].include?(:show)
+        respond_to do |format|
+          format.html # show.rhtml
+          format.xml  { render :xml => eval("@#{controller_name.singularize}.to_xml") }      
+        end
+      else
+        flash[:error] = 'la transacción solicitada no puede ser solicitada'
+        redirect_to :action => 'index'
       end
     end
     
     def new    
-      instance_variable_set("@#{controller_name.singularize}", eval("#{controller_name.singularize.capitalize}.new"))
-      render 'commons/new'
+      if options[:accepted] && options[:accepted].include?(:new)
+        instance_variable_set("@#{controller_name.singularize}", eval("#{controller_name.singularize.capitalize}.new"))
+        render 'commons/new'
+      else
+        flash[:error] = 'la transacción solicitada no puede ser solicitada'
+        redirect_to :action => 'index'
+      end
     end
     
     def edit
-      render 'commons/edit'
+      if options[:accepted] && options[:accepted].include?(:edit)
+        render 'commons/edit'
+      else
+        flash[:error] = 'la transacción solicitada no puede ser solicitada'
+        redirect_to :action => 'index'
+      end
     end
     
     def create
@@ -89,11 +104,16 @@ module AdministrateMe::AdminScaffold
     end
     
     def destroy
-      @resource.destroy
-  
-      respond_to do |format|
-        format.html { redirect_to eval("#{controller_name}_url") }      
-        format.xml  { head :ok }
+      if options[:accepted] && options[:accepted].include?(:destroy)
+        @resource.destroy
+    
+        respond_to do |format|
+          format.html { redirect_to eval("#{controller_name}_url") }      
+          format.xml  { head :ok }
+        end
+      else
+        flash[:error] = 'la transacción solicitada no puede ser solicitada'
+        redirect_to :action => 'index'
       end
     end
     
