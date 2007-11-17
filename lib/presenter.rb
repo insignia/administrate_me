@@ -28,6 +28,8 @@ module AdminView::Presenter
         case value
           when TrueClass, FalseClass
             value ? 'Sí' : 'No'
+          when Date
+            value.to_s.split('-').reverse.join('/')
           else
             value
         end
