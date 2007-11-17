@@ -87,7 +87,7 @@ module AdminView
         html << link_to(image_tag('edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
       end
       if actions.include?('destroy')
-        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro será eliminado definitivamente. ¿Desea continuar?', :method => :delete, :title => 'eliminar este registro')
+        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro serÃ¡ eliminado definitivamente. Â¿Desea continuar?', :method => :delete, :title => 'eliminar este registro')
       end
       unless html.blank?
         html = content_tag('div', html, :align => 'right')     
