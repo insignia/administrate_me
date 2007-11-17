@@ -115,7 +115,8 @@ module AdminView
   def generate_path(item)
     path = "path("
     unless controller.options[:parent].blank?
-      path << "item.send('#{controller.options[:parent]}_id'),"
+#      path << "item.send('#{controller.options[:parent]}_id'),"
+      path << "@parent.id,"
     end
     path << "item)"
     path

@@ -58,7 +58,8 @@ module AdminView::ElegantPresentation
   def generate_target_path
     str = "#{controller.model_name}_path("
     unless controller.options[:parent].blank?
-      str << "@resource.send('#{controller.options[:parent]}_id'), "
+#      str << "@resource.send('#{controller.options[:parent]}_id'), "
+      str << "@parent.id, "
     end
     str << "@resource)"
     str
@@ -67,7 +68,8 @@ module AdminView::ElegantPresentation
   def render_back_action
     str = "#{controller.controller_name}_path"
     unless controller.options[:parent].blank?
-      str << "(@resource.send('#{controller.options[:parent]}_id'))"
+#      str << "(@resource.send('#{controller.options[:parent]}_id'))"
+      str << "(@parent.id)"
     end    
     link_to 'Volver', eval(str), :class => 'neutro'
   end
