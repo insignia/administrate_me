@@ -68,7 +68,11 @@ module AdministrateMe::AdminScaffold
     
     def new    
       if self.class.accepted_action(:new)
-        instance_variable_set("@resource", eval("#{controller_name.singularize.capitalize}.new"))
+        if options[:model]
+          instance_variable_set("@resource", eval("#{options[:model].capitalize}.new"))
+        else
+          instance_variable_set("@resource", eval("#{controller_name.singularize.capitalize}.new"))
+        end
         call_before_render
         render :template => 'commons/new'
       else

@@ -187,7 +187,7 @@ module AdminView
     end
     html
   end 
-  
+
   def list_for(group, settings = {})
     header  = (settings[:label]) ? settings[:label] : group.to_s.humanize
     html    = content_tag(:div, header, :class => 'header')    
