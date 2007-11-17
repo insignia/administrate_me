@@ -607,3 +607,38 @@ div.group div.more a {
 	color: #333333;
 	font-size: 12px;
 }
+
+table.grid_table {
+	background-color: #FAFAFA;
+	border-left: 1px solid #CFCFCF;
+	border-right: 1px solid #CFCFCF;
+	border-bottom: 1px solid #CFCFCF;
+	width: 100%;
+}
+
+table.grid_table thead tr th {
+	background: transparent url(/images/bg_head.jpg) repeat-x;
+	padding: 0px 10px;
+	border-left: 1px solid #F4F4F4;
+	border-right: 1px solid #CFCFCF;
+	border-bottom: 1px solid #CFCFCF;
+	color: #333333;
+	height: 30px;
+}			
+
+table.grid_table tbody tr td {
+	height: 25px;
+	padding: 0px 5px;
+	border-right: 1px solid #CFCFCF;
+	border-left: 1px solid #F4F4F4;
+	border-bottom: 1px solid #CFCFCF;
+	cursor: pointer;
+}
+
+table.grid_table tbody tr.even {
+	background: white url(/images/bg_even.jpg) repeat-x bottom;				
+}			
+
+table.grid_table tbody tr.over {
+	background: white url(/images/bg_over.jpg) repeat-x bottom;				
+}
