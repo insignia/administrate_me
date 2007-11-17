@@ -4,7 +4,7 @@ module AdminView
     controller.modules.each do |tab|
       selector = (controller.controller_name == tab || controller.options[:parent].to_s.pluralize == tab) ? 'selected' : 'available'        
       html << content_tag('li', 
-                          link_to(tab.humanize, :controller => tab), 
+                          link_to(tab[:caption].humanize, tab[:url]), 
                           :class => selector )
     end    
     content_tag('ul', html, :id => 'navs')
