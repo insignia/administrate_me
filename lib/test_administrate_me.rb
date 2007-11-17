@@ -8,8 +8,8 @@ module TestAdministrateMe
         @params = {}
       end
       
-      def create_params(options = {})
-        @params[:create] = options
+      def set_params(action, options = {})
+        @params[action] = options
       end
     end
   
