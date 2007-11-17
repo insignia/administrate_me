@@ -9,6 +9,6 @@
 
   <div class="actions">
     <%= submit_tag "Guardar estos cambios", :class => 'save' %> o 
-    <%= link_to 'Cancelar', productos_path %>
+    <%= link_to 'Cancelar', eval("#{controller.controller_name}_path") %>
   </div>
 <% end %>

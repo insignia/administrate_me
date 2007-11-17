@@ -8,9 +8,7 @@ module AdminView::ElegantPresentation
     if options[:on_body]
       html << render_elegant_body(options[:on_body])
     end
-    unless options[:no_actions]
-      html << render_elegant_actions
-    end
+    html << render_elegant_actions(options[:no_actions])
     content_tag('div', html, :class => 'elegant_presentation')
   end
 
@@ -33,9 +31,12 @@ module AdminView::ElegantPresentation
     content_tag('div', html, :class => 'body')
   end
   
-  def render_elegant_actions
-    html  = render_edit_action
-    html << render_destroy_action
+  def render_elegant_actions(show)
+    html  = ""
+    unless show
+      html << render_edit_action
+      html << render_destroy_action
+    end
     html << render_back_action
     content_tag('div', html, :class => 'actions')
   end
