@@ -30,7 +30,7 @@ module AdministrateMe::AdminScaffold
     def index 
       get_list
       respond_to do |format|
-        format.html { render 'commons/index' }
+        format.html { render :template => 'commons/index' }
         format.xml  { render :xml => instance_variable_get("@#{controller_name}").to_xml }
       end
     end
@@ -55,7 +55,7 @@ module AdministrateMe::AdminScaffold
     def new    
       if options[:accepted] && options[:accepted].include?(:new)
         instance_variable_set("@#{controller_name.singularize}", eval("#{controller_name.singularize.capitalize}.new"))
-        render 'commons/new'
+        render :template => 'commons/new'
       else
         flash[:error] = 'la transacción solicitada no puede ser solicitada'
         redirect_to :action => 'index'
@@ -64,7 +64,7 @@ module AdministrateMe::AdminScaffold
     
     def edit
       if options[:accepted] && options[:accepted].include?(:edit)
-        render 'commons/edit'
+        render :template => 'commons/edit'
       else
         flash[:error] = 'la transacción solicitada no puede ser solicitada'
         redirect_to :action => 'index'
@@ -84,7 +84,7 @@ module AdministrateMe::AdminScaffold
           format.html { redirect_to eval("#{model_name}_#{generate_url}") }
           format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
         else
-          format.html { render "commons/new" }
+          format.html { render :template => "commons/new" }
           format.xml  { render :xml => @resource.errors.to_xml }        
         end
       end
@@ -97,7 +97,7 @@ module AdministrateMe::AdminScaffold
           format.html { redirect_to eval("#{model_name}_#{generate_url}") }
           format.xml  { head :ok }
         else
-          format.html { render "commons/edit" }        
+          format.html { render :template => "commons/edit" }        
           format.xml  { render :xml => @resource.errors.to_xml }
         end
       end
@@ -122,6 +122,16 @@ module AdministrateMe::AdminScaffold
       unless options[:parent].blank?
         path << "(params[:#{options[:parent].to_s}_id])"
       end
+      eval(path)
+    end
+    
+    def path_to_resource(resource)
+      path  = "#{controller_name.singularize}_path("
+      unless options[:parent].blank?
+        path << "params[:#{options[:parent].to_s}_id], "
+      end
+      path << "#{resource.to_param})"
+      logger.info "path_to_resource: #{path}"
       eval(path)
     end
     
