@@ -117,6 +117,7 @@ module AdministrateMe::AdminScaffold
         @resource.destroy
     
         respond_to do |format|
+          flash[:notice] = 'El registro fue eliminado exitosamente.'
           format.html { redirect_to path_to_index }      
           format.xml  { head :ok }
         end
