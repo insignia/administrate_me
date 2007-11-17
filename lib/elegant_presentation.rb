@@ -27,7 +27,7 @@ module AdminView::ElegantPresentation
     html = ""
     fields.each do |field|
       body  = content_tag('span', field.to_s.humanize, :class => 'label') << "<br />"
-      body << content_tag('span', @resource.send(field.to_s), :class => 'content')
+      body << content_tag('div', @resource.send(field.to_s), :class => 'content')
       html << content_tag('div', body)
     end
     content_tag('div', html, :class => 'body')
@@ -53,8 +53,36 @@ module AdminView::ElegantPresentation
   end
   
   def render_back_action
-    link_to 'Volver', "javascript:history.back()", :class => 'neutro'
+    str = "#{controller.controller_name}_path"
+    unless controller.options[:parent].blank?
+      str << "(@resource.send('#{controller.options[:parent]}_id'))"
+    end    
+    link_to 'Volver', eval(str), :class => 'neutro'
   end
+  
+  def render_resource_context
+    html = ""
+    unless controller.options[:parent].blank?
+      html << content_tag('span', controller.options[:parent].to_s.humanize, :class => 'context')
+      html << content_tag('h3', @parent.send(controller.context[:highlight]))
+      html << content_tag('span', @parent.send(controller.context[:description]), :class => 'body' )
+      html << content_tag('div', link_to('volver', eval("#{controller.options[:parent]}_path(@parent)")), :class => 'actions') 
+      html  = content_tag('div', html, :class => 'resource_context')
+    else
+      html = ""
+    end
+    html
+  end
+  
+  def related_info_for(group, links=[])
+    html = content_tag('h3', group)
+    lis  = ""
+    links.each do |link|
+      lis << content_tag('li', link_to(link[:link], link[:url]))
+    end
+    html << content_tag('ul', lis)
+    content_tag('div', html, :class => 'related_info')
+  end   
   
 end
 

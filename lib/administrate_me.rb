@@ -1,6 +1,7 @@
 module AdministrateMe
   
   module ClassMethods
+  
     def administrate_me(options = {})
       @administrate_me_options = options
       include AdministrateMe::AdminScaffold::InstanceMethods
