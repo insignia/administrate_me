@@ -57,7 +57,7 @@ module AdministrateMe::AdminScaffold
     
     def new    
       unless options[:except] && options[:except].include?(:new)
-        instance_variable_set("@#{controller_name.singularize}", eval("#{controller_name.singularize.capitalize}.new"))
+        instance_variable_set("@resource", eval("#{controller_name.singularize.capitalize}.new"))
         render :template => 'commons/new'
       else
         not_available
