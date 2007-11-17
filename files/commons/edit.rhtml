@@ -4,7 +4,6 @@
 
 <%= error_messages_for :resource %>
 
-<% logger.info controller.model_name %>
 <% form_for(controller.model_name, @resource,
             :url => edit_url, 
             :html => html) do |f| %>
