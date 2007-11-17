@@ -9,9 +9,9 @@
 
   <%= render :partial => "form", :locals => {:f => f} %>
 
-  <p>
-    <%= submit_tag "Update" %>
-  </p>
+  <div class="actions">
+    <%= submit_tag "Guardar estos cambios", :class => 'save' %> o 
+    <%= link_to 'Cancelar', "javascript:history.back()" %>
+  </div>
 <% end %>
 
-<%= link_to 'Back', "javascript:history.back()" %>

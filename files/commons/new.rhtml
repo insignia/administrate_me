@@ -7,9 +7,8 @@
 
   <%= render :partial => "form", :locals => {:f => f} %>
 
-  <p>
-    <%= submit_tag "Create" %>
-  </p>
+  <div class="actions">
+    <%= submit_tag "Guardar estos cambios", :class => 'save' %> o 
+    <%= link_to 'Cancelar', productos_path %>
+  </div>
 <% end %>
-
-<%= link_to 'Back', productos_path %>s
