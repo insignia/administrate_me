@@ -89,7 +89,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def destroy
-      eval("@#{controller_name.singularize}.destroy")
+      @resource.destroy
   
       respond_to do |format|
         format.html { redirect_to eval("#{controller_name}_url") }      

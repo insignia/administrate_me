@@ -35,12 +35,17 @@ module AdminView::ElegantPresentation
   
   def render_elegant_actions
     html  = render_edit_action
+    html << render_destroy_action
     html << render_back_action
     content_tag('div', html, :class => 'actions')
   end
 
   def render_edit_action
     link_to('Editar este registro', generate_edit_path)
+  end
+  
+  def render_destroy_action
+    link_to('Eliminar este registro', eval("#{controller.model_name}_path(@resource)"), :confirm => 'Are you sure?', :method => :delete, :class => 'delete')
   end
   
   def generate_edit_path
@@ -83,6 +88,18 @@ module AdminView::ElegantPresentation
     html << content_tag('ul', lis)
     content_tag('div', html, :class => 'related_info')
   end   
+  
+  def simple_list(highlight, description)
+    html = ""
+    for item in @records
+      str  = content_tag('h3', item.send(highlight))
+      str << content_tag('span', item.send(description))
+      str  = content_tag('div', str)
+      str  = link_to(str, eval("#{controller.model_name}_#{generate_path(item)}"))
+      html << content_tag('li', str, :class => cycle('odd', 'even'))
+    end
+    content_tag('ul', html, :class => 'list')
+  end
   
 end
 
