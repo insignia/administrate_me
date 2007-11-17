@@ -108,13 +108,16 @@ module AdminView
     html = ""
     if actions
       if actions.include?('show')
-        html << link_to(image_tag('admin_ui/show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver más...')
+        html << link_to(image_tag('show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver más...')
+#        html << link_to(image_tag('admin_ui/show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver más...')
       end
       if actions.include?('edit')
-        html << link_to(image_tag('admin_ui/edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
+        html << link_to(image_tag('edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
+#        html << link_to(image_tag('admin_ui/edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
       end
       if actions.include?('destroy')
-        html << link_to(image_tag('admin_ui/destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro será eliminado definitivamente. ¿Desea continuar?', :method => :delete, :title => 'eliminar este registro')
+        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro será eliminado definitivamente. ¿Desea continuar?', :method => :delete, :title => 'eliminar este registro')
+#        html << link_to(image_tag('admin_ui/destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro será eliminado definitivamente. ¿Desea continuar?', :method => :delete, :title => 'eliminar este registro')
       end
       unless html.blank?
         html = content_tag('div', html, :align => 'right')     
