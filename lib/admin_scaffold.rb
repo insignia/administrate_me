@@ -5,10 +5,12 @@ module AdministrateMe::AdminScaffold
     def get_list    
       session[:mini] = ''
       @search_key = params[:search_key]
-      model_class.send(:with_scope, :find => { :conditions => global_scope }) do
-        model_class.send(:with_scope, :find => { :conditions => search_scope }) do
-          @records = model_class.paginate(:page => params[:page], :per_page => get_per_page, :order => get_order )
-          set_search_message
+      model_class.send(:with_scope, :find => { :conditions => parent_scope }) do
+        model_class.send(:with_scope, :find => { :conditions => global_scope }) do
+          model_class.send(:with_scope, :find => { :conditions => search_scope }) do
+            @records = model_class.paginate(:page => params[:page], :per_page => get_per_page, :order => get_order )
+            set_search_message
+          end
         end
       end
     end  
@@ -34,6 +36,12 @@ module AdministrateMe::AdminScaffold
       end
     end
     
+    def parent_scope
+      if parent = controller.options[:parent]
+        { "#{parent}_id" => params["#{parent}_id"] }
+      end
+    end
+
     def global_scope
       gc = respond_to?('general_conditions') ? general_conditions : nil
       if gc
