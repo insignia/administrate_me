@@ -112,7 +112,7 @@ module AdminView::ElegantPresentation
     unless @records.blank?
       for item in @records
         str  = content_tag('h3', item.send(highlight))
-        str << content_tag('span', item.send(description))
+        str << content_tag('span', item.send(description)) unless description.blank?
         str  = content_tag('div', str)
         str  = link_to(str, eval("#{controller.model_name}_#{generate_path(item)}"))
         html << content_tag('li', str, :class => cycle('odd', 'even'))
