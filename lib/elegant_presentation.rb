@@ -1,12 +1,12 @@
 module AdminView::ElegantPresentation
 
-  def render_elegant_presentation_for(object, options={})
+  def elegant_presentation_for(options={})
     html = ""
     if options[:on_header]
-      html << render_elegant_header(object, options[:on_header])
+      html << render_elegant_header(options[:on_header])
     end
     if options[:on_body]
-      html << render_elegant_body(object, options[:on_body])
+      html << render_elegant_body(options[:on_body])
     end
     unless options[:no_actions]
       html << render_elegant_actions
@@ -14,20 +14,20 @@ module AdminView::ElegantPresentation
     content_tag('div', html, :class => 'elegant_presentation')
   end
 
-  def render_elegant_header(object, fields)
+  def render_elegant_header(fields)
     html = ""
     fields.each do |field|
       html << content_tag('span', field.to_s.humanize, :class => 'label')
-      html << content_tag('h3',   object.send(field.to_s))      
+      html << content_tag('h3',   @resource.send(field.to_s))      
     end
     content_tag('div', html, :class => 'header')
   end
   
-  def render_elegant_body(object, fields)
+  def render_elegant_body(fields)
     html = ""
     fields.each do |field|
       body  = content_tag('span', field.to_s.humanize, :class => 'label') << "<br />"
-      body << content_tag('span', object.send(field.to_s), :class => 'content')
+      body << content_tag('span', @resource.send(field.to_s), :class => 'content')
       html << content_tag('div', body)
     end
     content_tag('div', html, :class => 'body')
@@ -40,8 +40,16 @@ module AdminView::ElegantPresentation
   end
 
   def render_edit_action
-    control = controller.model_name
-    link_to 'Editar este registro', eval("edit_#{control}_path(@resource)")
+    link_to('Editar este registro', generate_edit_path)
+  end
+  
+  def generate_edit_path
+    str  = "edit_#{controller.model_name}_path("
+    unless controller.options[:parent].blank?
+      str << "@resource.send('#{controller.options[:parent]}_id'), "
+    end
+    str << "@resource)"
+    eval(str)
   end
   
   def render_back_action

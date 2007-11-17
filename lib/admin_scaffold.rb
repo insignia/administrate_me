@@ -21,7 +21,7 @@ module AdministrateMe::AdminScaffold
       end
     end
     
-    def get_conditions
+    def get_conditions      
       gc = respond_to?('general_conditions') ? general_conditions : nil
       sc = @search_key.blank? ? nil : search_conditions
       [gc, sc]
