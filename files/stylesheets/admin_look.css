@@ -240,60 +240,59 @@ div.section_label {
 	margin-left: 5px;
 }
 
-.elegant_presentation .header {
-	border-bottom: 1px dashed #C2C2C2;
-	margin-bottom: 10px;
+.elegant .header {
+	margin-bottom: 5px;
 	padding-bottom: 5px;
 }
 
-.elegant_presentation span.label {
+.elegant .header span,
+.elegant .body span {
 	font-size: 10px;
 	color: #666666;
 }
 
-.elegant_presentation .header h3 {
+.elegant .header div {
 	padding: 0px;
 	margin: 0px;
+	font-size: 16px;
+	font-weight: bold;
 	color: #032E6F; 
 }
 
-.elegant_presentation .body div {
-	margin-bottom: 10px;
-}
-
-.elegant_presentation .body div div.content {
+.elegant .body div {    
+    margin-bottom: 10px;
     background-color: #F9F9F9;
     padding: 5px;
     margin-top: 3px;
 }
 
-.elegant_presentation .actions {
+.elegant .actions {
 	text-align: right;
 	border-top: 1px dashed #C2C2C2;
 	padding-top: 10px;
 }
 
-.elegant_presentation .actions a, 
-.elegant_presentation .actions a.neutro,
-.elegant_presentation .actions a.delete {
+.elegant .actions a, 
+.elegant .actions a.neutro,
+.elegant .actions a.delete {
 	padding: 3px 5px 3px 5px;
 	margin-right: 3px;
 	text-decoration: none;
 }
 
-.elegant_presentation .actions a {	
+.elegant .actions a {	
 	background-color: #E2F0FE;
 	border: 1px solid #AAD4FF;
-	color: #0C82F8;	 	
+	color: #0C82F8; 	
 }
 
-.elegant_presentation .actions a.neutro {	
+.elegant .actions a.neutro {	
 	background-color: #F4F4F4;
 	border: 1px solid #C2C2C2;
 	color: #666666;	 	
 }
 
-.elegant_presentation .actions a.delete {
+.elegant .actions a.delete {
     background-color: #FEE2E2 ;
 	border: 1px solid #FA6262;
 	color: #F10000;	 	
