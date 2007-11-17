@@ -2,7 +2,7 @@ module AdminView
   def generate_navigation
     html = ""
     controller.modules.each do |tab|
-      tab_name = controller.tab.to_s rescue nil
+      tab_name = get_tab_name
       selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
       html << content_tag('li', 
                           link_to(tab[:caption].humanize, tab[:url]), 
@@ -11,9 +11,17 @@ module AdminView
     content_tag('ul', html, :id => 'navs')
   end
   
+  def get_tab_name
+    if controller.respond_to?('tab')
+      tname = controller.tab.to_s
+    else
+      tname = controller.controller_name.to_s
+    end
+  end
+  
   def show_section_header
     html  = show_section_label
-    if controller.options[:accepted] && controller.options[:accepted].include?(:new)
+    unless controller.options[:except] && controller.options[:except].include?(:new)
       html << content_tag('div', 
                           link_to( "agregar un nuevo #{controller.controller_name.singularize}", 
                                    eval("new_#{controller.controller_name.singularize}_path")),

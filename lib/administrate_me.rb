@@ -8,12 +8,15 @@ module AdministrateMe
       layout 'admin_layout'
       before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
       before_filter :get_parent
-      before_filter :tab
       
-      if options[:secured] == true
+      if respond_to?('tab')
+        before_filter :tab
+      end
+      
+      unless options[:secured] == false
         before_filter :secured_access
       end
-    end
+    end  
     
     def model_name
       @administrate_me_options[:model] || to_s.gsub(/Controller$/, '').singularize.underscore
@@ -30,7 +33,7 @@ module AdministrateMe
     def options
       @administrate_me_options
     end
-
+    
   end
   
 end

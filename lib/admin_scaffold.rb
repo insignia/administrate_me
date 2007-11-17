@@ -44,8 +44,8 @@ module AdministrateMe::AdminScaffold
       render :partial => 'list'    
     end
     
-    def show        
-      if options[:accepted] && options[:accepted].include?(:show)
+    def show
+      unless options[:except] && options[:except].include?(:show)
         respond_to do |format|
           format.html # show.rhtml
           format.xml  { render :xml => eval("@#{controller_name.singularize}.to_xml") }      
@@ -56,7 +56,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def new    
-      if options[:accepted] && options[:accepted].include?(:new)
+      unless options[:except] && options[:except].include?(:new)
         instance_variable_set("@#{controller_name.singularize}", eval("#{controller_name.singularize.capitalize}.new"))
         render :template => 'commons/new'
       else
@@ -65,7 +65,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def edit
-      if options[:accepted] && options[:accepted].include?(:edit)
+      unless options[:except] && options[:except].include?(:edit)
         render :template => 'commons/edit'
       else
         not_available
@@ -73,7 +73,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def create
-      if options[:accepted] && options[:accepted].include?(:new)
+      unless options[:except] && options[:except].include?(:new)
         @resource = model_class.new(params[model_name.to_sym])      
         if parent = options[:parent]
           @resource.send("#{parent_key}=", @parent.id)
@@ -96,7 +96,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def update 
-      if options[:accepted] && options[:accepted].include?(:edit)             
+      unless options[:except] && options[:except].include?(:edit)
         respond_to do |format|
           if @resource.update_attributes(params[model_name.to_sym])
             flash[:notice] = 'Las cambios fueron guardados exitosamente'
@@ -113,7 +113,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def destroy
-      if options[:accepted] && options[:accepted].include?(:destroy)
+      unless options[:except] && options[:except].include?(:destroy)
         @resource.destroy
     
         respond_to do |format|
@@ -171,7 +171,7 @@ module AdministrateMe::AdminScaffold
     def parent_key
       options[:foreign_key] || "#{options[:parent]}_id".to_sym
     end
-    
+        
     def conditions_for(fields=[])
       predicate = []
       values    = []
