@@ -73,7 +73,7 @@ module AdminView
       body = ""
       for item in @records      
         cells = generate_grid_table_cells(item, options[:fields], options[:actions])
-        body << content_tag('tr', cells, :id => dom_id(item), :class => cycle('odd', 'even'))
+        body << content_tag('tr', cells, :id => "item_#{item.id}", :class => cycle('odd', 'even'))
       end
       
       html << body
