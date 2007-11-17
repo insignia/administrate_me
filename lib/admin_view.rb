@@ -2,7 +2,8 @@ module AdminView
   def generate_navigation
     html = ""
     controller.modules.each do |tab|
-      selector = (controller.controller_name == tab || controller.options[:parent].to_s.pluralize == tab) ? 'selected' : 'available'        
+      tab_name = controller.tab.to_s rescue nil
+      selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
       html << content_tag('li', 
                           link_to(tab[:caption].humanize, tab[:url]), 
                           :class => selector )
