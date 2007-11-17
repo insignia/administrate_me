@@ -42,6 +42,7 @@ module AdministrateMe::AdminScaffold
   
     def index
       get_list
+      call_before_render
       respond_to do |format|
         format.html { render :template => 'commons/index' }
         format.xml  { render :xml => @records.to_xml }
@@ -55,6 +56,7 @@ module AdministrateMe::AdminScaffold
     
     def show
       if self.class.accepted_action(:show)
+        call_before_render
         respond_to do |format|
           format.html # show.rhtml
           format.xml  { render :xml => @resource.to_xml }      
@@ -67,6 +69,7 @@ module AdministrateMe::AdminScaffold
     def new    
       if self.class.accepted_action(:new)
         instance_variable_set("@resource", eval("#{controller_name.singularize.capitalize}.new"))
+        call_before_render
         render :template => 'commons/new'
       else
         not_available
@@ -75,6 +78,7 @@ module AdministrateMe::AdminScaffold
     
     def edit
       if self.class.accepted_action(:edit)
+        call_before_render
         render :template => 'commons/edit'
       else
         not_available
@@ -89,7 +93,7 @@ module AdministrateMe::AdminScaffold
         end
         @resource = model_class.new(create_params)
         save_model
-    
+        call_before_render
         respond_to do |format|
           if @success
             flash[:notice] = 'El registro fue creado exitosamente'        
@@ -109,6 +113,7 @@ module AdministrateMe::AdminScaffold
       if self.class.accepted_action(:edit)
         @resource.attributes = params[model_name.to_sym]
         save_model
+        call_before_render
         respond_to do |format|
           if @success
             flash[:notice] = 'Las cambios fueron guardados exitosamente'
@@ -127,7 +132,7 @@ module AdministrateMe::AdminScaffold
     def destroy
       if self.class.accepted_action(:destroy)
         @resource.destroy
-    
+        call_before_render
         respond_to do |format|
           flash[:notice] = 'El registro fue eliminado exitosamente.'
           format.html { redirect_to path_to_index }      
@@ -257,6 +262,10 @@ module AdministrateMe::AdminScaffold
         session[:c_filter] = name_space
         session["#{controller_name}"] = condition
         redirect_to :action => 'index'
+      end
+      
+      def call_before_render
+        before_render if respond_to?('before_render')
       end
       
   end
