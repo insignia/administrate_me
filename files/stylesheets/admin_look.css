@@ -460,12 +460,11 @@ div.section_label {
 }
 
 #errorExplanation {
-  width: 400px;
-  border: 2px solid red;
-  padding: 7px;
-  padding-bottom: 12px;
-  margin-bottom: 20px;
-  background-color: #f0f0f0;
+  border: 1px solid #FF0000;
+  padding: 2px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: #FEE2E2;
 }
 
 #errorExplanation h2 {
@@ -476,17 +475,26 @@ div.section_label {
   margin: -7px;
   background-color: #c00;
   color: #fff;
+  display: none;
 }
 
 #errorExplanation p {
   color: #333;
   margin-bottom: 0;
   padding: 5px;
+  display: none;
 }
 
-#errorExplanation ul li {
+#errorExplanation ul {
+  margin: 0px;
+  padding: 3px 20px;
+}
+
+#errorExplanation ul li {  
   font-size: 12px;
   list-style: square;
+  color: #FF0000;
+  font-weight: bold;
 }
 
 #paper_sheet #content #flash div.success,
