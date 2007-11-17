@@ -1,0 +1,288 @@
+body{ 
+	background-color:#333;
+	font-size:16px; 
+	margin:0; 
+	padding:0; 
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+
+#header{ 
+	background-color:#032E6F;
+	height:70px;
+}
+
+#header #titles span.owner {
+	font-size: 16px;
+	color: #FFFFD3;
+	position: relative;
+	top: 10px;
+	left: 15px;
+}
+
+#header #titles span.app_name {
+	font-size: 24px;
+	font-weight: bold;
+	color: #F4F4F4;
+	position: relative;
+	top: 10px;
+	left: 15px;
+}
+
+#header #session {
+	position: absolute;
+	top: 5px;
+	right: 10px;
+	color: #F4F4F4;
+	font-size: 11px;
+}
+
+#header #session a {
+	color: #F4F4F4;
+	text-decoration: none;
+}
+
+#header #session a:hover {
+	color: #FFFFD3;
+}
+
+#center { 
+	background-color:#E4EFFF; 
+	min-height:650px; /* for modern browsers */
+	height:auto !important; /* for modern browsers */
+	height:650px; /* for IE5.x and IE6 */
+	padding: 10px;
+}
+
+#center #paper_sheet {	
+	width: 72%;
+	height: auto !important;
+	clear: both;	
+}
+
+#center #paper_sheet #navs {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	font-weight: bold;
+}
+
+#center #paper_sheet #navs li {
+	float: left;	
+}
+
+#center #paper_sheet #navs li a {
+	display: block;
+	padding: 5px;
+	margin-right: 5px;
+	text-decoration: none;
+	background-color: #032E6F;
+	color: #F4F4F4;
+}
+
+#center #paper_sheet #navs li a:hover {
+	background-color: #FFFFD3;
+	color: #333;
+}
+
+#center #paper_sheet #navs li.selected a {
+	display: block;
+	padding: 5px;
+	margin-right: 5px;
+	text-decoration: none;
+	background-color: white;
+	color: #032E6F;
+}
+
+#center #paper_sheet #content {	
+	background-color: white;
+	padding: 10px;
+	min-height: 600px;
+	height: auto !important;
+	height: 600px;
+	clear: both;
+}
+
+#center #support {
+	position: absolute;
+	top: 105px;
+	left: 73%;
+	width: 240px;
+	width: 23%;	
+	padding: 5px;	
+}
+
+#footer { 
+	clear:both;
+	background-color:#333;
+	height:50px;
+}
+
+#footer #credits {
+	color: #F4F4F4;
+}
+
+#footer #credits span {
+	position: relative;
+	top: 10px;	
+	left: 10px;
+}
+
+#footer #credits a {
+	color: #F4F4F4;
+	text-decoration: none;
+	font-weight: bold;
+	letter-spacing: 1px;
+	position: relative;
+	top: 10px;	
+	left: 10px;
+}
+
+#footer #credits a:hover {
+	color: #FFFFD3;
+}
+
+div.section_label {
+	padding: 5px;	
+	color: #032E6F;
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+	border-bottom: 1px solid #F4F4F4; 
+}
+
+#center div.pagination {
+	text-align: right;
+	color: #0C82F8;
+	font-weight: bold;
+}
+
+#center div.pagination a {	
+	padding: 5px;
+	margin-right: 3px;
+	background-color: #E2F0FE;
+	border: 1px solid #AAD4FF;
+	color: #0C82F8;	 
+	text-decoration: none;	
+}
+
+#support form label {	
+	color: #032E6F;
+}
+
+#support form label input {
+	width: 90%;
+}
+
+#list_area #mini_flash {
+	background-color: #FEFEE2;
+	padding: 5px;
+	color: #333;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+#center #paper_sheet #content #actions {	
+	margin-bottom: 5px;
+	text-align: center;
+}
+
+#center #paper_sheet #content #actions a {
+	font-weight: bold;	
+	text-decoration: none;
+	color: #0C82F8;
+}
+
+#list_area #grid_table {	
+	width: 100%;
+	margin-top: 10px;		
+}
+
+#list_area #grid_table td {
+	padding: 2px;	
+}
+
+#list_area #grid_table th {
+	background-color: #C2C2C2;
+	color: #032E6F;
+	padding: 2px; 
+}
+
+#list_area #grid_table tr.even {
+	background-color: #F4F4F4;	
+}
+
+#list_area #grid_table tr.odd {	
+}
+
+#list_area #grid_table td a img {
+	border: none;
+	margin-left: 5px;
+}
+
+.elegant_presentation .header {
+	border-bottom: 1px dashed #C2C2C2;
+	margin-bottom: 10px;
+	padding-bottom: 5px;
+}
+
+.elegant_presentation span.label {
+	font-size: 10px;
+	color: #666666;
+}
+
+.elegant_presentation .header h3 {
+	padding: 0px;
+	margin: 0px;
+	color: #032E6F; 
+}
+
+.elegant_presentation .body div {
+	margin-bottom: 10px;
+}
+
+.elegant_presentation .actions {
+	text-align: right;
+	border-top: 1px dashed #C2C2C2;
+	padding-top: 10px;
+}
+
+.elegant_presentation .actions a, 
+.elegant_presentation .actions a.neutro {
+	padding: 3px 5px 3px 5px;
+	margin-right: 3px;
+	text-decoration: none;
+}
+
+.elegant_presentation .actions a {	
+	background-color: #E2F0FE;
+	border: 1px solid #AAD4FF;
+	color: #0C82F8;	 	
+}
+
+.elegant_presentation .actions a.neutro {	
+	background-color: #F4F4F4;
+	border: 1px solid #C2C2C2;
+	color: #666666;	 	
+}
+
+#center #paper_sheet #content form {
+    margin-top: 10px;
+}
+
+#center #paper_sheet #content form div {
+    margin-bottom: 10px;
+}
+
+#center #paper_sheet #content form span.label {
+    font-size: 10px;
+	color: #666666;
+}
+
+#center #paper_sheet #content form textarea.mini_area {
+    height: 50px;
+}
+
+#center #paper_sheet #content form textarea.medium_area {
+    height: 150px;
+}

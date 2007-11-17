@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<head>
+    <title>Panel de Administracion</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <style type="text/css" media="all">
+        @import "/stylesheets/admin_look.css";
+    </style>
+    
+    <%= javascript_include_tag :defaults %>
+</head>
+
+<body>
+    <div id="header">
+        <div id="titles">
+            <span class="owner"><%= controller.owner %></span> <br />
+            <span class="app_name"><%= controller.app_name %></span> 
+        </div>
+        <div id="session">
+            <span class="user">Usuario</span> | 
+            <a href="#">Mis datos</a> |
+            <a href="#">Salir</a>            
+        </div>
+    </div>
+    <div id="center">
+        <div id="paper_sheet">
+            <%= generate_navigation %>
+            <div id="content">
+                <%= yield %>
+            </div>
+        </div>
+        <div id="support">
+            <%= yield :support %>            
+        </div>
+    </div>
+    <div id="footer">
+        <div id="credits">
+            <span>powered by</span> <br />
+            <a href="http://www.insignia4u.com" target="_blank">(in)signia</a>
+        </div>
+    </div>
+</body>
+
+</html>

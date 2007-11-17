@@ -6,6 +6,7 @@ module AdministrateMe
       include AdministrateMe::AdminScaffold::InstanceMethods
       layout 'admin_layout'
       before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
+      before_filter :get_parent
     end
     
     def model_name
@@ -14,6 +15,14 @@ module AdministrateMe
     
     def model_class
       model_name.classify.constantize
+    end
+    
+    def parent_class
+      @administrate_me_options[:parent].to_s.classify.constantize
+    end
+    
+    def options
+      @administrate_me_options
     end
 
   end

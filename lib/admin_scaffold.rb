@@ -57,11 +57,14 @@ module AdministrateMe::AdminScaffold
     end
     
     def create
-#      @resource = eval("#{model_name}.new(params[:#{controller_name.singularize.to_sym}])")
-      @resource = model_class.new(params[model_name.to_sym])
+      @resource = model_class.new(params[model_name.to_sym])      
+      if parent = options[:parent]
+        @resource.send("#{parent_key}=", @parent.id)
+      end
+      save_model
   
       respond_to do |format|
-        if @resource.save
+        if @success
           flash[:notice] = 'El registro fue creado exitosamente'        
           format.html { redirect_to eval("#{controller_name.singularize}_url(@resource)") }
           format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
@@ -111,11 +114,50 @@ module AdministrateMe::AdminScaffold
       self.class.model_class
     end
     
+    def options
+      self.class.options
+    end
+    
+    def parent_class
+      self.class.parent_class
+    end
+    
+    def parent_key
+      options[:foreign_key] || "#{options[:parent]}_id".to_sym
+    end
+    
     protected
     
       def count_selected
         model_class.count
       end
+      
+      def save_model
+        begin
+          model_class.transaction do 
+#            before_save
+            if @success = @resource.save!
+#              after_save
+            end
+          end 
+        rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid
+          logger.error("Ocurrió una exception al salvar el registro: " + $!)
+          @success = false
+        end
+      end
+      
+      def get_parent
+        if parent = options[:parent]
+          begin
+            @parent = parent_class.find(params[:"#{parent}_id"])
+          rescue ActiveRecord::RecordNotFound
+            flash[:error] = "No existe el padre del elemento solicitado"
+            redirect_to ''
+            return false
+          end
+        end
+      end
+      
     
   end
   
