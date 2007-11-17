@@ -10,6 +10,10 @@ module AdministrateMe
       build            
     end            
     
+    def no_scaffold!
+      @administrate_me_options[:scaffold] = false
+    end
+    
     def except(*actions)
       @administrate_me_options[:except] = actions
     end
@@ -57,19 +61,21 @@ module AdministrateMe
     end
         
     def build
-      include AdministrateMe::AdminScaffold::InstanceMethods
-      layout 'admin_layout'
+      layout 'admin_layout'            
       
-      before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
-      before_filter :get_parent
-      
-      if respond_to?('tab')
-        before_filter :tab
+      unless @administrate_me_options[:scaffold] == false
+        include AdministrateMe::AdminScaffold::InstanceMethods
+        before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
+        before_filter :get_parent
       end
       
       unless @administrate_me_options[:secured] == false
         before_filter :secured_access
-      end
+      end            
+      
+      if respond_to?('tab')
+        before_filter :tab
+      end            
     end
     
     def model_name
