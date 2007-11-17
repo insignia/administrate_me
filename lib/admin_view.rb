@@ -11,12 +11,16 @@ module AdminView
   end
   
   def show_section_header
-    label = "Administración de #{controller.controller_name.humanize}"
-    html  = content_tag('div', label, :class => 'section_label')
+    html  = show_section_label
     html << content_tag('div', 
                         link_to( "agregar un nuevo #{controller.controller_name.singularize}", 
                                  eval("new_#{controller.controller_name.singularize}_path")),
                         :id => 'actions' )
+  end
+  
+  def show_section_label
+    label = "Administración de #{controller.controller_name.humanize}"
+    content_tag('div', label, :class => 'section_label')
   end
   
   def show_section_body
