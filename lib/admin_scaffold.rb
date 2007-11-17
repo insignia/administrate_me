@@ -29,9 +29,9 @@ module AdministrateMe::AdminScaffold
     def global_scope
       gc = respond_to?('general_conditions') ? general_conditions : nil
       if gc
-        gc.merge(session[:filters]) if session[:filters]  
+        gc.merge(session["#{controller_name}"]) if session["#{controller_name}"]          
       else
-        gc = session[:filters] if session[:filters]  
+        gc = session["#{controller_name}"] if session["#{controller_name}"]  
       end
       gc
     end   
@@ -40,13 +40,13 @@ module AdministrateMe::AdminScaffold
       sc = @search_key.blank? ? nil : conditions_for(options[:search])
     end   
   
-    def index 
+    def index
       get_list
       respond_to do |format|
         format.html { render :template => 'commons/index' }
-        format.xml  { render :xml => instance_variable_get("@#{controller_name}").to_xml }
+        format.xml  { render :xml => @records.to_xml }
       end
-    end
+    end    
     
     def search    
       get_list
@@ -57,7 +57,7 @@ module AdministrateMe::AdminScaffold
       unless options[:except] && options[:except].include?(:show)
         respond_to do |format|
           format.html # show.rhtml
-          format.xml  { render :xml => eval("@#{controller_name.singularize}.to_xml") }      
+          format.xml  { render :xml => @resource.to_xml }      
         end
       else
         not_available
@@ -210,7 +210,7 @@ module AdministrateMe::AdminScaffold
       def save_model
         begin
           model_class.transaction do 
-#            before_save
+            before_save
             if @success = @resource.save!
 #              after_save
             end
@@ -232,8 +232,7 @@ module AdministrateMe::AdminScaffold
           end
         end
       end
-      
-      
+
       def generate_url
         html  = "url("
         unless options[:parent].blank?
@@ -245,7 +244,7 @@ module AdministrateMe::AdminScaffold
       
       def set_filter_for(name_space, condition)
         session[:c_filter] = name_space
-        session[:filters] = condition
+        session["#{controller_name}"] = condition
         redirect_to :action => 'index'
       end
       
