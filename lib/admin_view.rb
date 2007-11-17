@@ -192,13 +192,20 @@ module AdminView
     header  = (settings[:label]) ? settings[:label] : group.to_s.humanize
     html    = content_tag(:div, header, :class => 'header')    
     settings[:collection].each do |item|
-      link_to_show = (settings[:to_show].blank?) ? eval("#{group.to_s.singularize}_path(#{settings[:parent]}, item)") : "#"
-      link  = link_to(item.send(settings[:field]), link_to_show)
+      aux   = link_to_show(group, settings[:parent], item)
+      link  = link_to(item.send(settings[:field]), aux)
       html << content_tag(:li, link, :class => cycle('odd', 'even') )
     end
     html  = content_tag(:ul, html, :id => 'list')
     html << link_to_more(settings[:link]) if settings[:link]
     html
+  end
+  
+  def link_to_show(group, parent, item)
+    aux  = "#{group.to_s.singularize}_path(" 
+    aux << "#{parent}, " unless parent.blank?
+    aux << "item)"
+    eval(aux)
   end
   
   def link_to_more(ltmore)
