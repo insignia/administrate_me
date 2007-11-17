@@ -40,8 +40,8 @@ module AdminView::ElegantPresentation
   end
 
   def render_edit_action
-    control = controller.controller_name.singularize    
-    link_to 'Editar este registro', eval("edit_#{control}_path(@#{control})")
+    control = controller.model_name
+    link_to 'Editar este registro', eval("edit_#{control}_path(@resource)")
   end
   
   def render_back_action
