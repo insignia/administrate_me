@@ -19,9 +19,7 @@
             <span class="app_name"><%= controller.app_name %></span> 
         </div>
         <div id="session">
-            <span class="user">Usuario</span> | 
-            <a href="#">Mis datos</a> |
-            <a href="#">Salir</a>            
+            <%= render :partial => 'commons/session' %>      
         </div>
     </div>
     <div id="center">
