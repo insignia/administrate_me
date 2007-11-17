@@ -16,13 +16,21 @@ module AdminView::Presenter
       end
       def field(label, value)
         @fields << @mybuilder.span(label)
-        @fields << @mybuilder.div(value)
+        @fields << @mybuilder.div(pretty_value(value))
       end
       def text(value)
         @fields << value
       end
       def render
         "<div class='#{@type.to_s}'> #{@fields.join} </div>"
+      end
+      def pretty_value(value)
+        case value
+          when TrueClass, FalseClass
+            value ? 'Sí' : 'No'
+          else
+            value
+        end
       end
     end   
     

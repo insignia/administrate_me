@@ -107,8 +107,10 @@ module AdministrateMe::AdminScaffold
     
     def update 
       unless options[:except] && options[:except].include?(:edit)
+        @resource.attributes = params[model_name.to_sym]
+        save_model
         respond_to do |format|
-          if @resource.update_attributes(params[model_name.to_sym])
+          if @success
             flash[:notice] = 'Las cambios fueron guardados exitosamente'
             format.html { redirect_to eval("#{model_name}_#{generate_url}") }
             format.xml  { head :ok }
@@ -221,7 +223,7 @@ module AdministrateMe::AdminScaffold
           model_class.transaction do 
             before_save if respond_to?('before_save')
             if @success = @resource.save!
-#              after_save
+              after_save if respond_to?('after_save')
             end
           end 
         rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid

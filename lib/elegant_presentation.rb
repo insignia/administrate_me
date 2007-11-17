@@ -21,7 +21,7 @@ module AdminView::ElegantPresentation
     html = content_tag('h3', group)
     lis  = ""
     links.each do |link|
-      lis << content_tag('li', link_to(link[:link], link[:url]))
+      lis << content_tag('li', link_to(link[:link], link[:url], :method => link[:method] || :get))
     end
     html << content_tag('ul', lis)
     content_tag('div', html, :class => 'related_info')
