@@ -107,6 +107,16 @@ module AdminView::ElegantPresentation
     content_tag('ul', html, :class => 'list')
   end
   
+  def render_action_label
+    case controller.action_name
+      when "new"
+        label = "Nuevo registro de #{controller.controller_name.humanize}"
+      when "edit"
+        label = "Editando un registro de #{controller.controller_name.humanize}"      
+    end
+    content_tag('div', label, :class => 'section_label')
+  end
+  
 end
 
 ActionView::Base.send :include, AdminView::ElegantPresentation
