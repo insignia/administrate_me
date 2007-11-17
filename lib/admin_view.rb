@@ -59,17 +59,21 @@ module AdminView
   end
       
   def generate_grid_table_for(options = {})
-    html = generate_grid_table_heads(options[:fields])
-    
-    body = ""
-    for item in @records      
-      cells = generate_grid_table_cells(item, options[:fields], options[:actions])
-      body << content_tag('tr', cells, :id => dom_id(item), :class => cycle('odd', 'even'))
+    unless @records.blank?    
+      html = generate_grid_table_heads(options[:fields])
+      
+      body = ""
+      for item in @records      
+        cells = generate_grid_table_cells(item, options[:fields], options[:actions])
+        body << content_tag('tr', cells, :id => dom_id(item), :class => cycle('odd', 'even'))
+      end
+      
+      html << body
+      
+      content_tag('table', html, :id => 'grid_table')
+    else
+      render_empty_msg
     end
-    
-    html << body
-    
-    content_tag('table', html, :id => 'grid_table')
   end
   
   def generate_grid_table_heads(fields) 
@@ -138,6 +142,29 @@ module AdminView
     end
     str << "@resource)"
     eval(str)
+  end
+  
+  def search_scope
+    "(#{controller.options[:search].map{|x| x.to_s.humanize}.join(', ')})"
+  end
+  
+  def render_flash_message
+    html = ""
+    if flash[:notice] || flash[:error]    
+      html = content_tag('div', flash[:notice], :class => 'success') unless flash[:notice].blank?
+      html = content_tag('div', flash[:error],  :class => 'error')   unless flash[:error].blank?
+      html = content_tag('div', html, :id => 'flash')
+    end
+    html
+  end
+  
+  def html
+    aux = {}
+    if controller.respond_to?('form_settings')
+      aux = controller.form_settings
+    end
+    aux[:method] = :put if controller.action_name == 'edit'
+    aux
   end
 end
 

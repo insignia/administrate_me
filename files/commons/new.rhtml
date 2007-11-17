@@ -5,7 +5,8 @@
 <%= error_messages_for :resource %>
 
 <% form_for(controller.model_name, @resource,
-           :url => eval("#{controller.model_name.pluralize}_path")) do |f| %>
+           :url => eval("#{controller.model_name.pluralize}_path"),
+           :html => html) do |f| %>
 
   <%= render :partial => "form", :locals => {:f => f} %>
 

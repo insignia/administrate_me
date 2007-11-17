@@ -63,6 +63,7 @@ body{
 #center #paper_sheet #navs {
 	padding: 0;
 	margin: 0;
+	margin-left: 15px;
 	list-style: none;
 	font-weight: bold;
 }
@@ -189,6 +190,16 @@ div.section_label {
     padding: 1px 5px 1px 5px;
     float: right;
     margin-top: -17px;
+}
+
+#list_area div.msg {
+    background-color: #FEDEDE;
+    border: 1px solid #FC9090;
+    padding: 10px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    color: #9D0505;
 }
 
 #center #paper_sheet #content #actions {	
@@ -468,4 +479,21 @@ div.section_label {
 #errorExplanation ul li {
   font-size: 12px;
   list-style: square;
+}
+
+#paper_sheet #content #flash div.success,
+#paper_sheet #content #flash div.error {    
+    padding: 5px 5px 5px 25px;
+    font-size: 11px;
+    font-weight: bold;   
+}
+
+#paper_sheet #content #flash div.success {
+    background: #FFFFC5 url("/images/icon_success.png") no-repeat 5px;
+    color: #333333;
+}
+
+#paper_sheet #content #flash div.error {
+    background: #FEE2E2 url("/images/icon_error.png") no-repeat 5px;
+    color: #A30505;    
 }

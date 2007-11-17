@@ -46,7 +46,7 @@ module AdminView::ElegantPresentation
   end
   
   def render_destroy_action
-    link_to('Eliminar este registro', eval(generate_target_path), :confirm => 'Are you sure?', :method => :delete, :class => 'delete')
+    link_to('Eliminar este registro', eval(generate_target_path), :confirm => 'Eliminará definitivamente este registro. ¿Está seguro?', :method => :delete, :class => 'delete')
   end  
   
   def generate_edit_path
@@ -104,14 +104,22 @@ module AdminView::ElegantPresentation
   
   def simple_list(highlight, description)
     html = ""
-    for item in @records
-      str  = content_tag('h3', item.send(highlight))
-      str << content_tag('span', item.send(description))
-      str  = content_tag('div', str)
-      str  = link_to(str, eval("#{controller.model_name}_#{generate_path(item)}"))
-      html << content_tag('li', str, :class => cycle('odd', 'even'))
+    unless @records.blank?
+      for item in @records
+        str  = content_tag('h3', item.send(highlight))
+        str << content_tag('span', item.send(description))
+        str  = content_tag('div', str)
+        str  = link_to(str, eval("#{controller.model_name}_#{generate_path(item)}"))
+        html << content_tag('li', str, :class => cycle('odd', 'even'))
+      end
+      content_tag('ul', html, :class => 'list')
+    else
+      render_empty_msg
     end
-    content_tag('ul', html, :class => 'list')
+  end
+  
+  def render_empty_msg
+    content_tag('div', 'No hay registros cargados', :class => 'msg')
   end
   
   def render_action_label

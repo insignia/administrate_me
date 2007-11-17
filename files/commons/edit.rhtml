@@ -7,7 +7,7 @@
 <% logger.info controller.model_name %>
 <% form_for(controller.model_name, @resource,
             :url => edit_url, 
-            :html => { :method => :put }) do |f| %>
+            :html => html) do |f| %>
 
   <%= render :partial => "form", :locals => {:f => f} %>
 

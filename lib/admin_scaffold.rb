@@ -26,6 +26,10 @@ module AdministrateMe::AdminScaffold
       sc = @search_key.blank? ? nil : search_conditions
       [gc, sc]
     end
+    
+    def search_conditions
+      conditions_for options[:search]
+    end
   
     def index 
       get_list
@@ -47,8 +51,7 @@ module AdministrateMe::AdminScaffold
           format.xml  { render :xml => eval("@#{controller_name.singularize}.to_xml") }      
         end
       else
-        flash[:error] = 'la transacción solicitada no puede ser solicitada'
-        redirect_to :action => 'index'
+        not_available
       end
     end
     
@@ -57,8 +60,7 @@ module AdministrateMe::AdminScaffold
         instance_variable_set("@#{controller_name.singularize}", eval("#{controller_name.singularize.capitalize}.new"))
         render :template => 'commons/new'
       else
-        flash[:error] = 'la transacción solicitada no puede ser solicitada'
-        redirect_to :action => 'index'
+        not_available
       end
     end
     
@@ -66,40 +68,47 @@ module AdministrateMe::AdminScaffold
       if options[:accepted] && options[:accepted].include?(:edit)
         render :template => 'commons/edit'
       else
-        flash[:error] = 'la transacción solicitada no puede ser solicitada'
-        redirect_to :action => 'index'
+        not_available
       end
     end
     
     def create
-      @resource = model_class.new(params[model_name.to_sym])      
-      if parent = options[:parent]
-        @resource.send("#{parent_key}=", @parent.id)
-      end
-      save_model
-  
-      respond_to do |format|
-        if @success
-          flash[:notice] = 'El registro fue creado exitosamente'        
-          format.html { redirect_to eval("#{model_name}_#{generate_url}") }
-          format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
-        else
-          format.html { render :template => "commons/new" }
-          format.xml  { render :xml => @resource.errors.to_xml }        
+      if options[:accepted] && options[:accepted].include?(:new)
+        @resource = model_class.new(params[model_name.to_sym])      
+        if parent = options[:parent]
+          @resource.send("#{parent_key}=", @parent.id)
         end
+        save_model
+    
+        respond_to do |format|
+          if @success
+            flash[:notice] = 'El registro fue creado exitosamente'        
+            format.html { redirect_to eval("#{model_name}_#{generate_url}") }
+            format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
+          else
+            format.html { render :template => "commons/new" }
+            format.xml  { render :xml => @resource.errors.to_xml }        
+          end
+        end
+      else
+        not_available
       end
     end
     
-    def update        
-      respond_to do |format|
-        if @resource.update_attributes(params[model_name.to_sym])
-          flash[:notice] = 'Las cambios fueron guardados exitosamente'
-          format.html { redirect_to eval("#{model_name}_#{generate_url}") }
-          format.xml  { head :ok }
-        else
-          format.html { render :template => "commons/edit" }        
-          format.xml  { render :xml => @resource.errors.to_xml }
+    def update 
+      if options[:accepted] && options[:accepted].include?(:edit)             
+        respond_to do |format|
+          if @resource.update_attributes(params[model_name.to_sym])
+            flash[:notice] = 'Las cambios fueron guardados exitosamente'
+            format.html { redirect_to eval("#{model_name}_#{generate_url}") }
+            format.xml  { head :ok }
+          else
+            format.html { render :template => "commons/edit" }        
+            format.xml  { render :xml => @resource.errors.to_xml }
+          end
         end
+      else
+        not_available
       end
     end
     
@@ -112,8 +121,7 @@ module AdministrateMe::AdminScaffold
           format.xml  { head :ok }
         end
       else
-        flash[:error] = 'la transacción solicitada no puede ser solicitada'
-        redirect_to :action => 'index'
+        not_available
       end
     end
     
@@ -163,7 +171,22 @@ module AdministrateMe::AdminScaffold
       options[:foreign_key] || "#{options[:parent]}_id".to_sym
     end
     
+    def conditions_for(fields=[])
+      predicate = []
+      values    = []
+      fields.each do |field|
+        predicate << "lower(#{field.to_s}) like ?"
+        values    << "@search_key.downcase + '%'"
+      end
+      eval("[\"#{predicate.join(' OR ')}\", #{values.join(',')}]")
+    end
+    
     protected
+    
+      def not_available
+        flash[:error] = 'la transacción solicitada no se encuentra disponible'
+        redirect_to :action => 'index'
+      end
     
       def count_selected
         model_class.count
