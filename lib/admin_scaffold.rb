@@ -108,7 +108,7 @@ module AdministrateMe::AdminScaffold
         @resource.destroy
     
         respond_to do |format|
-          format.html { redirect_to eval("#{controller_name}_url") }      
+          format.html { redirect_to path_to_index }      
           format.xml  { head :ok }
         end
       else
@@ -117,13 +117,20 @@ module AdministrateMe::AdminScaffold
       end
     end
     
+    def path_to_index
+      path  = "#{controller_name}_path"
+      unless options[:parent].blank?
+        path << "(params[:#{options[:parent].to_s}_id])"
+      end
+      eval(path)
+    end
+    
     def search_message(search_key)
       "se encontraron #{count_selected} resultados con \"<b>#{search_key}</b>\""
     end
     
     def get_resource
       @resource = model_class.find(params[:id])
-      logger.info "resource: #{@resource}"
     end   
     
     def model_name
