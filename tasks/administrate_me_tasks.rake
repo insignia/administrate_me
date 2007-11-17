@@ -8,15 +8,17 @@ namespace :admin do
     FileUtils.cp(stylesheets, path_to_css)
     
     path_to_images = RAILS_ROOT + "/public/images/admin_ui/"
+    FileUtils.mkdir(path_to_images) unless File.exist?(path_to_images)
     images = Dir["./vendor/plugins/administrate_me/files/images/*.*"]
     FileUtils.cp(images, path_to_images)
     
     path_to_layouts = RAILS_ROOT + "/app/views/layouts/"
-    layouts     = Dir["./vendor/plugins/administrate_me/files/layouts/*.rhtml"]
+    layouts = Dir["./vendor/plugins/administrate_me/files/layouts/*.rhtml"]
     FileUtils.cp(layouts, path_to_layouts)
     
     path_to_commons = RAILS_ROOT + "/app/views/commons/"
-    commons     = Dir["./vendor/plugins/administrate_me/files/commons/*.rhtml"]
+    FileUtils.mkdir(path_to_commons) unless File.exist?(path_to_commons)
+    commons = Dir["./vendor/plugins/administrate_me/files/commons/*.rhtml"]
     FileUtils.cp(commons, path_to_commons) 
   end
 end
