@@ -326,7 +326,7 @@ div.section_label {
     margin-bottom: 10px;
 }
 
-#center #paper_sheet #content form span.label {
+#center #paper_sheet #content form label.label {
     font-size: 10px;
 	color: #666666;
 }

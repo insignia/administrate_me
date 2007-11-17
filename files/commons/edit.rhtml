@@ -5,6 +5,7 @@
 <%= error_messages_for :resource %>
 
 <% form_for(controller.model_name, @resource,
+            :builder => AdminBuilder,
             :url => edit_url, 
             :html => html) do |f| %>
 
