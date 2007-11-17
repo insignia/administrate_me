@@ -210,7 +210,7 @@ module AdministrateMe::AdminScaffold
       def save_model
         begin
           model_class.transaction do 
-            before_save
+            before_save if respond_to?('before_save')
             if @success = @resource.save!
 #              after_save
             end
