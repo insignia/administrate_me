@@ -137,10 +137,19 @@ module AdministrateMe::AdminScaffold
     end
     
     def path_to_index
+      unless respond_to?('after_destroy')
+        path = get_index
+      else
+        path = after_destroy
+      end      
+      path
+    end
+    
+    def get_index
       path  = "#{controller_name}_path"
       unless options[:parent].blank?
         path << "(params[:#{options[:parent].to_s}_id])"
-      end
+      end     
       eval(path)
     end
     
