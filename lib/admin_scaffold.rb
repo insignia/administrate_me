@@ -265,7 +265,7 @@ module AdministrateMe::AdminScaffold
       def set_filter_for(name_space, condition)
         session[:c_filter] = name_space
         session["#{controller_name}"] = condition
-        redirect_to :action => 'index'
+        redirect_to :action => 'index' unless name_space.to_s == 'index'
       end
       
       def call_before_render
