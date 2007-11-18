@@ -37,7 +37,7 @@ module AdministrateMe::AdminScaffold
     end
     
     def parent_scope
-      if parent = controller.options[:parent]
+      if parent = options[:parent]
         { "#{parent}_id" => params["#{parent}_id"] }
       end
     end
