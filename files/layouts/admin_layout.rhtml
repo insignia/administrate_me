@@ -43,7 +43,7 @@
 			</div>
 		<% end %>
 		
-        <%=  render :partial => 'context' if @parent %>
+        <%=  render :partial => "#{@parent.class.to_s.downcase.pluralize}/context" if @parent %>
 
         <div id="shadow-container">
             <div class="shadow1">
