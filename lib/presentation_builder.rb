@@ -13,6 +13,10 @@ module AdminView::PresentationBuilder
       def caption
         @options[:caption] ? @options[:caption] : @field
       end
+      
+      def style
+        @options[:style]
+      end
     end
     
     def initialize(collection)
@@ -63,7 +67,7 @@ module AdminView::PresentationBuilder
   def build_row_for(pb, item, css_class)
     html = ""
     pb.columns.each do |column| 
-      html << "<td> #{column.value_for(item)} </td>"      
+      html << "<td #{column.style}> #{column.value_for(item)} </td>"      
     end         
     html << "<td class='link_options'> #{build_row_links(item)} </td>"
     "<tr class='#{css_class}'> #{html} </tr>"
@@ -88,15 +92,15 @@ module AdminView::PresentationBuilder
   end
   
   
-  def list_builder_for(collection)
+  def list_builder_for(collection, type = :grid)
     yield(list = PresentationBuilder.new(collection))
-    list_renderer(list)    
+    list_renderer(list, type)    
   end
   
-  def list_renderer(list)
+  def list_renderer(list, type)
     html  = ""
     html << show_mini_flash rescue ""
-    html << render_grid(list)
+    html << render_grid(list) if type == :grid
     html << render(:partial => 'commons/pagination')
     html
   end
