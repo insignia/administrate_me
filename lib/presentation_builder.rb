@@ -24,17 +24,7 @@ module AdminView::PresentationBuilder
       @columns = []
       @rows    = []
       @captions = {}
-    end
-    
-    def build
-      puts "captions = #{@captions}"
-      for item in @collection
-        @columns.each{|column| @rows << "#{column.caption} =  #{column.value_for(item)}"}
-      end
-      html = ""
-      @rows.each{|row| html << "<p> #{row} </p>" }
-      html
-    end
+    end        
     
     def columns
       @columns
