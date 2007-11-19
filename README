@@ -1,4 +1,32 @@
 AdministrateMe
 ==============
 
-Description goes here
+administrate_me es un plugin para simplificar el uso de tareas administrativas de
+Altas, Bajas y Modificaciones en un proyecto Rails.
+
+(en breve un link al screencast que está en preparación)
+
+1. Instalación y setup:
+
+Para instalar el plugin administrate_me en un proyecto rails se debe correr el 
+siguiente comando:
+
+ruby script/plugin install http://administrateme.googlecode.com/svn/administrate_me
+
+Una vez realizado esto, es necesario correr la tarea admin:import_files, para 
+copiar en app/views/commos los archivos necesarios por el plugin.
+
+Ejecutar:
+rake admin:import_files
+
+2. Dependencias:
+
+administrate_me requiere que estén instalados los plugins will_paginate y bundle_fu
+
+Para instalarlos:
+
+ruby script/plugin install svn://errtheblog.com/svn/plugins/will_paginate
+ruby script/plugin install http://bundle-fu.googlecode.com/svn/tags/bundle_fu
+
+Está planeado que futuras versiones detecten si dichos plugins están instalados y solo 
+los usen en ese caso.
