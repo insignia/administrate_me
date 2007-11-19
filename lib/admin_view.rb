@@ -172,7 +172,7 @@ module AdminView
     if controller.respond_to?('form_settings')
       aux = controller.form_settings
     end
-    aux[:method] = :put if controller.action_name == 'edit'
+    aux[:method] = :put if ['edit', 'update'].include?(controller.action_name)
     aux
   end
   
