@@ -804,3 +804,16 @@ table.grid_table tbody tr.over {
 .admin_grid tr.even {
     background-color: #f4f4f4;
 }
+
+#context {
+    margin: 10px 0px;
+    background-color: #FFFFF1;
+    border: 1px solid #FFFFCC;
+    padding: 5px;
+    margin-right: 220px;
+    color: #666666;
+}
+
+#context a {
+    color: #333333;
+}

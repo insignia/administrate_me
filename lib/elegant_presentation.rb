@@ -17,6 +17,12 @@ module AdminView::ElegantPresentation
     html
   end
   
+  def render_context_with(attr)
+    html  = "#{@parent.class} > "
+    html << link_to(@parent.send(attr), controller.send("#{@parent.class.to_s.downcase}_path", @parent))
+    content_tag(:div, html, :id => :context)
+  end
+  
   def related_info_for(group, links=[])
     html = content_tag('h3', group)
     lis  = ""
