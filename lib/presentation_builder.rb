@@ -67,7 +67,7 @@ module AdminView::PresentationBuilder
   def build_row_for(pb, item, css_class)
     html = ""
     pb.columns.each do |column| 
-      html << "<td #{column.style}> #{column.value_for(item)} </td>"      
+      html << "<td style='#{column.style}'> #{column.value_for(item)} </td>"      
     end         
     html << "<td class='link_options'> #{build_row_links(item)} </td>"
     "<tr class='#{css_class}'> #{html} </tr>"
