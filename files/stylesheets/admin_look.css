@@ -771,3 +771,36 @@ table.grid_table tbody tr.over {
     border-bottom: 1px solid #9B9B9D;  
     /*padding: 10px;  */
 }  
+
+.admin_grid {
+    margin: 5px;
+    padding: 0px;
+    width: 98%;
+}
+
+.admin_grid tr th {
+    background-color: #ebebeb;
+    border: 1px solid #ebebeb;
+    font-size: 11px;
+    color: #333333;
+    padding: 2px;
+}
+
+.admin_grid tr td {
+    border: 1px solid #ebebeb;
+    padding: 0px 5px;
+}
+
+.admin_grid td.link_options {
+    width: 50px;
+    text-align: right;
+}
+
+.admin_grid td.link_options a img {
+    border: 0px;    
+    margin-top: 3px;
+}
+
+.admin_grid tr.even {
+    background-color: #f4f4f4;
+}
