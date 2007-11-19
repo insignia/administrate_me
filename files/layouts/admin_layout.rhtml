@@ -6,7 +6,7 @@
     <title><%= controller.title %> :: <%= controller.app_name %></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <% bundle do %>      
+    <% bundle :name => :admin do %>      
       <%= stylesheet_link_tag 'admin_look.css'%>
       <%= stylesheet_link_tag 'admin_campus.css'%>
       
