@@ -1,0 +1,24 @@
+<%%= show_section_label %>
+<%%=
+  present :elegant do |p|
+    p.header do |r|
+      r.field 'Field 1', @resource.field1
+      r.field 'Field 2', @resource.field2
+    end
+    p.body do |r|
+      r.field 'Field 3', @resource.field3
+      r.field 'Field 4', @resource.field4
+    end
+    p.actions do |r|
+      r.text edit_action
+      r.text destroy_action
+      r.text back_action
+    end
+  end
+%>
+<%% content_for :support do %>    
+    <%%# related_info_for 'Tareas de soporte', 
+          [ 
+            { :link => 'Enlace a otra página', :url => otra_pagina_path(@resource), :method => :post}
+          ] %>
+<%% end %>
