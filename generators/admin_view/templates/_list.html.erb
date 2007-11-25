@@ -1,5 +1,7 @@
 <%%= list_builder_for @records do |list|
 <% klass.content_columns.each do |column| -%>
+<% unless ['created_at', 'updated_at'].include?(column.name) -%>
       list.<%= column.name %>
+<% end -%>
 <% end -%>
     end %>
