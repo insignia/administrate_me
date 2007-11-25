@@ -8,13 +8,15 @@
     <title><%= title %> :: <%= app_name %></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <% bundle :name => :admin do %>      
-      <%= stylesheet_link_tag 'admin_look.css'%>
-      <%= stylesheet_link_tag 'admin_campus.css'%>
-      
-      <%= javascript_include_tag :defaults %>
-      <%= javascript_include_tag 'admin_ui.js' %>
-    <% end %>
+    <% if respond_to?('bundle') -%>
+      <% bundle :name => :admin_me do -%>
+        <%= stylesheet_link_tag 'admin_look', 'admin_campus' %>
+        <%= javascript_include_tag :defaults, 'admin_ui' %>
+      <% end -%>
+    <% else -%>
+        <%= stylesheet_link_tag 'admin_look', 'admin_campus' %>
+        <%= javascript_include_tag :defaults, 'admin_ui' %>
+    <% end -%>
 </head>
 
 <body>
