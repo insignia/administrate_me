@@ -91,7 +91,7 @@ module AdminView::PresentationBuilder
     html  = ""
     html << show_mini_flash rescue ""
     html << render_grid(list) if type == :grid
-    html << render(:partial => 'commons/pagination')
+    html << render(:partial => 'commons/pagination') if controller.model_class.respond_to?('paginate')
     html
   end
 end

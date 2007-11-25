@@ -8,7 +8,11 @@ module AdministrateMe::AdminScaffold
       model_class.send(:with_scope, :find => { :conditions => parent_scope }) do
         model_class.send(:with_scope, :find => { :conditions => global_scope }) do
           model_class.send(:with_scope, :find => { :conditions => search_scope }) do
-            @records = model_class.paginate(:page => params[:page], :per_page => get_per_page, :order => get_order )
+            if model_class.respond_to?('paginate')
+              @records = model_class.paginate(:page => params[:page], :per_page => get_per_page, :order => get_order )
+            else
+              @records = model_class.find(:all, :order => get_order )
+            end
             set_search_message
           end
         end
