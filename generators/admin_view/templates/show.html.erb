@@ -1,14 +1,17 @@
 <%%= show_section_label %>
+<% columns = klass.content_columns.dup -%> 
 <%%=
   present :elegant do |p|
     p.header do |r|
-      r.field 'Field 1', @resource.field1
-      r.field 'Field 2', @resource.field2
+      r.field '<%= columns.first.name.humanize %>', @resource.<%= columns.shift.name %>
     end
+<% unless columns.empty? -%>
     p.body do |r|
-      r.field 'Field 3', @resource.field3
-      r.field 'Field 4', @resource.field4
+<% columns.each do |column| -%>
+      r.field '<%= column.name.humanize %>', @resource.<%= column.name %>
+<% end -%>
     end
+<% end -%>
     p.actions do |r|
       r.text edit_action
       r.text destroy_action
@@ -16,6 +19,7 @@
     end
   end
 %>
+<%%# Esta sección se puede borrar si no es necesaria -%>
 <%% content_for :support do %>    
     <%%# related_info_for 'Tareas de soporte', 
           [ 

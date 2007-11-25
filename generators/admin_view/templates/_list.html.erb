@@ -1,5 +1,5 @@
 <%%= list_builder_for @records do |list|
-      list.field1
-      list.field2
-      list.field3
+<% klass.content_columns.each do |column| -%>
+      list.<%= column.name %>
+<% end -%>
     end %>

@@ -1,3 +1,5 @@
-<%%= f.text_field :field1 %>
-<%%= f.text_field :field2 %>
-<%%= f.text_field :field3 %>
+<% klass.content_columns.each do |column| -%>
+<% unless ['created_at', 'updated_at'].include?(column.name) -%>
+<%%= f.<%= form_type[column.type] %> :<%= column.name %> %>
+<% end -%>
+<% end -%>
