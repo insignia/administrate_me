@@ -1,9 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
 "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-
+<% title = controller.respond_to?('title') ? controller.title : 'Administración' -%>
+<% app_name = controller.respond_to?('app_name') ? controller.app_name : 'administrate_me' -%>
+<% owner = controller.respond_to?('owner') ? controller.owner : 'nobody' -%>
 <head>
-    <title><%= controller.title %> :: <%= controller.app_name %></title>
+    <title><%= title %> :: <%= app_name %></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <% bundle :name => :admin do %>      
@@ -18,8 +20,8 @@
 <body>
     <div id="header">
         <div id="titles">
-            <span class="owner"><%= controller.owner %></span> <br />
-            <span class="app_name"><%= controller.app_name %></span> 
+            <span class="owner"><%= owner %></span> <br />
+            <span class="app_name"><%= app_name %></span> 
         </div>
         <div id="navigation">
             <%= generate_navigation %>
