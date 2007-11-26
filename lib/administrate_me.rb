@@ -10,6 +10,19 @@ module AdministrateMe
       build            
     end            
     
+    def set_module(name, options = {})
+      self.ame_modules ||= []
+      self.ame_modules << compose_module(name, options)
+    end
+    
+    def compose_module(name, options = {})
+      {
+        :name => name, 
+        :caption => options[:caption] || name.to_s.humanize,
+        :url => options[:url] || {:controller => "#{name.to_s.pluralize}"}
+      }
+    end
+    
     def no_scaffold!
       @administrate_me_options[:scaffold] = false
     end
@@ -100,6 +113,16 @@ module AdministrateMe
     
   end
   
+  module InstanceMethods
+    def set_module(name, options = {})
+      @instance_modules << self.class.compose_module(name, options)
+    end
+  end
+  
 end
 
 ActionController::Base.extend AdministrateMe::ClassMethods
+ActionController::Base.send :include, AdministrateMe::InstanceMethods
+class ActionController::Base
+  superclass_delegating_accessor :ame_modules
+end

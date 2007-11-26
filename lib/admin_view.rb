@@ -1,7 +1,7 @@
 module AdminView
   def generate_navigation
     html = ""
-    controller.modules.each do |tab|
+    get_modules.each do |tab|
       tab_name = get_tab_name
       selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
       html << content_tag('li', 
@@ -11,6 +11,16 @@ module AdminView
     content_tag('ul', html, :id => 'navs')
   end
   
+  def get_modules
+    if controller.respond_to?('modules')
+      controller.instance_variable_set("@instance_modules", [])
+      controller.modules
+      controller.instance_variable_get("@instance_modules")
+    else
+      controller.class.ame_modules
+    end
+  end
+
   def get_tab_name
     if controller.respond_to?('tab')
       tname = controller.tab.to_s
@@ -223,6 +233,7 @@ module AdminView
     end
     css
   end
+  
 end
 
 ActionView::Base.send :include, AdminView
