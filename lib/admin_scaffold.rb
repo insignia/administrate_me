@@ -195,16 +195,6 @@ module AdministrateMe::AdminScaffold
       eval(path)
     end
     
-    def path_to_resource(resource)
-      path  = "#{controller_name.singularize}_path("
-      unless options[:parent].blank?
-        path << "params[:#{options[:parent].to_s}_id], "
-      end
-      path << "#{resource.to_param})"
-      logger.info "path_to_resource: #{path}"
-      eval(path)
-    end
-    
     def search_message(search_key)
       "se encontraron #{count_selected} resultados con \"<b>#{search_key}</b>\""
     end

@@ -68,43 +68,57 @@ module TestAdministrateMe
     def test_should_create
       my_setup
       old_count = @model_class.count
-      params = {@model_name.to_sym => {}}
-      post :create, params.merge(extra_params(:create))
-      assert_response :success
+      params = {@model_name.to_sym => extra_params(:create)}
+      post :create, params
       assert assigns(:resource)
       assert assigns(:resource).valid?, "El registro creado no es válido."
       assert_equal old_count + 1, @model_class.count
       
-      assert_redirected_to @controller.path_to_resource(assigns(:resource))
+      assert_redirected_to :action => 'index'
     end
   
     def test_should_show
       my_setup
-      get :show, {:id => @model_first.id}.merge(extra_params(:show))
-      assert_response :success
+      test_with_fixtures(:test_should_show) do
+        get :show, {:id => @model_first.id}.merge(extra_params(:show))
+        assert_response :success
+      end
     end
   
     def test_should_get
       my_setup
-      get :edit, {:id => @model_first.id}.merge(extra_params(:edit))
-      assert_response :success
+      test_with_fixtures(:test_should_get) do
+        get :edit, {:id => @model_first.id}.merge(extra_params(:edit))
+        assert_response :success
+      end
     end
     
     def test_should_update
       my_setup
-      params = {:id => @model_first.id, @model_name.to_sym => { }}
-      put :update, params.merge(extra_params(:update))
-      assert_redirected_to @controller.path_to_resource(assigns(:resource))
+      test_with_fixtures(:test_should_update) do
+        params = {:id => @model_first.id, @model_name.to_sym => { }}
+        put :update, params.merge(extra_params(:update))
+        assert_redirected_to :action => 'show', :id => assigns(:resource)
+      end
     end
     
     def test_should_destroy
       my_setup
-      old_count = @model_class.count
-      params = {:id => @model_first.id}
-      delete :destroy, params.merge(extra_params(:destroy))
-      assert_equal old_count-1, @model_class.count
-      
-      assert_redirected_to @controller.path_to_index
+      test_with_fixtures(:test_sould_destroy) do
+        old_count = @model_class.count
+        params = {:id => @model_first.id}
+        delete :destroy, params.merge(extra_params(:destroy))
+        assert_equal old_count-1, @model_class.count
+        assert_redirected_to @controller.path_to_index
+      end
+    end
+    
+    def test_with_fixtures(caller)
+      if @model_first
+        yield
+      else
+        assert false, "#{caller}: No se puede testear correctamente, no hay registros en los fixtures."
+      end
     end
 
   end
