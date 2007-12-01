@@ -88,12 +88,8 @@ module AdministrateMe::AdminScaffold
     
     def new    
       if self.class.accepted_action(:new)
-        if options[:model]
-          instance_variable_set("@resource", eval("#{options[:model].capitalize}.new"))
-        else
-          instance_variable_set("@resource", eval("#{controller_name.singularize.capitalize}.new"))
-        end
-        call_before_render
+        mclass = ( options[:model] ? options[:model] : controller_name).classify.constantize
+        instance_variable_set("@resource", mclass.new)                call_before_render
         render :template => 'commons/new'
       else
         not_available
@@ -166,15 +162,6 @@ module AdministrateMe::AdminScaffold
         not_available
       end
     end
-    
-    #def path_to_index
-    #  unless respond_to?('after_destroy')
-    #    path = get_index
-    #  else
-    #    path = after_destroy
-    #  end      
-    #  path
-    #end
     
     def path_to_index(prefix=nil)
       eval(path_to_index_name(prefix))
