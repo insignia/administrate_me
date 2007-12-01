@@ -88,8 +88,8 @@ module AdministrateMe::AdminScaffold
     
     def new    
       if self.class.accepted_action(:new)
-        mclass = ( options[:model] ? options[:model] : controller_name).classify.constantize
-        instance_variable_set("@resource", mclass.new)                call_before_render
+        mclass = ( (options[:model]) ? options[:model] : controller_name ).classify.constantize
+        instance_variable_set("@resource", mclass.new)        call_before_render
         render :template => 'commons/new'
       else
         not_available
