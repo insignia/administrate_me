@@ -2,6 +2,18 @@ module AdministrateMe
   
   module ClassMethods
   
+    # Crea en el controller en el que se lo utiliza los métodos necesarios para
+    # que se responda a las acciones restful del recurso con el que trabaja.
+    # 
+    # ==== Ejemplo
+    #   
+    #   class LugaresController < ApplicationController
+    #     administrate_me do
+    #       search :nombre, :descripcion, :direccion, :localidad
+    #       order  'nombre'
+    #     end
+    #   end
+    #
     def administrate_me(options = {})
       @administrate_me_options = {}
       @administrate_me_options[:secured] = true
@@ -78,7 +90,7 @@ module AdministrateMe
       
       unless @administrate_me_options[:scaffold] == false
         include AdministrateMe::AdminScaffold::InstanceMethods
-        before_filter :get_resource, :only => [:show, :edit, :update, :destroy]
+        before_filter :get_resource, :only => actions_for_get_resource
         before_filter :get_parent
       end
       
@@ -89,6 +101,15 @@ module AdministrateMe
       if respond_to?('tab')
         before_filter :tab
       end            
+    end
+    
+    def actions_for_get_resource
+      list = []
+      list << :edit    if accepted_action?(:edit)
+      list << :update  if accepted_action?(:edit)
+      list << :show    if accepted_action?(:show)
+      list << :destroy if accepted_action?(:destroy)
+      list
     end
     
     def model_name
@@ -107,8 +128,16 @@ module AdministrateMe
       @administrate_me_options
     end
     
-    def accepted_action(action)
-      !options[:except] || !options[:except].include?(action)
+    def accepted_action?(action)
+      translated_action = case action
+      when :update
+        :edit
+      when :create
+        :new
+      else
+        action
+      end
+      !options[:except] || !options[:except].include?(translated_action)
     end
     
   end

@@ -31,7 +31,7 @@ module AdminView
   
   def show_section_header
     html  = show_section_label
-    if controller.class.accepted_action(:new)
+    if controller.class.accepted_action?(:new)
       html << content_tag('div', 
                           show_section_links,
                           :id => 'actions' )

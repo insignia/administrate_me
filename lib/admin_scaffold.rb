@@ -75,37 +75,32 @@ module AdministrateMe::AdminScaffold
     end
     
     def show
-      if self.class.accepted_action(:show)
+      if_available(:show) do 
         call_before_render
         respond_to do |format|
           format.html # show.rhtml
           format.xml  { render :xml => @resource.to_xml }      
         end
-      else
-        not_available
       end
     end
     
     def new    
-      if self.class.accepted_action(:new)
-        @resource = ( options[:model] ? options[:model] : controller_name ).classify.constantize.new        call_before_render
+      if_available(:new) do
+        @resource = ( options[:model] ? options[:model] : controller_name ).classify.constantize.new
+        call_before_render
         render :template => 'commons/new'
-      else
-        not_available
       end
     end
     
     def edit
-      if self.class.accepted_action(:edit)
+      if_available(:edit) do
         call_before_render
         render :template => 'commons/edit'
-      else
-        not_available
       end
     end
     
     def create
-      if self.class.accepted_action(:new)
+      if_available(:new) do
         create_params = params[model_name.to_sym]
         if parent = options[:parent]
           create_params[parent_key.to_sym] = @parent.id
@@ -123,13 +118,11 @@ module AdministrateMe::AdminScaffold
             format.xml  { render :xml => @resource.errors.to_xml }        
           end
         end
-      else
-        not_available
       end
     end
     
     def update 
-      if self.class.accepted_action(:edit)
+      if_available(:edit) do 
         @resource.attributes = params[model_name.to_sym]
         save_model
         call_before_render
@@ -143,13 +136,11 @@ module AdministrateMe::AdminScaffold
             format.xml  { render :xml => @resource.errors.to_xml }
           end
         end
-      else
-        not_available
       end
     end
     
     def destroy
-      if self.class.accepted_action(:destroy)
+      if_available(:destroy) do
         @resource.destroy
         call_before_render
         respond_to do |format|
@@ -157,8 +148,6 @@ module AdministrateMe::AdminScaffold
           format.html { redirect_to path_to_index }      
           format.xml  { head :ok }
         end
-      else
-        not_available
       end
     end
     
@@ -238,10 +227,13 @@ module AdministrateMe::AdminScaffold
     end
     
     protected
-    
-      def not_available
-        flash[:error] = 'la transacción solicitada no se encuentra disponible'
-        redirect_to :action => 'index'
+
+      def if_available(action)
+        if self.class.accepted_action?(action)
+          yield
+        else
+          raise ActionController::UnknownAction
+        end
       end
     
       def count_selected
