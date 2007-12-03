@@ -1,6 +1,11 @@
 <%= show_section_content %>
 
 <% content_for :support do %>
+    <% if controller.class.accepted_action?(:new) %>
+      <div id="actions">
+        <%= link_to 'Agregar nuevo registro', path_to_index(:new), :id => :add_new %>
+      </div>
+    <% end %>
     <%= render :partial => 'commons/search_form' %>    
 <% end %>
 

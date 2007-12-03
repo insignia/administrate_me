@@ -6,7 +6,7 @@ module AdminView
       selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
       html << content_tag('li', 
                           link_to(tab[:caption].humanize, tab[:url]), 
-                          :class => selector )
+                          :class => selector, :id => tab[:name] )
     end    
     content_tag('ul', html, :id => 'navs')
   end
@@ -57,13 +57,7 @@ module AdminView
   end
   
   def show_section_header
-    html  = show_section_label
-    if controller.class.accepted_action?(:new)
-      html << content_tag('div', 
-                          show_section_links,
-                          :id => 'actions' )
-    end
-    html
+    show_section_label
   end
   
   def show_section_links

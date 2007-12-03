@@ -228,24 +228,23 @@ div.section_label {
     color: #9D0505;
 }
 
-#actions {	
-	margin: 7px 0px;
-	text-align: right;
+#actions {
+    margin-bottom: 15px;
 }
 
-#actions a {
-    margin-right: 5px;
-    font-size: 11px;
-	text-decoration: none;
-	background-color:#E0ECF6;
-    border:1px solid #C5DDEF;
-    padding: 2px 5px;
-    color:#408DC8;
-}
+/*#actions a {*/
+/*    margin-right: 5px;*/
+/*    font-size: 11px;*/
+/*   	text-decoration: none;*/
+/*	  background-color:#E0ECF6;*/
+/*    border:1px solid #C5DDEF;*/
+/*    padding: 2px 5px;*/
+/*    color:#408DC8;*/
+/*}*/
 
-#actions a img {
-	border: none;
-}
+/*#actions a img {*/
+/*	border: none;*/
+/*}*/
 
 #list_area #grid_table {	
 	width: 100%;
@@ -773,7 +772,7 @@ table.grid_table tbody tr.over {
 }  
 
 .admin_grid {
-    margin: 5px;
+    margin: 15px 5px;
     padding: 0px;
     width: 98%;
 }
@@ -816,4 +815,13 @@ table.grid_table tbody tr.over {
 
 #context a {
     color: #333333;
+}
+
+#add_new {
+  display: block;
+  width: 160px;
+  height: 28px;
+  background: transparent url(/images/admin_ui/add_new.gif) no-repeat;
+  cursor: pointer;    
+  text-indent: -3000px;
 }
