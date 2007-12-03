@@ -86,7 +86,7 @@ module AdministrateMe
     end
         
     def build
-      layout 'admin_layout'            
+      layout :set_layout            
       
       unless @administrate_me_options[:scaffold] == false
         include AdministrateMe::AdminScaffold::InstanceMethods
@@ -101,7 +101,7 @@ module AdministrateMe
       if respond_to?('tab')
         before_filter :tab
       end            
-    end
+    end        
     
     def actions_for_get_resource
       list = []
@@ -145,6 +145,10 @@ module AdministrateMe
   module InstanceMethods
     def set_module(name, options = {})
       @instance_modules << self.class.compose_module(name, options)
+    end
+    
+    def set_layout
+      self.respond_to?('admin_layout') ? admin_layout : "admin_layout" 
     end
   end
   
