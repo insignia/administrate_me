@@ -10,12 +10,10 @@
 
     <% if respond_to?('bundle') -%>
       <% bundle :name => :admin_me do -%>
-        <%= stylesheet_link_tag 'admin_look', 'admin_campus' %>
-        <%= javascript_include_tag :defaults, 'admin_ui' %>
+        <%= admin_file_loader %>
       <% end -%>
     <% else -%>
-        <%= stylesheet_link_tag 'admin_look', 'admin_campus' %>
-        <%= javascript_include_tag :defaults, 'admin_ui' %>
+        <%= admin_file_loader %>
     <% end -%>
 </head>
 
