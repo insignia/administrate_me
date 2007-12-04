@@ -1,26 +1,13 @@
-module AdminView::ElegantPresentation
-  def render_resource_context(options={})
-    html = ""
-    unless controller.respond_to?(:render_context_condition) && controller.render_context_condition == false
-      unless controller.options[:parent].blank?
-        html << content_tag('span', controller.options[:parent].to_s.humanize, :class => 'context')
-        html << content_tag('h3', @parent.send(controller.context[:highlight]))
-        html << content_tag('span', @parent.send(controller.context[:description]), :class => 'body' )
-        unless options[:no_back]
-          html << content_tag('div', link_to('volver', eval("#{controller.options[:parent]}_path(@parent)")), :class => 'actions') 
-        end
-        html  = content_tag('div', html, :class => 'resource_context')
-      else
-        html = ""
-      end
+module AdminView::ElegantPresentation    def render_context_with(attr)
+    condition = controller.respond_to?("render_context_condition") ? controller.render_context_condition : true
+    if condition
+      html  = "#{@parent.class} > "
+      html << link_to(@parent.send(attr), controller.send("#{@parent.class.to_s.downcase}_path", @parent))
+      html  = content_tag(:div, html, :id => :context)
+    else
+      html = ""
     end
     html
-  end
-  
-  def render_context_with(attr)
-    html  = "#{@parent.class} > "
-    html << link_to(@parent.send(attr), controller.send("#{@parent.class.to_s.downcase}_path", @parent))
-    content_tag(:div, html, :id => :context)
   end
   
   def related_info_for(group, links=[])
