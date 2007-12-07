@@ -5,7 +5,7 @@ module AdminView
       tab_name = get_tab_name
       selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
       html << content_tag('li', 
-                          link_to(tab[:caption].humanize, tab[:url]), 
+                          link_to(content_tag('span', tab[:caption].humanize), tab[:url]), 
                           :class => selector, :id => tab[:name] )
     end    
     content_tag('ul', html, :id => 'navs')

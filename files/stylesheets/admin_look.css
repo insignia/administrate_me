@@ -72,44 +72,62 @@ body{
 }
 
 #navigation {
-    position: absolute;
-    top:66px;
+  float:left;
+  width: 760px;
+  font-size: 11px;
+  font-weight: bold;
+  line-height:normal;
+  border-bottom: 1px solid #ebebeb;
+  top: 57px;
+  position: absolute;
 }
 
-#navs {
-	padding: 0;
-	margin: 0;
-	margin-left: 15px;
-	list-style: none;
-	font-weight: bold;
+#navigation ul {
+  margin:0;
+  padding: 10px 10px 0 15px;
+  list-style:none;
 }
 
-#navs li {
-	float: left;	
+#navigation li {
+  display:inline;
+  margin:0;
+  padding:0;
 }
 
-#navs li a {
-    font-size: 11px;
-	display: block;
-	padding: 5px;
-	margin-right: 5px;
-	text-decoration: none;
-	background: #993333 url(/images/admin_ui/common.jpg) repeat-x;
-	color: #F4F4F4;
+#navigation a {
+  float:left;
+  background:url("/images/admin_ui/tab_left.gif") no-repeat left top;
+  margin:0;
+  padding:0 0 0 4px;
+  text-decoration:none;
 }
 
-#navs li a:hover {
-	background: transparent url(/images/admin_ui/hover.jpg) repeat-x;
-	color: #333333;
+#navigation a span {
+  float:left;
+  display:block;
+  background:url("/images/admin_ui/tab_right.gif") no-repeat right top;
+  padding:5px 15px 4px 6px;
+  color:#FFF;
 }
 
-#navs li.selected a {
-	display: block;
-	padding: 5px;
-	margin-right: 5px;
-	text-decoration: none;
-	background: #EBEBEB url(/images/admin_ui/current.jpg) repeat-x;
-	color: #660000;
+/* Commented Backslash Hack hides rule from IE5-Mac \*/
+#navigation a span {float:none;}
+
+/* End IE5-Mac hack */
+#navigation a:hover span,
+#navigation li.selected a span {
+  color:#FFF;
+  background-position:100% -42px;
+}
+
+#navigation a:hover,
+#navigation li.selected a {
+  background-position:0% -42px;
+}
+
+#navigation a:hover span,
+#navigation li..selected a span {
+  background-position:100% -42px;
 }
 
 #content {	
