@@ -152,30 +152,46 @@ module AdministrateMe::AdminScaffold
     end
     
     def path_to_index(prefix=nil)
-      eval(path_to_index_name(prefix))
-    end
-    
-    def path_to_index_name(prefix=nil)
+      parts = []
+      # Agregar prefijo
+      parts << prefix if prefix
+      nspace = self.class.namespace
+      # Agregar namespace
+      parts << nspace if nspace
+      # Agregar parent
+      parent = options[:parent]
+      parts << options[:parent] unless parent.blank?
+      # Agregar controller
       cname = prefix ? controller_name.singularize : controller_name
-      path  = "#{cname}_path"
-      unless options[:parent].blank?
-        path = "#{options[:parent]}_" + path
-        path << "(params[:#{options[:parent].to_s}_id])"
-      end
-      prefix ? "#{prefix}_#{path}" : path
+      parts << cname
+      #
+      parts << 'path'
+      helper_name = parts.join('_')
+      ids = []
+      ids << params[:"#{parent}_id"] unless parent.blank?
+      send(helper_name, *ids)
     end
     
     def path_to_element(element, prefix=nil)
-      ids = [element.id]      
-      path  = "#{controller_name.singularize}_path"
-      unless options[:parent].blank?
-        path = "#{options[:parent]}_" + path
-        ids.unshift(@parent.id) unless options[:parent].blank?
-      end
-      path = "#{prefix}_#{path}" if prefix
-      send(path.to_sym, *ids)
+      parts = []
+      # Agregar prefijo
+      parts << prefix if prefix
+      nspace = self.class.namespace
+      # Agregar namespace
+      parts << nspace if nspace
+      # Agregar parent
+      parent = options[:parent]
+      parts << options[:parent] unless parent.blank?
+      # Agregar controller
+      parts << controller_name.singularize
+      #
+      parts << 'path'
+      helper_name = parts.join('_')
+      ids = [element.id]
+      ids.unshift @parent.id unless parent.blank?
+      send(helper_name, *ids)
     end
-    
+
     def get_index
       path  = "#{controller_name}_path"
       unless options[:parent].blank?

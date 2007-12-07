@@ -22,20 +22,6 @@ module AdministrateMe
       build            
     end            
     
-    # Definición de un módulo o pestaña de la aplicación.
-    # 
-    # === Ejemplo
-    #
-    #   class ApplicationController < ActionController::Base
-    #     set_module :rubros
-    #     set_module :productos, :caption => 'Articulos'
-    #     set_module :perfil, :url => {:controller => 'profile'}
-    #   end
-    #
-    # Los valores :captio y :url del hash que recibe como parámetro son opcionales.
-    # Por defecto asumen los valores apropiados para mostrar el nombre correcto
-    # de la pestaña y la url correspondiente.
-    #
     def set_module(name, options = {})
       self.ame_modules ||= []
       self.ame_modules << compose_module(name, options)
@@ -156,8 +142,13 @@ module AdministrateMe
       list
     end
     
+    def namespace
+      to_s =~ /(.*)::/
+      $1 ? $1.underscore : nil
+    end
+    
     def model_name
-      @administrate_me_options[:model] || to_s.gsub(/Controller$/, '').singularize.underscore
+      @administrate_me_options[:model] || to_s.gsub(/Controller$/, '').gsub(/.*::/, '').singularize.underscore
     end
     
     def model_class
