@@ -11,7 +11,7 @@ module AdminView::ElegantPresentation    def render_context_with(attr)
     html
   end
   
-  def resource_context
+  def resource_context_path
     nspace  = controller.class.namespace ? "#{controller.class.namespace}/" : ""
     "#{nspace}#{@parent.class.to_s.downcase.pluralize}/context"
   end
