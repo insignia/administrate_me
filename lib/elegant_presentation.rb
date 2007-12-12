@@ -11,6 +11,11 @@ module AdminView::ElegantPresentation    def render_context_with(attr)
     html
   end
   
+  def resource_context
+    nspace  = controller.class.namespace ? "#{controller.class.namespace}/" : ""
+    "#{nspace}#{@parent.class.to_s.downcase.pluralize}/context"
+  end
+  
   def related_info_for(group, links=[])
     html = content_tag('h3', group)
     lis  = ""
