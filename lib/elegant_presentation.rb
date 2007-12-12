@@ -1,6 +1,6 @@
 module AdminView::ElegantPresentation    def render_context_with(attr)
     condition = controller.respond_to?("render_context_condition") ? controller.render_context_condition : true
-    nspace  = controller.namespace ? "#{controller.namespace}_" : ""
+    nspace  = controller.class.namespace ? "#{controller.namespace}_" : ""
     if condition
       html  = "#{@parent.class} > "
       html << link_to(@parent.send(attr), controller.send("#{nspace}#{@parent.class.to_s.downcase}_path", @parent))
