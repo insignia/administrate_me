@@ -17,11 +17,22 @@ module AdministrateMe
     def administrate_me(options = {})
       @administrate_me_options = {}
       @administrate_me_options[:secured] = true
+      @administrate_me_options[:except] = []
       yield
       
       build            
     end            
-    
+
+    # El método set_module toma como parámetros el nombre de módulo a definir y 
+    # opcionalmente un hash de opciones. El hash de opciones permite reemplazar 
+    # los siguientes valores por defecto:
+    #   :caption = Nombre a mostrar en la pestaña. Por defecto se toma el nombre
+    #    del módulo en formato "humanized". 
+    #   :url = Dirección del enlace en la pestaña. Por defecto se crea un
+    #    enlace al index del controller con nombre igual al del módulo. 
+    # Ej:
+    #   set_module :productos, :caption => 'Articulos', :url => activos_productos_url()
+    #
     def set_module(name, options = {})
       self.ame_modules ||= []
       self.ame_modules << compose_module(name, options)
@@ -172,12 +183,22 @@ module AdministrateMe
       else
         action
       end
-      !options[:except] || !options[:except].include?(translated_action)
+      options[:except].empty? || !options[:except].include?(translated_action)
     end
     
   end
   
   module InstanceMethods
+    # El método set_module toma como parámetros el nombre de módulo a definir y 
+    # opcionalmente un hash de opciones. El hash de opciones permite reemplazar 
+    # los siguientes valores por defecto:
+    #   :caption = Nombre a mostrar en la pestaña. Por defecto se toma el nombre
+    #    del módulo en formato "humanized". 
+    #   :url = Dirección del enlace en la pestaña. Por defecto se crea un
+    #    enlace al index del controller con nombre igual al del módulo. 
+    # Ej:
+    #   set_module :productos, :caption => 'Articulos', :url => activos_productos_url()
+    #
     def set_module(name, options = {})
       @instance_modules << self.class.compose_module(name, options)
     end

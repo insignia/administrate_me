@@ -1,14 +1,18 @@
 module AdminView
   def generate_navigation
     html = ""
-    get_modules.each do |tab|
-      tab_name = get_tab_name
-      selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
-      html << content_tag('li', 
-                          link_to(content_tag('span', tab[:caption].humanize), tab[:url]), 
-                          :class => selector, :id => tab[:name] )
-    end    
-    content_tag('ul', html, :id => 'navs')
+    if modules = get_modules
+      modules.each do |tab|
+        tab_name = get_tab_name
+        selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
+        html << content_tag('li', 
+                            link_to(content_tag('span', tab[:caption].humanize), tab[:url]), 
+                            :class => selector, :id => tab[:name] )
+      end    
+      content_tag('ul', html, :id => 'navs')
+    else
+      raise Exception, "Debe definir los módulos para la aplicación. Ver: http://code.google.com/p/administrateme/wiki/ConfiguracionDeModulos"
+    end
   end
   
   def admin_file_loader
