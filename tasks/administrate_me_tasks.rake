@@ -17,7 +17,7 @@ namespace :admin do
     FileUtils.cp(images, path_to_images, :verbose => true)
     
     path_to_layouts = RAILS_ROOT + "/app/views/layouts/"
-    layouts = Dir["./vendor/plugins/administrate_me/files/layouts/*.rhtml"]
+    layouts = Dir["./vendor/plugins/administrate_me/files/layouts/*.html.erb"]
     FileUtils.cp(layouts, path_to_layouts, :verbose => true)
     
     path_to_commons = RAILS_ROOT + "/app/views/commons/"
