@@ -4,10 +4,10 @@ module AdminView
     if modules = get_modules
       modules.each do |tab|
         tab_name = get_tab_name
-        selector = (tab_name == tab[:name].to_s) ? 'selected' : 'available'        
+        selector = (tab_name == tab[:name].to_s) ? 'current' : 'available'        
         html << content_tag('li', 
-                            link_to(content_tag('span', tab[:caption].humanize), tab[:url]), 
-                            :class => selector, :id => tab[:name] )
+                            link_to(content_tag('span', tab[:caption].humanize), tab[:url], :class => selector), 
+                            :id => tab[:name] )
       end    
       content_tag('ul', html, :id => 'navs')
     else
@@ -74,11 +74,11 @@ module AdminView
   end
   
   def show_section_label
-    show_label("Administración de #{controller.controller_name.humanize}")
+    show_label("#{controller.controller_name.humanize}")
   end
   
   def show_label(label)
-    content_tag('div', label, :class => 'section_label')
+    content_tag('h1', label, :id => 'section_label')
   end
   
   def show_section_body
@@ -89,6 +89,7 @@ module AdminView
   
   def show_section_content
     html  = show_section_header
+    html << content_tag('div', render(:partial => 'commons/search_form'), :id => 'search')
     html << show_section_body
     html
   end
@@ -96,7 +97,6 @@ module AdminView
   def show_mini_flash
     unless session[:mini].blank?      
       html  = content_tag('span', session[:mini])
-      html << link_to('ver todos', path_to_index)
       content_tag('div', html, :id => 'mini_flash')
     end
   end
@@ -208,6 +208,7 @@ module AdminView
       aux = controller.form_settings
     end
     aux[:method] = :put if ['edit', 'update'].include?(controller.action_name)
+    aux[:id] = controller.model_name
     aux
   end
   

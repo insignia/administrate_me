@@ -2,11 +2,10 @@
 
 <% content_for :support do %>
     <% if controller.class.accepted_action?(:new) %>
-      <div id="actions">
-        <%= link_to 'Agregar nuevo registro', path_to_index(:new), :id => :add_new %>
+      <div id="add_new">
+        <%= link_to '<span>Agregar nuevo registro</span>', path_to_index(:new), :id => :add_new, :class => :button, :onclick => "this.blur();" %>
       </div>
     <% end %>
-    <%= render :partial => 'commons/search_form' %>    
 <% end %>
 
 

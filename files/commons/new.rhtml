@@ -10,7 +10,7 @@
   <%= render :partial => "form", :locals => {:f => f} %>
 
   <div class="actions">
-    <%= submit_tag "Guardar estos cambios", :class => 'save' %> o 
-    <%= link_to 'Cancelar', path_to_index %>
+    <%= link_to '<span>Guardar estos cambios</span>', '#', :onclick => "$('#{controller.model_name}').submit()", :class => 'button save' %>
+    <%= link_to '<span>Cancelar</span>', path_to_index, :class => 'button' %>
   </div>
 <% end %>

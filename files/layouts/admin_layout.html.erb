@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ "http://www.w3.org/TR/html4/strict.dtd">
+
+<% title = controller.respond_to?('title') ? controller.title : 'Administración' -%>
+<% app_name = controller.respond_to?('app_name') ? controller.app_name : 'administrate_me' -%>
+<% owner = controller.respond_to?('owner') ? controller.owner : 'nobody' -%>
+
+<html>
+  <head>
+     <title><%= title %> :: <%= app_name %></title>
+     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+     <link rel="stylesheet" href="http://yui.yahooapis.com/2.4.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
+
+     <% if respond_to?('bundle') -%>
+       <% bundle :name => :admin_me do -%>
+         <%= admin_file_loader %>
+       <% end -%>
+     <% else -%>
+       <%= admin_file_loader %>
+     <% end -%>
+     
+  </head>
+  <body>
+    <div id="doc3" class="yui-t4">
+       <div id="hd">
+         
+         <div id="titles">
+           <span><%= owner %></span> > <%= app_name %>
+         </div>
+
+         <% unless controller.options[:secured] == false %>
+           <%= render :partial => 'commons/session' %>      
+         <% end %>
+
+         <div style="clear:both"></div>
+
+         <div id="navigation">
+           <%= generate_navigation %>
+         </div>
+       </div>
+       <div id="bd">
+            <div id="yui-main">
+              <div class="yui-b">
+                <div class="yui-g">
+
+                  <% if !flash.blank? %>
+                    <div id="flash" class="alert">
+                      <% flash.each do |key, msg| %>
+                        <%= content_tag :div, msg, :id => key %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                  
+                  <%=  render :partial => resource_context_path if @parent %>                  
+
+                  <div id="shadow-container">
+                    <div class="shadow1">
+                      <div class="shadow2">
+                        <div class="shadow3">
+                          <div id="paper_sheet">            
+                            <div id="content" class="container">                                
+                              <%= yield %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="yui-b">
+              <div id="support">
+                <%= yield :support %>
+                <%= yield :extras %>
+              </div>
+            </div>
+
+            </div>
+       <div id="ft">
+         powered by <%= link_to 'ruby on rails', 'http://www.rubyonrails.org', :target => '_blank' %>
+         & <%= link_to 'administrate_me', 'http://administrateme.googlecode.com', :target => '_blank' %>
+       </div>
+    </div>
+  </body>
+</html>
