@@ -32,7 +32,7 @@ module AdminView
   
   def files_to_load(type)
     if type == :css
-      files = controller.respond_to?('admin_style') ? controller.admin_style : "admin_look" 
+      files = controller.respond_to?('admin_style') ? controller.admin_style : ["admin_look", "reset-fonts-grids"] 
     else    
       files = controller.respond_to?('admin_scripts') ? controller.admin_scripts : [:defaults, "admin_ui.js"]
     end
