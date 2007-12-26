@@ -7,7 +7,16 @@ module AdminView::PresentationBuilder
       end
       
       def value_for(item)
-        item.send(@field)
+        @options[:with] ? related_value_for(item.send(@field)) : item.send(@field)
+      end
+      
+      def related_value_for(value)
+        if value.is_a?(Array)
+          rtn = value.map{|x| x.send(@options[:with])}.join(", ")
+        else
+          rtn = value.send(@options[:with])
+        end
+        rtn
       end
       
       def caption
