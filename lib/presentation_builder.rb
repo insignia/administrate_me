@@ -30,9 +30,10 @@ module AdminView::PresentationBuilder
       
       def custom_grid
         customizations = []
-        customizations << "width:#{@options[:width]}" if @options[:width]
-        customizations << "color:#{@options[:color]}" if @options[:color]
-        customizations << "font-weight:bold"          if @options[:strong]
+        customizations << "width:#{@options[:width]}"      if @options[:width]
+        customizations << "color:#{@options[:color]}"      if @options[:color]
+        customizations << "font-weight:bold"               if @options[:strong]
+        customizations << "text-align:#{@options[:align]}" if @options[:align]
         customizations.join(';')
       end
     end
