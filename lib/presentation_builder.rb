@@ -67,18 +67,18 @@ module AdminView::PresentationBuilder
     "<tr> #{ html } </tr>"
   end
   
-  def build_grid_body(pb)
+  def build_grid_body(pb, options)
     html = ""
-    pb.data.each{|item| html << build_row_for(pb, item, cycle('odd', 'even')) }
+    pb.data.each{|item| html << build_row_for(pb, item, cycle('odd', 'even'), options) }
     html
   end
   
-  def build_row_for(pb, item, css_class)
+  def build_row_for(pb, item, css_class, options)
     html = ""
     pb.columns.each do |column| 
       html << "<td style='#{column.style}'> #{column.value_for(item)} </td>"      
-    end         
-    html << "<td class='link_options'> #{build_row_links(item)} </td>"
+    end             
+    html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report]
     "<tr class='#{css_class}'> #{html} </tr>"
   end
   
@@ -90,10 +90,10 @@ module AdminView::PresentationBuilder
     html 
   end
   
-  def render_grid(pb)
+  def render_grid(pb, options)
     unless pb.data.empty?
       html  = build_grid_header(pb)
-      html << build_grid_body(pb)
+      html << build_grid_body(pb, options)
       "<table class='admin_grid'>#{html}</table>"
     else
       render_empty_msg
@@ -101,15 +101,15 @@ module AdminView::PresentationBuilder
   end
   
   
-  def list_builder_for(collection, type = :grid)
+  def list_builder_for(collection, options = {}, type = :grid)
     yield(list = PresentationBuilder.new(collection))
-    list_renderer(list, type)    
+    list_renderer(list, options, type)    
   end
   
-  def list_renderer(list, type)
+  def list_renderer(list, options,type)
     html  = ""
     html << show_mini_flash rescue ""
-    html << render_grid(list) if type == :grid
+    html << render_grid(list, options) if type == :grid
     html << render(:partial => 'commons/pagination') if controller.model_class.respond_to?('paginate')
     html
   end
