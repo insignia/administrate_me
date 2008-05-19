@@ -81,15 +81,35 @@ module AdministrateMe
       @administrate_me_options[:except] = actions
     end
     
+    # Use search to indicate the fields to be looked up when the search action
+    # is executed.
+    # Note that the option includes was set up, the fields selected for search
+    # should be specified with its table name, i.e.: 'products.name'.
     def search(*fields)
       @administrate_me_options[:search] = fields
+    end
+    
+    # Use includes to indicate the associations that should be loaded when
+    # find action is executed.
+    #
+    # ==== Example
+    #   
+    #   class ProductsController < ApplicationController
+    #     administrate_me do
+    #       includes 'brand'
+    #       search   'brands.name', 'products.name', 'products.description'    #       order    'brands.name', 'products,name'
+    #     end
+    #   end
+    #    
+    def includes(*tables)
+      @administrate_me_options[:includes] = tables
     end
     
     def order(criteria)
       @administrate_me_options[:order_by] = criteria
     end
     
-    # Use per_page to indicates the number of records to be listed per page.
+    # Use per_page to indicate the number of records to be listed per page.
     def per_page(records)
       @administrate_me_options[:per_page] = records
     end

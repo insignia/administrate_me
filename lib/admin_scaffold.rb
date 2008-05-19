@@ -9,9 +9,9 @@ module AdministrateMe::AdminScaffold
         model_class.send(:with_scope, :find => { :conditions => global_scope }) do
           model_class.send(:with_scope, :find => { :conditions => search_scope }) do
             if model_class.respond_to?('paginate')
-              @records = model_class.paginate(:page => params[:page], :per_page => get_per_page, :order => get_order )
+              @records = model_class.paginate(:include => get_includes, :page => params[:page], :per_page => get_per_page, :order => get_order )
             else
-              @records = model_class.find(:all, :order => get_order )
+              @records = model_class.find(:all, :include => get_includes, :order => get_order )
             end
             set_search_message
           end
@@ -21,6 +21,10 @@ module AdministrateMe::AdminScaffold
     
     def get_per_page
       options[:per_page] || 15
+    end
+    
+    def get_includes
+      options[:includes] || nil
     end
     
     def get_order
@@ -253,7 +257,7 @@ module AdministrateMe::AdminScaffold
       end
     
       def count_selected
-        model_class.count
+        model_class.count(:include => get_includes)
       end
       
       def save_model
