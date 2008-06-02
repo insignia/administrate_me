@@ -1,7 +1,6 @@
-/* fade flashes automatically */
 Event.observe(window, 'load', function() { 
-  $A(document.getElementsByClassName('alert')).each(function(o) {
-    o.opacity = 100.0
-    Effect.Fade(o, {duration: 3.5})
-  });
+  var flasher = $('flasher');
+  if (flasher) {
+    Element.hide.delay(5, flasher);
+  }
 });

@@ -495,12 +495,38 @@ div.pagination a {
     color: #333333;
 }
 
-#flash {
-	z-index: 100;
-	padding: 7px;
-	margin-bottom: 10px;
-	text-align: center;
-        background-color: #FFFF88;
-        color: #333333;
-        font-weight: bold;
+#flasher {
+  z-index: 100;
+  position: absolute;
+  margin-top: 6%;
+  width: 80%;
+}
+
+#box {
+  border: 2px solid #e4e4e4;
+  background-color: #f4f4f4;
+  padding: 4px;
+  margin: auto;
+  width: 450px;
+}
+
+#box .close {
+  float: right;
+}
+
+#box .close a {
+  color: #666666;
+  text-decoration: none;
+  display: block;
+  border: 1px solid #ebebeb;
+  padding: 0px 3px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+#box .message {
+  margin: 0px 20px 0px 0px;
+  padding: 5px;
+  background-color: #FFFFC4;
+  color: #333333;
 }

@@ -1,0 +1,12 @@
+<div id="flasher">
+  <div id="box">
+    <div class="close">
+      <%= link_to_function 'x' do |page|
+            page.visual_effect :fade, 'flasher'
+          end %>
+    </div>
+    <div class="message">
+      <%= flash[:notice] || flash[:error] %>
+    </div>
+  </div>
+</div>

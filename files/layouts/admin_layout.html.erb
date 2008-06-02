@@ -42,13 +42,7 @@
               <div class="yui-b">
                 <div class="yui-g">
 
-                  <% if !flash.blank? %>
-                    <div id="flash" class="alert">
-                      <% flash.each do |key, msg| %>
-                        <%= content_tag :div, msg, :id => key %>
-                      <% end %>
-                    </div>
-                  <% end %>
+                  <%= render(:partial => 'commons/flasher') if flash[:notice] || flash[:error] %>
                   
                   <%=  render :partial => resource_context_path if @parent %>                  
 
