@@ -18,194 +18,197 @@ module AdministrateMe
       @administrate_me_options = {}
       @administrate_me_options[:secured] = true
       @administrate_me_options[:except] = []
+      ActionController::Base.extend AdministrateMe::ClassMethods::Base
+      
       yield
       
       build            
     end            
 
-    # El método set_module toma como parámetros el nombre de módulo a definir y 
-    # opcionalmente un hash de opciones. El hash de opciones permite reemplazar 
-    # los siguientes valores por defecto:
-    #   :caption = Nombre a mostrar en la pestaña. Por defecto se toma el nombre
-    #    del módulo en formato "humanized". 
-    #   :url = Dirección del enlace en la pestaña. Por defecto se crea un
-    #    enlace al index del controller con nombre igual al del módulo. 
-    # Ej:
-    #   set_module :productos, :caption => 'Articulos', :url => activos_productos_url()
-    #
-    def set_module(name, options = {})
-      self.ame_modules ||= []
-      self.ame_modules << compose_module(name, options)
-    end
-    
-    def compose_module(name, options = {})
-      {
-        :name => name, 
-        :caption => options[:caption] || name.to_s.humanize,
-        :url => options[:url] || {:controller => "#{name.to_s.pluralize}"}
-      }
-    end
-    
-    # Sometimes it's necesary to include controllers in the application
-    # which don't need to include all Restful actions. In this particular
-    # case, you can specify this in the plugin macro with the options
-    # 'no_scaffold!'.
-    # 
-    #   class DashboardController < ApplicationController
-    #     administrate_me do
-    #       no_scaffold!
-    #     end
-    #   end
-    # 
-    # In this case, the controller Dashboard loads the basic features of 
-    # the plugin, but does not include the Restful methods.
-    def no_scaffold!
-      @administrate_me_options[:scaffold] = false
-    end
-    
-    # The except method specifies the action that will not be allowed
-    # in the controller.
-    #
-    # ==== Example
-    #   
-    #   class ProductsController < ApplicationController
-    #     administrate_me do
-    #       search :name, :description, :price
-    #       except :new, :edit, :destroy
-    #     end
-    #   end
-    # 
-    # With this configuration, the plugin load a read-only controller, that will only
-    # accept the index and the show actions.
-    def except(*actions)
-      @administrate_me_options[:except] = actions
-    end
-    
-    # Use search to indicate the fields to be looked up when the search action
-    # is executed.
-    # Note that the option includes was set up, the fields selected for search
-    # should be specified with its table name, i.e.: 'products.name'.
-    def search(*fields)
-      @administrate_me_options[:search] = fields
-    end
-    
-    # Use includes to indicate the associations that should be loaded when
-    # find action is executed.
-    #
-    # ==== Example
-    #   
-    #   class ProductsController < ApplicationController
-    #     administrate_me do
-    #       includes 'brand'
-    #       search   'brands.name', 'products.name', 'products.description'    #       order    'brands.name', 'products,name'
-    #     end
-    #   end
-    #    
-    def includes(*tables)
-      @administrate_me_options[:includes] = tables
-    end
-    
-    def order(criteria)
-      @administrate_me_options[:order_by] = criteria
-    end
-    
-    # Use per_page to indicate the number of records to be listed per page.
-    def per_page(records)
-      @administrate_me_options[:per_page] = records
-    end
-    
-    # The public_access! method specifies that the controller will not require user
-    # authetication.
-    def public_access!
-      @administrate_me_options[:secured] = false
-    end
+    module Base
+      # El método set_module toma como parámetros el nombre de módulo a definir y 
+      # opcionalmente un hash de opciones. El hash de opciones permite reemplazar 
+      # los siguientes valores por defecto:
+      #   :caption = Nombre a mostrar en la pestaña. Por defecto se toma el nombre
+      #    del módulo en formato "humanized". 
+      #   :url = Dirección del enlace en la pestaña. Por defecto se crea un
+      #    enlace al index del controller con nombre igual al del módulo. 
+      # Ej:
+      #   set_module :productos, :caption => 'Articulos', :url => activos_productos_url()
+      #
+      def set_module(name, options = {})
+        self.ame_modules ||= []
+        self.ame_modules << compose_module(name, options)
+      end
+      
+      def compose_module(name, options = {})
+        {
+          :name => name, 
+          :caption => options[:caption] || name.to_s.humanize,
+          :url => options[:url] || {:controller => "#{name.to_s.pluralize}"}
+        }
+      end
+      
+      # Sometimes it's necesary to include controllers in the application
+      # which don't need to include all Restful actions. In this particular
+      # case, you can specify this in the plugin macro with the options
+      # 'no_scaffold!'.
+      # 
+      #   class DashboardController < ApplicationController
+      #     administrate_me do
+      #       no_scaffold!
+      #     end
+      #   end
+      # 
+      # In this case, the controller Dashboard loads the basic features of 
+      # the plugin, but does not include the Restful methods.
+      def no_scaffold!
+        @administrate_me_options[:scaffold] = false
+      end
+      
+      # The except method specifies the action that will not be allowed
+      # in the controller.
+      #
+      # ==== Example
+      #   
+      #   class ProductsController < ApplicationController
+      #     administrate_me do
+      #       search :name, :description, :price
+      #       except :new, :edit, :destroy
+      #     end
+      #   end
+      # 
+      # With this configuration, the plugin load a read-only controller, that will only
+      # accept the index and the show actions.
+      def except(*actions)
+        @administrate_me_options[:except] = actions
+      end
+      
+      # Use search to indicate the fields to be looked up when the search action
+      # is executed.
+      # Note that the option includes was set up, the fields selected for search
+      # should be specified with its table name, i.e.: 'products.name'.
+      def search(*fields)
+        @administrate_me_options[:search] = fields
+      end
+      
+      # Use includes to indicate the associations that should be loaded when
+      # find action is executed.
+      #
+      # ==== Example
+      #   
+      #   class ProductsController < ApplicationController
+      #     administrate_me do
+      #       includes 'brand'
+      #       search   'brands.name', 'products.name', 'products.description'      #       order    'brands.name', 'products,name'
+      #     end
+      #   end
+      #    
+      def includes(*tables)
+        @administrate_me_options[:includes] = tables
+      end
+      
+      def order(criteria)
+        @administrate_me_options[:order_by] = criteria
+      end
+      
+      # Use per_page to indicate the number of records to be listed per page.
+      def per_page(records)
+        @administrate_me_options[:per_page] = records
+      end
+      
+      # The public_access! method specifies that the controller will not require user
+      # authetication.
+      def public_access!
+        @administrate_me_options[:secured] = false
+      end
 
-    def set_parent(parent)
-      @administrate_me_options[:parent] = parent
-    end
-    
-    def set_model(model)
-      @administrate_me_options[:model] = model
-    end
-    
-    def set_foreign_key(foreign_key)
-      @administrate_me_options[:foreign_key] = foreign_key
-    end
-    
-    def excel_available!
-      @administrate_me_options[:excel] = true
-    end
-    
-    def filters
-      yield
-    end
-    
-    def set(name, conditions)
-      define_method(name) do
-        set_filter_for(name, conditions)
+      def set_parent(parent)
+        @administrate_me_options[:parent] = parent
       end
-    end
+      
+      def set_model(model)
+        @administrate_me_options[:model] = model
+      end
+      
+      def set_foreign_key(foreign_key)
+        @administrate_me_options[:foreign_key] = foreign_key
+      end
+      
+      def excel_available!
+        @administrate_me_options[:excel] = true
+      end
+      
+      def filters
+        yield
+      end
+      
+      def set(name, conditions)
+        define_method(name) do
+          set_filter_for(name, conditions)
+        end
+      end
+          
+      def build
+        layout :set_layout            
         
-    def build
-      layout :set_layout            
+        unless @administrate_me_options[:scaffold] == false
+          include AdministrateMe::AdminScaffold::InstanceMethods
+          before_filter :get_resource, :only => actions_for_get_resource
+          before_filter :get_parent
+        end
+        
+        unless @administrate_me_options[:secured] == false
+          before_filter :secured_access
+        end            
+        
+        if respond_to?('tab')
+          before_filter :tab
+        end            
+      end        
       
-      unless @administrate_me_options[:scaffold] == false
-        include AdministrateMe::AdminScaffold::InstanceMethods
-        before_filter :get_resource, :only => actions_for_get_resource
-        before_filter :get_parent
+      def actions_for_get_resource
+        list = []
+        list << :edit    if accepted_action?(:edit)
+        list << :update  if accepted_action?(:edit)
+        list << :show    if accepted_action?(:show)
+        list << :destroy if accepted_action?(:destroy)
+        list
       end
       
-      unless @administrate_me_options[:secured] == false
-        before_filter :secured_access
-      end            
-      
-      if respond_to?('tab')
-        before_filter :tab
-      end            
-    end        
-    
-    def actions_for_get_resource
-      list = []
-      list << :edit    if accepted_action?(:edit)
-      list << :update  if accepted_action?(:edit)
-      list << :show    if accepted_action?(:show)
-      list << :destroy if accepted_action?(:destroy)
-      list
-    end
-    
-    def namespace
-      to_s =~ /(.*)::/
-      $1 ? $1.underscore : nil
-    end
-    
-    def model_name
-      @administrate_me_options[:model] || to_s.gsub(/Controller$/, '').gsub(/.*::/, '').singularize.underscore
-    end
-    
-    def model_class
-      model_name.classify.constantize
-    end
-    
-    def parent_class
-      @administrate_me_options[:parent].to_s.classify.constantize
-    end
-    
-    def options
-      @administrate_me_options
-    end
-    
-    def accepted_action?(action)
-      translated_action = case action
-      when :update
-        :edit
-      when :create
-        :new
-      else
-        action
+      def namespace
+        to_s =~ /(.*)::/
+        $1 ? $1.underscore : nil
       end
-      options[:except].empty? || !options[:except].include?(translated_action)
-    end
-    
+      
+      def model_name
+        @administrate_me_options[:model] || to_s.gsub(/Controller$/, '').gsub(/.*::/, '').singularize.underscore
+      end
+      
+      def model_class
+        model_name.classify.constantize
+      end
+      
+      def parent_class
+        @administrate_me_options[:parent].to_s.classify.constantize
+      end
+      
+      def options
+        @administrate_me_options
+      end
+      
+      def accepted_action?(action)
+        translated_action = case action
+        when :update
+          :edit
+        when :create
+          :new
+        else
+          action
+        end
+        options[:except].empty? || !options[:except].include?(translated_action)
+      end
+    end    
   end
   
   module InstanceMethods
