@@ -5,3 +5,5 @@ require 'admin_view'
 require 'elegant_presentation'
 require 'presenter'
 require 'presentation_builder'
+
+ActionController::Base.extend AdministrateMeBase
