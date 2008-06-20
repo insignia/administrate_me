@@ -148,10 +148,6 @@ module AdministrateMe
           before_filter :secured_access
         end            
         
-        #FIXME: Im pretty sure this is not working.
-        if respond_to?('tab')
-          before_filter :tab
-        end            
       end        
       
       def actions_for_get_resource
