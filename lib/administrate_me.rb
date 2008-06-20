@@ -1,31 +1,16 @@
 module AdministrateMe
   
   module ClassMethods
-    # Use this macro to include all the necesary methods that a controller
-    # needs to support a Restfull administration of an specific resource.
-    #
-    # ==== Example
-    #   
-    #   class ProductsController < ApplicationController
-    #     administrate_me do
-    #       search :name, :description, :price
-    #       order  'name'
-    #     end
-    #   end
-    # 
-    # You'll need to add map.resources :products to the routes.rb file.
-    def administrate_me(options = {})
-      @administrate_me_options = {}
-      @administrate_me_options[:secured] = true
-      @administrate_me_options[:except] = []
-      self.extend AdministrateMe::ClassMethods::Base
+    
+    class AdministrateMeConfig
+      attr_accessor :options
       
-      yield
+      def initialize
+        @options = {}
+        @options[:secured] = true
+        @options[:except] = []
+      end
       
-      build            
-    end            
-
-    module Base
       # Sometimes it's necesary to include controllers in the application
       # which don't need to include all Restful actions. In this particular
       # case, you can specify this in the plugin macro with the options
@@ -40,7 +25,7 @@ module AdministrateMe
       # In this case, the controller Dashboard loads the basic features of 
       # the plugin, but does not include the Restful methods.
       def no_scaffold!
-        @administrate_me_options[:scaffold] = false
+        @options[:scaffold] = false
       end
       
       # The except method specifies the action that will not be allowed
@@ -58,7 +43,7 @@ module AdministrateMe
       # With this configuration, the plugin load a read-only controller, that will only
       # accept the index and the show actions.
       def except(*actions)
-        @administrate_me_options[:except] = actions
+        @options[:except] = actions
       end
       
       # Use search to indicate the fields to be looked up when the search action
@@ -66,7 +51,7 @@ module AdministrateMe
       # Note that the option includes was set up, the fields selected for search
       # should be specified with its table name, i.e.: 'products.name'.
       def search(*fields)
-        @administrate_me_options[:search] = fields
+        @options[:search] = fields
       end
       
       # Use includes to indicate the associations that should be loaded when
@@ -83,39 +68,61 @@ module AdministrateMe
       #   end
       #    
       def includes(*tables)
-        @administrate_me_options[:includes] = tables
+        @options[:includes] = tables
       end
       
       def order(criteria)
-        @administrate_me_options[:order_by] = criteria
+        @options[:order_by] = criteria
       end
       
       # Use per_page to indicate the number of records to be listed per page.
       def per_page(records)
-        @administrate_me_options[:per_page] = records
+        @options[:per_page] = records
       end
       
       # The public_access! method specifies that the controller will not require user
       # authetication.
       def public_access!
-        @administrate_me_options[:secured] = false
+        @options[:secured] = false
       end
 
       def set_parent(parent)
-        @administrate_me_options[:parent] = parent
+        @options[:parent] = parent
       end
       
       def set_model(model)
-        @administrate_me_options[:model] = model
+        @options[:model] = model
       end
       
       def set_foreign_key(foreign_key)
-        @administrate_me_options[:foreign_key] = foreign_key
+        @options[:foreign_key] = foreign_key
       end
       
       def excel_available!
-        @administrate_me_options[:excel] = true
+        @options[:excel] = true
       end
+    end
+    
+    # Use this macro to include all the necesary methods that a controller
+    # needs to support a Restfull administration of an specific resource.
+    #
+    # ==== Example
+    #   
+    #   class ProductsController < ApplicationController
+    #     administrate_me do
+    #       search :name, :description, :price
+    #       order  'name'
+    #     end
+    #   end
+    # 
+    # You'll need to add map.resources :products to the routes.rb file.
+    def administrate_me(options = {})
+      self.extend AdministrateMe::ClassMethods::Base
+      yield(config = AdministrateMeConfig.new)
+      build config
+    end            
+
+    module Base
       
       def filters
         yield
@@ -127,19 +134,21 @@ module AdministrateMe
         end
       end
           
-      def build
-        layout :set_layout            
+      def build(config)
+        instance_variable_set("@administrate_me_options", config.options)
+        layout :set_layout
         
-        unless @administrate_me_options[:scaffold] == false
+        unless config.options[:scaffold] == false
           include AdministrateMe::AdminScaffold::InstanceMethods
           before_filter :get_resource, :only => actions_for_get_resource
           before_filter :get_parent
         end
         
-        unless @administrate_me_options[:secured] == false
+        unless config.options[:secured] == false
           before_filter :secured_access
         end            
         
+        #FIXME: Im pretty sure this is not working.
         if respond_to?('tab')
           before_filter :tab
         end            
