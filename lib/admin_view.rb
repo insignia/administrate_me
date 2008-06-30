@@ -230,7 +230,7 @@ module AdminView
     header  = (settings[:label]) ? settings[:label] : group.to_s.humanize
     html    = content_tag(:div, header, :class => 'header')    
     settings[:collection].each do |item|
-      aux   = (settings[:not_show]) ? '#' : link_to_show(group, settings[:parent], item)
+      aux   = (settings[:not_show]) ? '#' : link_to_show(group, item, settings)
       link  = link_to(item.send(settings[:field]), aux)
       html << content_tag(:li, link, :class => cycle('odd', 'even') )
     end
@@ -239,12 +239,12 @@ module AdminView
     html
   end
   
-  def link_to_show(group, parent, item)
-#    path_to_element(group, :parent => parent)
-    aux  = "#{group.to_s.singularize}_path(" 
-    aux << "#{parent}, " unless parent.blank?
-    aux << "item)"
-    eval(aux)
+  def link_to_show(group, item, options)
+    controller_name = options[:controller_name] || group.to_s.singularize
+    namespace = options[:namespace] || controller.class.namespace
+    new_options = options.dup
+    new_options[:parent] = new_options.delete(:parent_name)
+    controller.send(:create_path, controller_name, item, namespace, options[:parent], new_options)
   end
   
   def link_to_more(ltmore)
