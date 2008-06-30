@@ -15,42 +15,34 @@ describe AdministrateMe::AdminScaffold::InstanceMethods, 'with persons controlle
     @controller.stub!(:options).and_return({})
   end
   
-  describe "path_to_index" do
+  describe "create_path" do
     
     before do 
       @element = mock('Element')
       @path = '/path_to_element/id'
+      @controller_name = 'person'
     end
     
     it "should call element path and return its value" do
       @controller.should_receive(:person_path).with(@element).and_return(@path)
-      @controller.path_to_element(@element).should == @path
+      @controller.create_path(@controller_name, @element, nil, nil).should == @path
     end
     
     it "should call element path with prefix and return its value" do
       @controller.should_receive(:edit_person_path).with(@element).and_return(@path)
-      @controller.path_to_element(@element, :prefix => :edit).should == @path
+      @controller.create_path(@controller_name, @element, nil, nil, :prefix => :edit).should == @path
     end
     
     it "should call element path with namespace and return its value" do
       ControllerClass.stub!(:namespace).and_return(:admin)
       @controller.should_receive(:admin_person_path).with(@element).and_return(@path)
-      @controller.path_to_element(@element).should == @path
+      @controller.create_path(@controller_name, @element, :admin, nil).should == @path
     end
     
-    it "should call element path with parent when parent passed as a parameter and return its value" do
+    it "should call element path with parent and return its value" do
       company = mock('Company')
-      @controller.instance_variable_set("@parent", company)
       @controller.should_receive(:company_person_path).with(company, @element).and_return(@path)
-      @controller.path_to_element(@element, :parent => :company).should == @path
-    end
-    
-    it "should call element path with parent when parent is defined on the controller and return its value" do
-      company = mock('Company')
-      @controller.instance_variable_set("@parent", company)
-      @controller.stub!(:options).and_return({:parent => :company})
-      @controller.should_receive(:company_person_path).with(company, @element).and_return(@path)
-      @controller.path_to_element(@element).should == @path
+      @controller.create_path(@controller_name, @element, nil, company, :parent => :company).should == @path
     end
     
   end

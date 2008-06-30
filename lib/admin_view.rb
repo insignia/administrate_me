@@ -240,6 +240,7 @@ module AdminView
   end
   
   def link_to_show(group, parent, item)
+#    path_to_element(group, :parent => parent)
     aux  = "#{group.to_s.singularize}_path(" 
     aux << "#{parent}, " unless parent.blank?
     aux << "item)"

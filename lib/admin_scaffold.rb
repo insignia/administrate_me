@@ -177,25 +177,10 @@ module AdministrateMe
       end
 
       def path_to_element(element, options = {})
-        parts = []
-        # Agregar prefijo
-        parts << options[:prefix] if options[:prefix]
-        # Agregar namespace
-        nspace = self.class.namespace
-        parts << nspace if nspace
-        # Agregar parent
-        parent = options[:parent] || self.options[:parent]
-        parts << parent unless parent.blank?
-        # Agregar controller
-        parts << self.controller_name.singularize
-        #
-        parts << 'path'
-        helper_name = parts.join('_')
-        ids = [element]
-        ids.unshift @parent unless parent.blank?
-        send(helper_name, *ids)
+        options[:parent] ||= self.options[:parent]
+        create_path(self.controller_name.singularize, element, self.class.namespace, @parent, options)
       end
-
+      
       def get_index
         path  = "#{controller_name}_path"
         unless options[:parent].blank?
@@ -303,6 +288,24 @@ module AdministrateMe
 
         def call_before_render
           before_render if respond_to?('before_render')
+        end
+        
+        def create_path(controller_name, element, namespace, parent, options = {})
+          parts = []
+          # add prefix
+          parts << options[:prefix] if options[:prefix]
+          # add namespace
+          parts << namespace if namespace
+          # add parent
+          parts << options[:parent] if options[:parent]
+          # add controller
+          parts << controller_name
+          #
+          parts << 'path'
+          helper_name = parts.join('_')
+          ids = [element]
+          ids.unshift parent unless parent.blank?
+          send(helper_name, *ids)
         end
 
     end
