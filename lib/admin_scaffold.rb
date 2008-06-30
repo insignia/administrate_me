@@ -191,8 +191,8 @@ module AdministrateMe
         #
         parts << 'path'
         helper_name = parts.join('_')
-        ids = [element.id]
-        ids.unshift @parent.id unless parent.blank?
+        ids = [element]
+        ids.unshift @parent unless parent.blank?
         send(helper_name, *ids)
       end
 
