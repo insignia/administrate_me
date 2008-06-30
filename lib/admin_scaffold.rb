@@ -290,24 +290,28 @@ module AdministrateMe
           before_render if respond_to?('before_render')
         end
         
-        def create_path(controller_name, element, namespace, parent, options = {})
-          parts = []
-          # add prefix
-          parts << options[:prefix] if options[:prefix]
-          # add namespace
-          parts << namespace if namespace
-          # add parent
-          parts << options[:parent] if options[:parent]
-          # add controller
-          parts << controller_name
-          #
-          parts << 'path'
-          helper_name = parts.join('_')
-          ids = [element]
-          ids.unshift parent unless parent.blank?
-          send(helper_name, *ids)
-        end
-
     end
+  end
+  
+  module InstanceMethods
+    
+    def create_path(controller_name, element, namespace, parent, options = {})
+      parts = []
+      # add prefix
+      parts << options[:prefix] if options[:prefix]
+      # add namespace
+      parts << namespace if namespace
+      # add parent
+      parts << options[:parent] if options[:parent]
+      # add controller
+      parts << controller_name
+      #
+      parts << 'path'
+      helper_name = parts.join('_')
+      ids = [element]
+      ids.unshift parent unless parent.blank?
+      send(helper_name, *ids)
+    end
+
   end
 end

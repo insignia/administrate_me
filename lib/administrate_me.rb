@@ -139,6 +139,7 @@ module AdministrateMe
         layout :set_layout
         
         unless config.options[:scaffold] == false
+          include AdministrateMe::InstanceMethods
           include AdministrateMe::AdminScaffold::InstanceMethods
           hide_action :path_to_element
           before_filter :get_resource, :only => actions_for_get_resource
