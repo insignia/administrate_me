@@ -64,12 +64,12 @@ module AdminView::Presenter
   end
   
   def edit_action
-    link_to('Editar este registro', path_to_element(@resource, :edit))
+    link_to('Editar este registro', path_to_element(@resource, :prefix => :edit))
   end
   
   def destroy_action
     link_to('Eliminar este registro', path_to_element(@resource), :confirm => 'Eliminará definitivamente este registro. ¿Está seguro?', :method => :delete, :class => 'delete')
-  end      
+  end
   
   def back_action
     link_to 'Volver', path_to_index, :class => 'neutro'

@@ -176,18 +176,18 @@ module AdministrateMe::AdminScaffold
       send(helper_name, *ids)
     end
     
-    def path_to_element(element, prefix=nil)
+    def path_to_element(element, options = {})
       parts = []
       # Agregar prefijo
-      parts << prefix if prefix
-      nspace = self.class.namespace
+      parts << options[:prefix] if options[:prefix]
       # Agregar namespace
+      nspace = self.class.namespace
       parts << nspace if nspace
       # Agregar parent
-      parent = options[:parent]
-      parts << options[:parent] unless parent.blank?
+      parent = options[:parent] || self.options[:parent]
+      parts << parent unless parent.blank?
       # Agregar controller
-      parts << controller_name.singularize
+      parts << self.controller_name.singularize
       #
       parts << 'path'
       helper_name = parts.join('_')

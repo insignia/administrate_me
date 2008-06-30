@@ -101,12 +101,12 @@ module AdminView
     end
   end
   
-  def path_to_index(prefix=nil)
-    controller.path_to_index(prefix)
+  def path_to_index(*args)
+    controller.path_to_index(*args)
   end
   
-  def path_to_element(element, prefix=nil)
-    controller.path_to_element(element, prefix)
+  def path_to_element(*args)
+    controller.path_to_element(*args)
   end
       
   def generate_grid_table_for(options = {})
