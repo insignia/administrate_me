@@ -3,10 +3,10 @@ require 'activesupport'
 require File.dirname(__FILE__) + '/../lib/admin_scaffold.rb'
 
 class ControllerClass
-  include AdministrateMe::AdminScaffold::InstanceMethods
+  include AdministrateMe::InstanceMethods
 end
 
-describe AdministrateMe::AdminScaffold::InstanceMethods, 'with persons controller' do
+describe AdministrateMe::InstanceMethods, 'with persons controller' do
   
   before do 
     @controller = ControllerClass.new
