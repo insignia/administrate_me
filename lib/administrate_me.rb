@@ -7,7 +7,6 @@ module AdministrateMe
       
       def initialize
         @options = {}
-        @options[:secured] = true
         @options[:except] = []
       end
       
@@ -80,12 +79,6 @@ module AdministrateMe
         @options[:per_page] = records
       end
       
-      # The public_access! method specifies that the controller will not require user
-      # authetication.
-      def public_access!
-        @options[:secured] = false
-      end
-
       def set_parent(parent)
         @options[:parent] = parent
       end
@@ -145,10 +138,6 @@ module AdministrateMe
           before_filter :get_resource, :only => actions_for_get_resource
           before_filter :get_parent
         end
-        
-        unless config.options[:secured] == false
-          before_filter :secured_access
-        end            
         
       end        
       
