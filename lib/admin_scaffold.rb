@@ -157,15 +157,15 @@ module AdministrateMe
 
       def path_to_index(prefix=nil)
         parts = []
-        # Agregar prefijo
+        # add prefix
         parts << prefix if prefix
         nspace = self.class.namespace
-        # Agregar namespace
+        # add namespace
         parts << nspace if nspace
-        # Agregar parent
+        # add parent
         parent = options[:parent]
         parts << options[:parent] unless parent.blank?
-        # Agregar controller
+        # add controller
         cname = prefix ? controller_name.singularize : controller_name
         parts << cname
         #
