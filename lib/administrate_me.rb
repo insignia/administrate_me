@@ -17,8 +17,8 @@ module AdministrateMe
       # 'no_scaffold!'.
       # 
       #   class DashboardController < ApplicationController
-      #     administrate_me do
-      #       no_scaffold!
+      #     administrate_me do |a|
+      #       a.no_scaffold!
       #     end
       #   end
       # 
@@ -34,9 +34,9 @@ module AdministrateMe
       # ==== Example
       #   
       #   class ProductsController < ApplicationController
-      #     administrate_me do
-      #       search :name, :description, :price
-      #       except :new, :edit, :destroy
+      #     administrate_me do |a|
+      #       a.search :name, :description, :price
+      #       a.except :new, :edit, :destroy
       #     end
       #   end
       # 
@@ -60,10 +60,10 @@ module AdministrateMe
       # ==== Example
       #   
       #   class ProductsController < ApplicationController
-      #     administrate_me do
-      #       includes 'brand'
-      #       search   'brands.name', 'products.name', 'products.description'
-      #       order    'brands.name', 'products,name'
+      #     administrate_me do |a|
+      #       a.includes 'brand'
+      #       a.search   'brands.name', 'products.name', 'products.description'
+      #       a.order    'brands.name, products.name'
       #     end
       #   end
       #    
@@ -71,6 +71,8 @@ module AdministrateMe
         @options[:includes] = tables
       end
       
+      # Allows to specify the sort criteria on the retrieved records. It has to
+      # have the same format of the :sort value on the ActiveRecord::Base.find() options.
       def order(criteria)
         @options[:order_by] = criteria
       end
@@ -86,14 +88,30 @@ module AdministrateMe
         @options[:secured] = false
       end
 
+      # Used to specity the parent resource of the current resource.
       def set_parent(parent)
         @options[:parent] = parent
       end
       
+      # Used to specify the model name of the resource this controller handles. 
+      # It's optional and it has to be used only when the model name is different from 
+      # the controller name.
       def set_model(model)
         @options[:model] = model
       end
       
+      # Used to specify foreign_key to refer to the parent record. By default parent
+      # name plus "_id" will be used to access and assign the parent record.
+      # 
+      # ==== Example
+      # 
+      #   class AccountController < ApplicationController
+      #     administrate_me do |a|
+      #       a.set_parent :user
+      #       a.set_foreign_key :owner_id
+      #     end
+      #   end
+      #   
       def set_foreign_key(foreign_key)
         @options[:foreign_key] = foreign_key
       end
