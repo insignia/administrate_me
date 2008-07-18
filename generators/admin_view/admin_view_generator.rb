@@ -14,14 +14,17 @@ class AdminViewGenerator < Rails::Generator::NamedBase
   def manifest
     record do |m|
       parts = name.split('/')
-      parts.unshift 'views'
-      parts.unshift 'app'
+      parts.unshift 'app', 'views'
       parts << (parts.pop.underscore.pluralize)
       views_dir = File.join(*parts)
       m.directory views_dir
       m.template '_form.html.erb', File.join(views_dir, "_form.html.erb")
       m.template '_list.html.erb', File.join(views_dir, "_list.html.erb")
       m.template 'show.html.erb',  File.join(views_dir, "show.html.erb")
+      if parent = actions.map {|action| action =~ /^parent:(.*)/; $1}.compact.first
+        parts << '..' << parent.split('/')
+        m.template '_context.html.erb',  File.join(parts.flatten, "_context.html.erb")
+      end
     end
   end
 
