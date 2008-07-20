@@ -1,0 +1,27 @@
+= AdministrateMe
+
+(See wiki at http://administrateme.googlecode.com to get more info)
+
+administrate_me is a Rails plugin conceived to simplify the creation of administrative backend interfases on a Rails project. This way you can have basic CRUD with a nice user interfase almost for free.
+
+1. Install and setup:
+
+If you're already running Rails 2.1 you can just run the next command:
+
+ruby script/plugin install http://github.com/jmax/administrate_me
+
+Otherwise you'll have to clone the git repository and the delete the .git folder:
+
+git clone git://github.com/jmax/administrate_me vendor/plugins/administrate_me
+rm vendor/plugins/administrate_me/.git -rf
+
+Once installed you need to run the admin_import_files task to copy to your project the assets files needed by your project: 
+
+rake admin:import_files
+
+2. Dependencies:
+
+administrate_me currently requires at lest Rails 2 to run smoothly, also works fine with Rails 2.1
+
+It will also take advange of other installed plugins on the same project, such as will_paginate and bundle_fu.
+will_paginate will be used to paginate records of each table and bundle_fu to automatically bundle assets files (javascripts and stylesheets) to increase loading performace.
