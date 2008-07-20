@@ -1,28 +1,92 @@
-AdministrateMe
-==============
+= AdministrateMe
 
 (See wiki at http://administrateme.googlecode.com to get more info)
 
 administrate_me is a Rails plugin conceived to simplify the creation of administrative backend interfases on a Rails project. This way you can have basic CRUD with a nice user interfase almost for free.
 
-1. Install and setup:
+== Install and setup:
 
 If you're already running Rails 2.1 you can just run the next command:
 
-ruby script/plugin install http://github.com/jmax/administrate_me
+  ruby script/plugin install http://github.com/jmax/administrate_me
 
 Otherwise you'll have to clone the git repository and the delete the .git folder:
 
-git clone git://github.com/jmax/administrate_me vendor/plugins/administrate_me
-rm vendor/plugins/administrate_me/.git -rf
+  git clone git://github.com/jmax/administrate_me vendor/plugins/administrate_me
+  rm vendor/plugins/administrate_me/.git -rf
 
 Once installed you need to run the admin_import_files task to copy to your project the assets files needed by your project: 
 
-rake admin:import_files
+  rake admin:import_files
 
-2. Dependencies:
+== Dependencies:
 
 administrate_me currently requires at lest Rails 2 to run smoothly.
 
 It will also take advange of other installed plugins on the same project, such as will_paginate and bundle_fu.
 will_paginate will be used to paginate records of each table and bundle_fu to automatically bundle assets files (javascripts and stylesheets) to increase loading performace.
+
+== How to create an app using administrate_me in a few simple steps.
+
+==== Create a new rails app and then cd into that directory
+
+  rails new_app
+  cd new_app
+
+==== Install administrate_me, if you're already on Rails 2.1 you can just run
+
+  ruby script/plugin install git://github.com/jmax/administrate_me.git
+
+On previous versions:
+
+  git clone git://github.com/jmax/administrate_me.git vendor/plugins/administrate_me
+  rm /vendor/plugins/administrate_me/.git -rf
+
+On both cases you've got to have git installed.
+
+==== Copy asset files to you project, just run this rake task provided by administrate_me.
+
+  rake admin:import_files
+
+==== Create a simple model and run the migration 
+
+By default this will use a sqlite3 database, otherwise you'll need to configure your database.yml file.
+
+  ruby script/generate model product name:string description:text
+  rake db:migrate
+
+==== Create an empty controller to admin the created model.
+
+  ruby script/generate controller products
+
+Then edit it to to include administrate_me configuration:
+
+  class ProductsController < ApplicationController
+    administrate_me do |a|
+      a.search :name
+    end
+  end
+
+==== Add general configuration for the application
+
+Edit application_controller.rb and add the set_module directive as seen on the next pastie:
+
+  class ApplicationController < ActionController::Base
+    helper :all # include all helpers, all the time
+    protect_from_forgery # :secret => 'ed1896d8d25a5a534d1a14d0f74664f4'
+    set_module :products  # This will set a products module or tab on the application interfase
+  end
+
+==== Add this route on config/routes.rb
+
+  map.resources :products
+
+==== Create views for you controller.
+
+Automatically create controller's views with this rake task. All templates needed will be created using all the table fields, you can edit those files later to include/exclude fields on your demand.
+
+  ruby script/generate admin_view products
+
+==== Run the application
+
+Run the server, go to http://localhost:3000/products and enjoy!
