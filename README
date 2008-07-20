@@ -90,3 +90,65 @@ Automatically create controller's views with this rake task. All templates neede
 ==== Run the application
 
 Run the server, go to http://localhost:3000/products and enjoy!
+
+== How to add parent/children navigation with administrate_me
+
+This build on top of the previously created new_app application, used to manage products. We'll add the posibility for a product to have multiple prices.
+
+==== Create a new model and run migrations
+
+In this occasion we'll create a model named Price
+
+  ruby script/generate model price product_id:integer since:date value:decimal
+  rake db:migrate
+
+==== Add relationships on models
+
+Products should have many prices and prices should belong to products.
+
+  class Product < ActiveRecord::Base
+    has_many :prices
+  end
+  
+  class Price < ActiveRecord::Base
+    belongs_to :product
+  end
+
+==== Create a controller and edit it to include administrate_me configuration
+
+  ruby script/generate controller prices
+
+Edit app/contrllers/prices_controller.rb to look like this:
+
+  class PricesController < ApplicationController
+    administrate_me do |a|
+      a.set_parent :product
+    end
+  end
+
+==== Alter products routes on config/routes.rb
+
+Modify the existing product resource to include prices.
+
+  map.resources :products, :has_many => :prices
+
+==== Generate controller views
+
+  ruby script/generate admin_view prices parent:product
+
+Sometimes we will need to modify the generated partial template app/views/products/_context.html.erb to use the right field name. In this case using the default :name will work.
+This partial is used to show navigation breadcrumbs on the children page.
+
+==== Modify product page to link to prices
+
+We should now modify the file app/views/products/show.html.erb to provide a link to each product prices. Remove the commented <% content_for :support %> block, and add this:
+
+  <% content_for :support do %>    
+      <%= related_info_for 'Support tasks', 
+            [ 
+              { :link => 'Prices', :url => product_prices_path(@resource)}
+            ] %>
+  <% end %>
+
+
+Now you parent/children navigation is complete!
