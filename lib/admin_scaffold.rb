@@ -4,6 +4,7 @@ module AdministrateMe
 
       def get_list    
         session[:mini] = ''
+        params[:search_key] ||= session["#{controller_name}_search_key"] if session["#{controller_name}_search_key"]
         @search_key = params[:search_key]
         model_class.send(:with_scope, :find => { :conditions => parent_scope }) do
           model_class.send(:with_scope, :find => { :conditions => global_scope }) do
@@ -17,6 +18,7 @@ module AdministrateMe
             end
           end
         end
+        session["#{controller_name}_search_key"] = @search_key
       end  
 
       def get_per_page
