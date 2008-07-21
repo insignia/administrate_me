@@ -230,7 +230,7 @@ div.pagination a {
 }
 
 #content form div.actions a {
-    color: #666666; 
+    color: #b30000;
 }
 
 #content form div.actions a.save {
@@ -279,11 +279,6 @@ div.pagination a {
 #content form textarea.editor {
     width: 485px;
     height: 300px;
-}
-
-#content form input, 
-#content form textarea {
-    border:1px solid #e1e1e1;    
 }
 
 #content form textarea.mini_area {

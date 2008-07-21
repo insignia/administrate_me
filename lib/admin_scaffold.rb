@@ -92,14 +92,14 @@ module AdministrateMe
         if_available(:new) do
           @resource = ( options[:model] ? options[:model] : controller_name ).classify.constantize.new
           call_before_render
-          render :template => 'commons/new'
+          render :template => 'commons/base_form'
         end
       end
 
       def edit
         if_available(:edit) do
           call_before_render
-          render :template => 'commons/edit'
+          render :template => 'commons/base_form'
         end
       end
 
@@ -118,7 +118,7 @@ module AdministrateMe
               format.html { redirect_to path_to_index }
               format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
             else
-              format.html { render :template => "commons/new" }
+              format.html { render :template => "commons/base_form" }
               format.xml  { render :xml => @resource.errors.to_xml }        
             end
           end
@@ -136,7 +136,7 @@ module AdministrateMe
               format.html { redirect_to path_to_element(@resource) }
               format.xml  { head :ok }
             else
-              format.html { render :template => "commons/edit" }        
+              format.html { render :template => "commons/base_form" }
               format.xml  { render :xml => @resource.errors.to_xml }
             end
           end
