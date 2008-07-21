@@ -69,14 +69,14 @@ module AdministrateMe
         call_before_render
         respond_to do |format|
           format.html { render :template => 'commons/index' }
+          format.js   {
+            render :update do |page|
+              page.replace_html :list_area, :partial => 'list'
+            end
+          }
           format.xml  { render :xml => @records.to_xml }
         end
       end    
-
-      def search    
-        get_list
-        render :partial => 'list'    
-      end
 
       def show
         if_available(:show) do 

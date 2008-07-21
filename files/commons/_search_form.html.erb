@@ -10,10 +10,10 @@
 
   <%= observe_field :search_key,                      
                     :frequency => 0.5,            
-                    :update    => 'list_area', 
                     :before    => "Element.show('indicator')",
                     :complete  => "Element.hide('indicator')",
-                    :url       => search_url,  
+                    :url       => path_to_index,
+                    :method    => :get,
                     :with      => "'search_key=' + encodeURIComponent(value)" %> 
   
 <% end %>
