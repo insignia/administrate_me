@@ -116,7 +116,8 @@ module AdministrateMe
           call_before_render
           respond_to do |format|
             if @success
-              flash[:notice] = 'El registro fue creado exitosamente'        
+              flash[:notice] = 'El registro fue creado exitosamente'
+              session["#{controller_name}_search_key"] = nil
               format.html { redirect_to path_to_index }
               format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
             else

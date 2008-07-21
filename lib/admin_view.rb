@@ -211,6 +211,10 @@ module AdminView
     aux[:id] = controller.model_name
     aux
   end
+
+  def form_name_space
+    @parent ? [@parent, @resource] : @resource
+  end
   
   def show_filters_for(filters = [])
     html = ""
