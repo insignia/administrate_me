@@ -2,15 +2,4 @@
  
 <%= error_messages_for :resource %>
 
-<% form_for(controller.model_name, @resource,
-            :builder => AdminBuilder,
-            :url => path_to_index,
-            :html => html) do |f| %>
-
-  <%= render :partial => "form", :locals => {:f => f} %>
-
-  <div class="actions">
-    <%= link_to '<span>Guardar estos cambios</span>', '#', :onclick => "$('#{controller.model_name}').submit()", :class => 'button save' %>
-    <%= link_to '<span>Cancelar</span>', path_to_index, :class => 'button' %>
-  </div>
-<% end %>
+<%= render :partial => 'commons/base_form' %>
