@@ -68,15 +68,15 @@ module AdministrateMe
         get_list
         call_before_render
         respond_to do |format|
+          format.js do
+            render :update do |page|
+              page[:list_area].replace_html :partial => 'list'
+            end
+          end
           format.html { render :template => 'commons/index' }
           format.xml  { render :xml => @records.to_xml }
         end
       end    
-
-      def search    
-        get_list
-        render :partial => 'list'    
-      end
 
       def show
         if_available(:show) do 

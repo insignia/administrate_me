@@ -179,15 +179,6 @@ module AdminView
     path
   end
   
-  def search_url
-    str  = "{:action=>'search', "
-    unless controller.options[:parent].blank?
-      str << ":#{controller.options[:parent].to_s}_id => params[:#{controller.options[:parent].to_s}_id],"
-    end
-    str << ":only_path => false}"
-    eval(str)
-  end  
-  
   def search_scope
     "(#{controller.options[:search].map{|x| x.to_s.humanize}.join(', ')})"
   end
