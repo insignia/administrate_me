@@ -4,7 +4,8 @@
 
 <% form_for(@resource,
             :builder => AdminBuilder,
-            :html => html) do |f| %>
+            :url     => path_to_index,
+            :html    => html) do |f| %>
 
   <%= render :partial => "form", :locals => {:f => f} %>
 
