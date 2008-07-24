@@ -1,5 +1,11 @@
+# This module contains the list_builder_for helper and the helper methods it uses.
 module AdminView::PresentationBuilder
-  class PresentationBuilder
+  # This class holds list_builder_for information to render a grid.
+  # It basically uses method_missing to add columns named the same as the method
+  # calls received.
+  # If you happen to use columns in your models named the same as its few public
+  # methods (like gpb_columns and gpb_data) err... there would be some problems.
+  class GridPresentationBuilder
     class ListColumn      
       def initialize(field, options={})
         @field = field
@@ -20,7 +26,7 @@ module AdminView::PresentationBuilder
       end
       
       def caption
-        @options[:caption] ? @options[:caption] : @field
+        @options[:caption] || @field.to_s.titleize
       end
       
       def style
@@ -44,38 +50,111 @@ module AdminView::PresentationBuilder
       @rows    = []
       @captions = {}
     end        
-    
-    def columns
+
+    # Returns the columns included on the grid.
+    def gpb_columns
       @columns
     end
     
-    def data
+    # Returns the dataset used on the grid.
+    def gpb_data
       @collection
     end
    
-    
     def method_missing(field, options={})
       @columns << ListColumn.new(field, options)      
     end
     
-    
   end    
   
+  # list_builder_for is a helper to easily generate grids on index actions, 
+  # even though it can be used elsewhere.
+  # 
+  # == Example
+  # 
+  #   <%= list_builder_for @records do |list|
+  #         list.name
+  #         list.last_name
+  #       end -%>
+  #       
+  # At the administrate_me index action have the @records instance which holds
+  # all the records that have to be displayed. On each instance we will call
+  # the name and last_name methods over the <code>list</code> variable, this
+  # will yield the inclusion of those two fields as columns on the generated
+  # grid.
+  # 
+  # As an implementation detail, the list variable passed to a block, is an
+  # instance of <code>GridPresentationBuilder</code> that is instantiated before 
+  # iterating over the records and holds the configuration for the grid.
+  # 
+  # == Advanced options
+  # 
+  # ==== Accessing data through associations
+  # 
+  # You can also include columns with data that is not accessible with just one
+  # method call on each records. Let's say you have a list of @records where each
+  # item represents a product, those products are related to a brand using a 
+  # belongs_to association and you just want to include a column with the brand
+  # name. 
+  # On cases like this you'll need to include :with option on the call to the
+  # list method. See an example:
+  # 
+  #   <%= list_builder_for @records do |list|
+  #         list.name
+  #         list.brand :with => :name
+  #       end -%>
+  #       
+  # ==== Assigning column titles
+  # 
+  # You'll have to use the :caption option:
+  # 
+  #   <%= list_builder_for @records do |list|
+  #         list.name :caption => 'Product name'
+  #         list.brand :with => :name, :caption => 'Brand name'
+  #       end -%>
+  #       
+  # By default, list_builder_for will use the titleized field names.
+  #
+  def list_builder_for(collection, options = {}, type = :grid)
+    yield(list = GridPresentationBuilder.new(collection))
+    list_renderer(list, options, type)    
+  end
+  
+  # Internally used by list_builder_for. Creates html output including a 
+  # flash message, the grid and the pagination when will_paginate is available.
+  def list_renderer(list, options, type)
+    html  = ""
+    html << show_mini_flash rescue ""
+    html << render_grid(list, options) if type == :grid
+    html << render(:partial => 'commons/pagination') if controller.model_class.respond_to?('paginate')
+    html
+  end
+
+  def render_grid(pb, options)
+    unless pb.gpb_data.empty?
+      html  = build_grid_header(pb)
+      html << build_grid_body(pb, options)
+      "<table class='admin_grid'>#{html}</table>"
+    else
+      render_empty_msg
+    end
+  end
+
   def build_grid_header(pb)
     html = ""
-    pb.columns.each{|column| html << "<th> #{column.caption.to_s.titleize} </th>" }
+    pb.gpb_columns.each{|column| html << "<th> #{column.caption} </th>" }
     "<tr> #{ html } </tr>"
   end
   
   def build_grid_body(pb, options)
     html = ""
-    pb.data.each{|item| html << build_row_for(pb, item, cycle('odd', 'even'), options) }
+    pb.gpb_data.each{|item| html << build_row_for(pb, item, cycle('odd', 'even'), options) }
     html
   end
   
   def build_row_for(pb, item, css_class, options)
     html = ""
-    pb.columns.each do |column| 
+    pb.gpb_columns.each do |column| 
       html << "<td style='#{column.style}'> #{column.value_for(item)} </td>"      
     end             
     html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report]
@@ -90,29 +169,6 @@ module AdminView::PresentationBuilder
     html 
   end
   
-  def render_grid(pb, options)
-    unless pb.data.empty?
-      html  = build_grid_header(pb)
-      html << build_grid_body(pb, options)
-      "<table class='admin_grid'>#{html}</table>"
-    else
-      render_empty_msg
-    end
-  end
-  
-  
-  def list_builder_for(collection, options = {}, type = :grid)
-    yield(list = PresentationBuilder.new(collection))
-    list_renderer(list, options, type)    
-  end
-  
-  def list_renderer(list, options,type)
-    html  = ""
-    html << show_mini_flash rescue ""
-    html << render_grid(list, options) if type == :grid
-    html << render(:partial => 'commons/pagination') if controller.model_class.respond_to?('paginate')
-    html
-  end
 end
 
 ActionView::Base.send :include, AdminView::PresentationBuilder
