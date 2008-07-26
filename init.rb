@@ -7,3 +7,8 @@ require 'presenter'
 require 'presentation_builder'
 
 ActionController::Base.extend AdministrateMeBase
+ActionController::Base.extend AdministrateMe::ClassMethods
+ActionController::Base.send :include, AdministrateMe::InstanceMethods
+class ActionController::Base
+  superclass_delegating_accessor :ame_modules
+end

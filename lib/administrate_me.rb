@@ -207,8 +207,3 @@ module AdministrateMe
   
 end
 
-ActionController::Base.extend AdministrateMe::ClassMethods
-ActionController::Base.send :include, AdministrateMe::InstanceMethods
-class ActionController::Base
-  superclass_delegating_accessor :ame_modules
-end
