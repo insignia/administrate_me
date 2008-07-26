@@ -41,7 +41,7 @@ module AdministrateMe
       end
 
       def set_search_message
-        unless params[:search_key].blank?        
+        if options[:search] && !params[:search_key].blank?        
           session[:mini] = search_message(@search_key) 
         end
       end
@@ -63,7 +63,7 @@ module AdministrateMe
       end   
 
       def search_scope
-        sc = @search_key.blank? ? nil : conditions_for(options[:search])
+        !@search_key.blank? && options[:search] ? conditions_for(options[:search]) : nil
       end   
 
       def index
