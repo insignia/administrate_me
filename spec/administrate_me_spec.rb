@@ -1,7 +1,3 @@
-# 
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
- 
 require File.dirname(__FILE__) + '/../lib/administrate_me.rb'
 
 describe AdministrateMe do

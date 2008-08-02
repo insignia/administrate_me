@@ -227,16 +227,9 @@ module AdministrateMe
   end
   
   module InstanceMethods
-    # El método set_module toma como parámetros el nombre de módulo a definir y 
-    # opcionalmente un hash de opciones. El hash de opciones permite reemplazar 
-    # los siguientes valores por defecto:
-    #   :caption = Nombre a mostrar en la pestaña. Por defecto se toma el nombre
-    #    del módulo en formato "humanized". 
-    #   :url = Dirección del enlace en la pestaña. Por defecto se crea un
-    #    enlace al index del controller con nombre igual al del módulo. 
-    # Ej:
-    #   set_module :productos, :caption => 'Articulos', :url => activos_productos_url()
-    #
+    # Adds a module in a request level basis.
+    # See <code>AdministrateMeBase::set_module</code> for further information
+    # about modules.
     def set_module(name, options = {})
       @instance_modules << self.class.administrate_me_compose_module(name, options)
     end
