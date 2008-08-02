@@ -1,3 +1,44 @@
+# This is the pluing's core where all definitions are made.
+# When you call the administrate_me class method on a controller all the 
+# AdminScaffold methods are added to that controller. Basically this allows you
+# to have a full featured table administration on that controller.
+# 
+# See README file to a step by step guide about how to setup an administrate_me
+# application.
+# 
+# == Callbacks
+# 
+# There are several callbacks that can be added to you controller to handle 
+# features on you app and extend the administrate_me ones.
+# 
+# ==== general_conditions
+# 
+# This method is expected to return a +conditions+ value that will be used to 
+# narrow down the results of the +index+ action.
+#  
+# The controller method +get_list+ is in charge to return records for the +index+
+# action, even if the request is a search request or an index filter. The +get_list+
+# method will always use this general conditions using a +with_scope+ sentence
+# to include them on the +find+ method call.
+# 
+# ==== before_render
+# 
+# This method will be called on the controller just before the respond_to block
+# on every administrate_me action. It can be used to define some extra instance
+# variables to use them on the views.
+# 
+# ==== before_save and after_save
+# 
+# This methods will be called and after the resource is saved. 
+# Be careful about it's use, you should consider as first option to include this
+# kind of logic on +before_save+ and +after_save+ callbacks of your model. 
+# Just use them when they're really controller related.
+# 
+# == Search
+# 
+# [TODO]
+# 
+#
 module AdministrateMe
   
   module ClassMethods
