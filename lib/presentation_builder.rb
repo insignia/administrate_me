@@ -13,7 +13,13 @@ module AdminView::PresentationBuilder
       end
 
       def value_for(item)
-        @options[:with] ? related_value_for(item.send(@field)) : item.send(@field)
+        if @field.is_a?(Proc)
+          @field
+        elsif @options[:with]
+          related_value_for(item.send(@field))
+        else
+          item.send(@field)
+        end
       end
 
       def related_value_for(value)
@@ -59,6 +65,11 @@ module AdminView::PresentationBuilder
     # Returns the dataset used on the grid.
     def gpb_data
       @collection
+    end
+    
+    def html(options = {}, &block)
+      options[:caption] = 'html' unless options[:caption]
+      @columns << ListColumn.new(block, options)
     end
 
     def method_missing(field, options={})
@@ -123,9 +134,9 @@ module AdminView::PresentationBuilder
   #
   # Valid options:
   # * <tt>:width</tt> - Width of the column
-  # * <tt>:color</tt> -  Text color of the column.
-  # * <tt>:string</tt> -  Shows the results strongs (bold) if the value is true.
-  # * <tt>:align</tt> -  Sets the text-align attribute for the column.
+  # * <tt>:color</tt> - Text color of the column.
+  # * <tt>:string</tt> - Shows the results strongs (bold) if the value is true.
+  # * <tt>:align</tt> - Sets the text-align attribute for the column.
   #
   #    <%= list_builder_for @records do |list|
   #         list.name        :width => '250px', :color => '#666666', :strong => true     
@@ -133,6 +144,24 @@ module AdminView::PresentationBuilder
   #         list.price       :width => '100px', :align => :right
   #      end %>
   #
+  # ==== Inserting free html
+  # 
+  # You can also insert the html code you want in any cell of the table. To do 
+  # that you just need to call the <code>html</code> method on the list object
+  # and pass it a block that can hadle a record of the table as a parameter.
+  # Then the result of that block will be included as html on the table.
+  # 
+  # Example: Let's say you have a model that uses the +paperclip+ plugin to 
+  # attach a file and you want to show a link to that file on the grid. You'll 
+  # have to do this:
+  # 
+  #   <%= list_builder_for @records do |list|
+  #         list.name :caption => 'User name'
+  #         list.html :caption => 'Avantar' do |user_instance|
+  #           image_tag(user_instance.avatar.url(:thumb))
+  #         end
+  #       end -%>
+  # 
   # ==== Report mode
   # 
   # Using this mode the grid will be displayed without showing links to the actions
@@ -170,7 +199,7 @@ module AdminView::PresentationBuilder
 
   def build_grid_header(pb)
     html = ""
-    pb.gpb_columns.each{|column| html << "<th> #{column.caption} </th>" }
+    pb.gpb_columns.each {|column| html << "<th> #{column.caption} </th>" }
     "<tr> #{ html } </tr>"
   end
 
@@ -183,7 +212,9 @@ module AdminView::PresentationBuilder
   def build_row_for(pb, item, css_class, options)
     html = ""
     pb.gpb_columns.each do |column|
-      html << "<td style='#{column.style}'> #{column.value_for(item)} </td>"
+      value = column.value_for(item)
+      value = value.call(item) if value.is_a?(Proc)
+      html << "<td style='#{column.style}'> #{value} </td>"
     end
     html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report]
     "<tr class='#{css_class}'> #{html} </tr>"
