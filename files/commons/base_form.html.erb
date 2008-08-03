@@ -1,0 +1,11 @@
+<%= show_section_label %>
+
+<%= error_messages_for :resource %>
+
+<% form_for(form_name_space, :builder => AdminBuilder, :html => html) do |f| %>
+  <%= render :partial => "form", :locals => {:f => f} %>
+  <div class="actions">
+    <%= submit_tag 'Guardar estos cambios' %> o
+    <%= link_to 'Cancelar', path_to_index %>
+  </div>
+<% end %>

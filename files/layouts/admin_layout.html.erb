@@ -27,9 +27,7 @@
            <span><%= owner %></span> > <%= app_name %>
          </div>
 
-         <% unless controller.options[:secured] == false %>
-           <%= render :partial => 'commons/session' %>      
-         <% end %>
+         <%= render :partial => 'commons/session' %>      
 
          <div style="clear:both"></div>
 

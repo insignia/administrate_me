@@ -87,9 +87,17 @@ module AdminView
                 :id => 'list_area')
   end
   
+  def show_search_form
+    content_tag('div', render(:partial => 'commons/search_form'), :id => 'search')
+  end
+
+  # This helper is used to show the main index sections. 
+  # Returns the header, search form and renders de list of elements.
   def show_section_content
     html  = show_section_header
-    html << content_tag('div', render(:partial => 'commons/search_form'), :id => 'search')
+    if controller.options[:search]
+      html << show_search_form
+    end
     html << show_section_body
     html
   end
@@ -179,15 +187,6 @@ module AdminView
     path
   end
   
-  def search_url
-    str  = "{:action=>'search', "
-    unless controller.options[:parent].blank?
-      str << ":#{controller.options[:parent].to_s}_id => params[:#{controller.options[:parent].to_s}_id],"
-    end
-    str << ":only_path => false}"
-    eval(str)
-  end  
-  
   def search_scope
     "(#{controller.options[:search].map{|x| x.to_s.humanize}.join(', ')})"
   end
@@ -210,6 +209,10 @@ module AdminView
     aux[:method] = :put if ['edit', 'update'].include?(controller.action_name)
     aux[:id] = controller.model_name
     aux
+  end
+
+  def form_name_space
+    @parent ? [@parent, @resource] : @resource
   end
   
   def show_filters_for(filters = [])

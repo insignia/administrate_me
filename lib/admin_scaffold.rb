@@ -4,6 +4,7 @@ module AdministrateMe
 
       def get_list    
         session[:mini] = ''
+        params[:search_key] ||= session["#{controller_name}_search_key"] if session["#{controller_name}_search_key"]
         @search_key = params[:search_key]
         model_class.send(:with_scope, :find => { :conditions => parent_scope }) do
           model_class.send(:with_scope, :find => { :conditions => global_scope }) do
@@ -17,6 +18,7 @@ module AdministrateMe
             end
           end
         end
+        session["#{controller_name}_search_key"] = @search_key
       end  
 
       def get_per_page
@@ -39,7 +41,7 @@ module AdministrateMe
       end
 
       def set_search_message
-        unless params[:search_key].blank?        
+        if options[:search] && !params[:search_key].blank?        
           session[:mini] = search_message(@search_key) 
         end
       end
@@ -61,7 +63,7 @@ module AdministrateMe
       end   
 
       def search_scope
-        sc = @search_key.blank? ? nil : conditions_for(options[:search])
+        !@search_key.blank? && options[:search] ? conditions_for(options[:search]) : nil
       end   
 
       def index
@@ -69,14 +71,14 @@ module AdministrateMe
         call_before_render
         respond_to do |format|
           format.html { render :template => 'commons/index' }
+          format.js   {
+            render :update do |page|
+              page.replace_html :list_area, :partial => 'list'
+            end
+          }
           format.xml  { render :xml => @records.to_xml }
         end
       end    
-
-      def search    
-        get_list
-        render :partial => 'list'    
-      end
 
       def show
         if_available(:show) do 
@@ -92,14 +94,14 @@ module AdministrateMe
         if_available(:new) do
           @resource = ( options[:model] ? options[:model] : controller_name ).classify.constantize.new
           call_before_render
-          render :template => 'commons/new'
+          render :template => 'commons/base_form'
         end
       end
 
       def edit
         if_available(:edit) do
           call_before_render
-          render :template => 'commons/edit'
+          render :template => 'commons/base_form'
         end
       end
 
@@ -114,11 +116,12 @@ module AdministrateMe
           call_before_render
           respond_to do |format|
             if @success
-              flash[:notice] = 'El registro fue creado exitosamente'        
+              flash[:notice] = 'El registro fue creado exitosamente'
+              session["#{controller_name}_search_key"] = nil
               format.html { redirect_to path_to_index }
               format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
             else
-              format.html { render :template => "commons/new" }
+              format.html { render :template => "commons/base_form" }
               format.xml  { render :xml => @resource.errors.to_xml }        
             end
           end
@@ -136,7 +139,7 @@ module AdministrateMe
               format.html { redirect_to path_to_element(@resource) }
               format.xml  { head :ok }
             else
-              format.html { render :template => "commons/edit" }        
+              format.html { render :template => "commons/base_form" }
               format.xml  { render :xml => @resource.errors.to_xml }
             end
           end

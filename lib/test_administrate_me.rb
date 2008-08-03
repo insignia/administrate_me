@@ -1,3 +1,6 @@
+# Test an administrate_me controller. This tester helper call all the 
+# seven restful actions to check they're all working fine. You'll got to
+# have your fixtures for this test helper to work. 
 module TestAdministrateMe
 
   module ClassMethods
@@ -13,12 +16,22 @@ module TestAdministrateMe
       end
     end
   
-    # Testear un controllador que utilice administrate_me
+    # ==== Example
     # 
-    # ==== Ejemplo
-    #
-    #   class LugaresControllerTest < Test::Unit::TestCase
+    #   class ProductsControllerTest < Test::Unit::TestCase
+    #     fixtures :products
     #     test_administrate_me
+    #   end
+    #
+    # Parameters can also be passed to different actions when needed to 
+    # make models validate.
+    # 
+    #   class ProductosControllerTest < ActionController::TestCase
+    #     tests ProductosController
+    #     fixtures :productos
+    #     test_administrate_me do |t|
+    #       t.set_params :create, :product => {:name => "Product Name"}
+    #     end
     #   end
     #
     def test_administrate_me(options = {})
@@ -44,17 +57,11 @@ module TestAdministrateMe
       @model_name  = @controller.model_name
       @model_class = @controller.model_class
       @model_first = @model_class.find(:first)
-      if parent = self.class.options[:parent]
+      if parent = @controller.options[:parent]
         @parent = @model_first.send(parent)
         assert @parent, "Los registros en los fixtures deben tener asignados sus parents para poder hacer las pruebas."
       end
     end
-    
-#    def get_parent
-#      if parent_class = self.class.options[:parent_class]
-#        parent_class.first.find(parent.last)
-#      end
-#    end
     
     def extra_params(action)
       cls = self.class

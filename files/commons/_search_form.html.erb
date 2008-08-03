@@ -1,0 +1,19 @@
+<% form_tag('javascript:void(0)') do %>
+
+    <label for="">
+        <span>Búsqueda (tipee la palabra que busca)</span><br/>
+        <%= text_field_tag :search_key, @search_key %>
+        <span id="indicator" style="display:none">
+            <%= image_tag 'admin_ui/indicator.gif' %>
+        </span>
+    </label>
+
+  <%= observe_field :search_key,
+                    :frequency => 0.5,
+                    :before    => "Element.show('indicator')",
+                    :complete  => "Element.hide('indicator')",
+                    :url       => path_to_index,
+                    :method    => :get,
+                    :with      => "'search_key=' + encodeURIComponent(value)" %>
+
+<% end %>

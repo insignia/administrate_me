@@ -1,3 +1,44 @@
+# This is the pluing's core where all definitions are made.
+# When you call the administrate_me class method on a controller all the 
+# AdminScaffold methods are added to that controller. Basically this allows you
+# to have a full featured table administration on that controller.
+# 
+# See README file to a step by step guide about how to setup an administrate_me
+# application.
+# 
+# == Callbacks
+# 
+# There are several callbacks that can be added to you controller to handle 
+# features on you app and extend the administrate_me ones.
+# 
+# ==== general_conditions
+# 
+# This method is expected to return a +conditions+ value that will be used to 
+# narrow down the results of the +index+ action.
+#  
+# The controller method +get_list+ is in charge to return records for the +index+
+# action, even if the request is a search request or an index filter. The +get_list+
+# method will always use this general conditions using a +with_scope+ sentence
+# to include them on the +find+ method call.
+# 
+# ==== before_render
+# 
+# This method will be called on the controller just before the respond_to block
+# on every administrate_me action. It can be used to define some extra instance
+# variables to use them on the views.
+# 
+# ==== before_save and after_save
+# 
+# This methods will be called and after the resource is saved. 
+# Be careful about it's use, you should consider as first option to include this
+# kind of logic on +before_save+ and +after_save+ callbacks of your model. 
+# Just use them when they're really controller related.
+# 
+# == Search
+# 
+# [TODO]
+# 
+#
 module AdministrateMe
   
   module ClassMethods
@@ -7,7 +48,6 @@ module AdministrateMe
       
       def initialize
         @options = {}
-        @options[:secured] = true
         @options[:except] = []
       end
       
@@ -82,12 +122,6 @@ module AdministrateMe
         @options[:per_page] = records
       end
       
-      # The public_access! method specifies that the controller will not require user
-      # authetication.
-      def public_access!
-        @options[:secured] = false
-      end
-
       # Used to specity the parent resource of the current resource.
       def set_parent(parent)
         @options[:parent] = parent
@@ -136,7 +170,8 @@ module AdministrateMe
     # You'll need to add map.resources :products to the routes.rb file.
     def administrate_me(options = {})
       self.extend AdministrateMe::ClassMethods::Base
-      yield(config = AdministrateMeConfig.new)
+      config = AdministrateMeConfig.new
+      yield(config) if block_given?
       build config
     end            
 
@@ -163,10 +198,6 @@ module AdministrateMe
           before_filter :get_resource, :only => actions_for_get_resource
           before_filter :get_parent
         end
-        
-        unless config.options[:secured] == false
-          before_filter :secured_access
-        end            
         
       end        
       
@@ -215,16 +246,9 @@ module AdministrateMe
   end
   
   module InstanceMethods
-    # El método set_module toma como parámetros el nombre de módulo a definir y 
-    # opcionalmente un hash de opciones. El hash de opciones permite reemplazar 
-    # los siguientes valores por defecto:
-    #   :caption = Nombre a mostrar en la pestaña. Por defecto se toma el nombre
-    #    del módulo en formato "humanized". 
-    #   :url = Dirección del enlace en la pestaña. Por defecto se crea un
-    #    enlace al index del controller con nombre igual al del módulo. 
-    # Ej:
-    #   set_module :productos, :caption => 'Articulos', :url => activos_productos_url()
-    #
+    # Adds a module in a request level basis.
+    # See <code>AdministrateMeBase::set_module</code> for further information
+    # about modules.
     def set_module(name, options = {})
       @instance_modules << self.class.administrate_me_compose_module(name, options)
     end
@@ -236,8 +260,3 @@ module AdministrateMe
   
 end
 
-ActionController::Base.extend AdministrateMe::ClassMethods
-ActionController::Base.send :include, AdministrateMe::InstanceMethods
-class ActionController::Base
-  superclass_delegating_accessor :ame_modules
-end
