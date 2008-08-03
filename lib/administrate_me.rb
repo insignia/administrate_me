@@ -152,7 +152,8 @@ module AdministrateMe
     # You'll need to add map.resources :products to the routes.rb file.
     def administrate_me(options = {})
       self.extend AdministrateMe::ClassMethods::Base
-      yield(config = AdministrateMeConfig.new)
+      config = AdministrateMeConfig.new
+      yield(config) if block_given?
       build config
     end            
 
