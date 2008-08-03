@@ -8,7 +8,7 @@ administrate_me is a Rails plugin conceived to simplify the creation of administ
 
 If you're already running Rails 2.1 you can just run the next command:
 
-  ruby script/plugin install http://github.com/jmax/administrate_me
+  ruby script/plugin install git://github.com/jmax/administrate_me
 
 Otherwise you'll have to clone the git repository and the delete the .git folder:
 
@@ -134,7 +134,7 @@ Modify the existing product resource to include prices.
 
 ==== Generate controller views
 
-  ruby script/generate admin_view prices parent:product
+  ruby script/generate admin_view prices parent:products
 
 Sometimes we will need to modify the generated partial template app/views/products/_context.html.erb to use the right field name. In this case using the default :name will work.
 This partial is used to show navigation breadcrumbs on the children page.

@@ -161,9 +161,9 @@ module AdministrateMe
     # ==== Example
     #   
     #   class ProductsController < ApplicationController
-    #     administrate_me do
-    #       search :name, :description, :price
-    #       order  'name'
+    #     administrate_me do |a|
+    #       a.search :name, :description, :price
+    #       a.order  'name'
     #     end
     #   end
     # 
