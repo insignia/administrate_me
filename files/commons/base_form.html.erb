@@ -5,7 +5,7 @@
 <% form_for(form_name_space, :builder => AdminBuilder, :html => html) do |f| %>
   <%= render :partial => "form", :locals => {:f => f} %>
   <div class="actions">
-    <%= submit_tag 'Guardar estos cambios' %> o
-    <%= link_to 'Cancelar', path_to_index %>
+    <%= submit_tag t('views.save_this_changes') %> o
+    <%= link_to t('views.cancel'), path_to_index %>
   </div>
 <% end %>

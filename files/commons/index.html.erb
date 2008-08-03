@@ -3,9 +3,9 @@
 <% content_for :support do %>
     <% if controller.class.accepted_action?(:new) %>
       <div id="add_new">
-        <%= link_to '<span>Agregar nuevo registro</span>', path_to_index(:new), :id => :add_new, :class => :button, :onclick => "this.blur();" %>
+        <% link_to path_to_index(:new), :id => :add_new, :class => :button, :onclick => "this.blur();" do %>
+          <span><%= t('views.add_new_record') %></span>
+        <% end %>
       </div>
     <% end %>
 <% end %>
-
-

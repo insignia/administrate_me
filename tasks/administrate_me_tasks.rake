@@ -23,7 +23,13 @@ namespace :admin do
     path_to_commons = RAILS_ROOT + "/app/views/commons/"
     FileUtils.mkdir(path_to_commons) unless File.exist?(path_to_commons)
     commons = Dir["./vendor/plugins/administrate_me/files/commons/*.html.erb"]
-    FileUtils.cp(commons, path_to_commons, :verbose => true) 
-    puts "Los archivos necesarios fueron copiados..."
+    FileUtils.cp(commons, path_to_commons, :verbose => true)
+
+    FileUtils.cp(
+      "./vendor/plugins/administrate_me/files/initializers/administrate_me.rb",
+      "./config/initializers",
+      :verbose => true
+    )
+    puts "Files were copied..."
   end
 end
