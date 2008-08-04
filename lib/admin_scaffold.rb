@@ -116,7 +116,7 @@ module AdministrateMe
           call_before_render
           respond_to do |format|
             if @success
-              flash[:notice] = t('messages.create_success')
+              flash[:notice] = I18n.t('messages.create_success')
               session["#{controller_name}_search_key"] = nil
               format.html { redirect_to path_to_index }
               format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
@@ -135,7 +135,7 @@ module AdministrateMe
           call_before_render
           respond_to do |format|
             if @success
-              flash[:notice] = t('messages.save_success')
+              flash[:notice] = I18n.t('messages.save_success')
               format.html { redirect_to path_to_element(@resource) }
               format.xml  { head :ok }
             else
@@ -151,7 +151,7 @@ module AdministrateMe
           @resource.destroy
           call_before_render
           respond_to do |format|
-            flash[:notice] = t('messages.destroy_success')
+            flash[:notice] = I18n.t('messages.destroy_success')
             format.html { redirect_to path_to_index }
             format.xml  { head :ok }
           end
@@ -193,7 +193,7 @@ module AdministrateMe
       end
 
       def search_message(search_key)
-        t('messages.search_message', :count => count_selected, :search_key => search_key)
+        I18n.t('messages.search_message', :count => count_selected, :search_key => search_key)
       end
 
       def get_resource
@@ -257,7 +257,7 @@ module AdministrateMe
               end
             end
           rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid
-            logger.error(t('errors.exception_on_save', :message => $!)
+            logger.error(I18n.t('errors.exception_on_save', :message => $!))
             @success = false
           end
         end
@@ -267,7 +267,7 @@ module AdministrateMe
             begin
               @parent = parent_class.find(params[:"#{parent}_id"])
             rescue ActiveRecord::RecordNotFound
-              flash[:error] = t('messages.missing_parent')
+              flash[:error] = I18n.t('messages.missing_parent')
               #FIXME: Where this case should redirect_to ?
               redirect_to ''
               return false
