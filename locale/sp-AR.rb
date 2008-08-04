@@ -1,5 +1,5 @@
 I18n.store_translations :'en-US',
-  :yes => 'SI', 
+  :yes => 'SI',
   :no  => 'NO',
   :views => {
     :prev => 'Anterior',
@@ -22,6 +22,14 @@ I18n.store_translations :'en-US',
     :back => 'Volver',
     :search_prompt => 'Búsqueda (tipee la palabra que busca)'
   },
+  :messages => {
+    :create_success => 'El registro fue creado exitosamente',
+    :save_success => 'Los cambios fueron guardados exitosamente',
+    :destroy_success => 'El registro fue eliminado exitosamente.',
+    :search_message => "se encontraron {{count}} resultados con \"<b>{{search_key}}</b>\"",
+    :missing_parent => "No existe el padre del elemento solicitado"
+  },
   :errors => {
-    :modules_not_defined => "Debe definir los módulos para la aplicación. Ver documentacion de AdministrateMe::Base#set_module para mayor información"
+    :modules_not_defined => "Debe definir los módulos para la aplicación. Ver documentacion de AdministrateMe::Base#set_module para mayor información",
+    :exception_on_save => "Ocurrió una exception al salvar el registro: {{message}}"
   }

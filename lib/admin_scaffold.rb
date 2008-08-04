@@ -2,7 +2,7 @@ module AdministrateMe
   module AdminScaffold
     module InstanceMethods
 
-      def get_list    
+      def get_list
         session[:mini] = ''
         params[:search_key] ||= session["#{controller_name}_search_key"] if session["#{controller_name}_search_key"]
         @search_key = params[:search_key]
@@ -19,7 +19,7 @@ module AdministrateMe
           end
         end
         session["#{controller_name}_search_key"] = @search_key
-      end  
+      end
 
       def get_per_page
         options[:per_page] || 15
@@ -41,8 +41,8 @@ module AdministrateMe
       end
 
       def set_search_message
-        if options[:search] && !params[:search_key].blank?        
-          session[:mini] = search_message(@search_key) 
+        if options[:search] && !params[:search_key].blank?
+          session[:mini] = search_message(@search_key)
         end
       end
 
@@ -55,16 +55,16 @@ module AdministrateMe
       def global_scope
         gc = respond_to?('general_conditions') ? general_conditions : nil
         if gc
-          gc.merge(session["#{controller_name}"]) if session["#{controller_name}"]          
+          gc.merge(session["#{controller_name}"]) if session["#{controller_name}"]
         else
-          gc = session["#{controller_name}"] if session["#{controller_name}"]  
+          gc = session["#{controller_name}"] if session["#{controller_name}"]
         end
         gc
-      end   
+      end
 
       def search_scope
         !@search_key.blank? && options[:search] ? conditions_for(options[:search]) : nil
-      end   
+      end
 
       def index
         get_list
@@ -78,19 +78,19 @@ module AdministrateMe
           }
           format.xml  { render :xml => @records.to_xml }
         end
-      end    
+      end
 
       def show
-        if_available(:show) do 
+        if_available(:show) do
           call_before_render
           respond_to do |format|
             format.html # show.rhtml
-            format.xml  { render :xml => @resource.to_xml }      
+            format.xml  { render :xml => @resource.to_xml }
           end
         end
       end
 
-      def new    
+      def new
         if_available(:new) do
           @resource = ( options[:model] ? options[:model] : controller_name ).classify.constantize.new
           call_before_render
@@ -116,26 +116,26 @@ module AdministrateMe
           call_before_render
           respond_to do |format|
             if @success
-              flash[:notice] = 'El registro fue creado exitosamente'
+              flash[:notice] = t('messages.create_success')
               session["#{controller_name}_search_key"] = nil
               format.html { redirect_to path_to_index }
               format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
             else
               format.html { render :template => "commons/base_form" }
-              format.xml  { render :xml => @resource.errors.to_xml }        
+              format.xml  { render :xml => @resource.errors.to_xml }
             end
           end
         end
       end
 
-      def update 
-        if_available(:edit) do 
+      def update
+        if_available(:edit) do
           @resource.attributes = params[model_name.to_sym]
           save_model
           call_before_render
           respond_to do |format|
             if @success
-              flash[:notice] = 'Los cambios fueron guardados exitosamente'
+              flash[:notice] = t('messages.save_success')
               format.html { redirect_to path_to_element(@resource) }
               format.xml  { head :ok }
             else
@@ -151,8 +151,8 @@ module AdministrateMe
           @resource.destroy
           call_before_render
           respond_to do |format|
-            flash[:notice] = 'El registro fue eliminado exitosamente.'
-            format.html { redirect_to path_to_index }      
+            flash[:notice] = t('messages.destroy_success')
+            format.html { redirect_to path_to_index }
             format.xml  { head :ok }
           end
         end
@@ -183,22 +183,22 @@ module AdministrateMe
         options[:parent] ||= self.options[:parent]
         create_path(self.controller_name.singularize, element, self.class.namespace, @parent, options)
       end
-      
+
       def get_index
         path  = "#{controller_name}_path"
         unless options[:parent].blank?
           path << "(params[:#{options[:parent].to_s}_id])"
-        end     
+        end
         eval(path)
       end
 
       def search_message(search_key)
-        "se encontraron #{count_selected} resultados con \"<b>#{search_key}</b>\""
+        t('messages.search_message', :count => count_selected, :search_key => search_key)
       end
 
       def get_resource
         @resource = model_class.find(params[:id])
-      end   
+      end
 
       def model_name
         self.class.model_name
@@ -250,14 +250,14 @@ module AdministrateMe
 
         def save_model
           begin
-            model_class.transaction do 
+            model_class.transaction do
               before_save if respond_to?('before_save')
               if @success = @resource.save!
                 after_save if respond_to?('after_save')
               end
-            end 
+            end
           rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid
-            logger.error("Ocurrió una exception al salvar el registro: " + $!)
+            logger.error(t('errors.exception_on_save', :message => $!)
             @success = false
           end
         end
@@ -267,7 +267,8 @@ module AdministrateMe
             begin
               @parent = parent_class.find(params[:"#{parent}_id"])
             rescue ActiveRecord::RecordNotFound
-              flash[:error] = "No existe el padre del elemento solicitado"
+              flash[:error] = t('messages.missing_parent')
+              #FIXME: Where this case should redirect_to ?
               redirect_to ''
               return false
             end
@@ -281,7 +282,7 @@ module AdministrateMe
           end
           html << "@resource)"
           html
-        end            
+        end
 
         def set_filter_for(name_space, condition)
           session[:c_filter] = name_space
@@ -292,12 +293,12 @@ module AdministrateMe
         def call_before_render
           before_render if respond_to?('before_render')
         end
-        
+
     end
   end
-  
+
   module InstanceMethods
-    
+
     def create_path(controller_name, element, namespace, parent, options = {})
       parts = []
       # add prefix

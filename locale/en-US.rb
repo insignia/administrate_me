@@ -21,7 +21,15 @@ I18n.store_translations :'en-US',
     :edit_record => "Editting a {{model}}",
     :back => 'Go back',
     :search_prompt => "Search (type the word you're looking for)"
-},
+  },
+  :messages => {
+    :create_success => 'Record was successfully created',
+    :save_success => 'Record was successfully saved',
+    :destroy_success => 'Record was successfully deleted',
+    :search_message => "{{count}} results found including \"<b>{{search_key}}</b>\"",
+    :missing_parent => "There is no parent for the requested element"
+  },
   :errors => {
-    :modules_not_defined => "Must define application modules. See AdministrateMe::Base#set_module documentation for further information."
+    :modules_not_defined => "Must define application modules. See AdministrateMe::Base#set_module documentation for further information.",
+    :exception_on_save => "An exception ocurred saving the record: {{message}}"
   }
