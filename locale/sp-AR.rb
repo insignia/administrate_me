@@ -17,9 +17,10 @@ I18n.store_translations :'en-US',
     :filter_records_by => 'Filtrar registros por...',
     :admin => 'administrar',
     :empty_dataset => 'No hay registros cargados',
-    :new_record => 'x',
-    :edit_record => 'x',
-    :back => 'Volver'
+    :new_record => "Nuevo {{model}}",
+    :edit_record => "Editando un {{model}}",
+    :back => 'Volver',
+    :search_prompt => 'Búsqueda (tipee la palabra que busca)'
   },
   :errors => {
     :modules_not_defined => "Debe definir los módulos para la aplicación. Ver documentacion de AdministrateMe::Base#set_module para mayor información"

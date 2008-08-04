@@ -17,8 +17,8 @@ I18n.store_translations :'en-US',
     :filter_records_by => 'Filter records by...',
     :admin => 'admin',
     :empty_dataset => 'No data loaded',
-    :new_record => 'x',
-    :edit_record => 'x',
+    :new_record => "New {{model}}",
+    :edit_record => "Editting a {{model}}",
     :back => 'Go back'
   },
   :errors => {
