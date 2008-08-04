@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
  "http://www.w3.org/TR/html4/strict.dtd">
 
-<% title = controller.respond_to?('title') ? controller.title : 'Administración' -%>
+<% title = controller.respond_to?('title') ? controller.title : t('views.default_title') -%>
 <% app_name = controller.respond_to?('app_name') ? controller.app_name : 'administrate_me' -%>
 <% owner = controller.respond_to?('owner') ? controller.owner : 'nobody' -%>
 

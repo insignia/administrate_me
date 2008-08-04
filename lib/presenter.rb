@@ -27,8 +27,9 @@ module AdminView::Presenter
       def pretty_value(value)
         case value
           when TrueClass, FalseClass
-            value ? 'Sí' : 'No'
+            value ? t(:yes) : t(:no)
           when Date
+            #FIXME: Revisit this, it needs to be localized.
             value.to_s.split('-').reverse.join('/')
           else
             value
@@ -64,15 +65,15 @@ module AdminView::Presenter
   end
   
   def edit_action
-    link_to('Editar este registro', path_to_element(@resource, :prefix => :edit))
+    link_to(t('views.edit_this_record'), path_to_element(@resource, :prefix => :edit))
   end
   
   def destroy_action
-    link_to('Eliminar este registro', path_to_element(@resource), :confirm => 'Eliminará definitivamente este registro. ¿Está seguro?', :method => :delete, :class => 'delete')
+    link_to(t('views.delete_this_record'), path_to_element(@resource), :confirm => t('views.delete_confirm'), :method => :delete, :class => 'delete')
   end
   
   def back_action
-    link_to 'Volver', path_to_index, :class => 'neutro'
+    link_to t('views.back'), path_to_index, :class => 'neutro'
   end
 end
 

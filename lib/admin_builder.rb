@@ -101,7 +101,7 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       def fld_value(fld, options = {})
         rtn = @object.send(fld)
         rtn = rtn.strftime('%H:%M') if rtn && options[:format] == :hour && options[:read_only]
-        rtn = rtn ? 'SI' : 'NO' if rtn == true || rtn == false
+        rtn = rtn ? t(:yes) : t(:no) if rtn == true || rtn == false
         rtn
       end
 
