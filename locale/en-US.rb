@@ -1,5 +1,5 @@
 I18n.store_translations :'en-US',
-  :yes => 'SI', 
+  :yes => 'SI',
   :no  => 'NO',
   :views => {
     :prev => 'Previous',
@@ -19,8 +19,9 @@ I18n.store_translations :'en-US',
     :empty_dataset => 'No data loaded',
     :new_record => "New {{model}}",
     :edit_record => "Editting a {{model}}",
-    :back => 'Go back'
-  },
+    :back => 'Go back',
+    :search_prompt => "Search (type the word you're looking for)"
+},
   :errors => {
     :modules_not_defined => "Must define application modules. See AdministrateMe::Base#set_module documentation for further information."
   }
