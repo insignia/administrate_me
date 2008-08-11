@@ -212,7 +212,11 @@ module AdminView
   end
 
   def form_name_space
-    @parent ? [@parent, @resource] : @resource
+    rtn  = [] 
+    rtn << controller.class.namespace.to_sym unless controller.class.namespace.blank?
+    rtn << @parent                           if     @parent
+    rtn << @resource                         if     @resource
+    rtn
   end
   
   def show_filters_for(filters = [])
