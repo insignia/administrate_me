@@ -1,4 +1,26 @@
 module AdminView
+
+  # field_block helper
+  # 
+  # Use this helper to set a two column fieldset layout for an admin form.
+  # 
+  # usage: in a _form.html.erb
+  # 
+  # <% field_block do %>
+  #   <%= t.text_field :name %>
+  #   <%= t.text_field :code %>
+  # <% end %>
+  # 
+  # note: this two input boxes will be render in a single row
+  #
+  def field_block(&block)
+    content = capture(&block)
+    concat('<div class="float_left">',        block.binding)
+    concat(content,                           block.binding)
+    concat('</div>',                          block.binding)
+    concat('<div style="clear:both;"></div>', block.binding)
+  end
+
   def generate_navigation
     html = ""
     if modules = get_modules
