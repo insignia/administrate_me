@@ -47,8 +47,10 @@ module AdministrateMe
       end
 
       def parent_scope
-        if parent = options[:parent]
-          { "#{parent}_id" => params["#{parent}_id"] }
+        parent = options[:parent]
+        foreign_key = options[:foreign_key].blank? ? "#{options[:parent]}_id" : options[:foreign_key]
+        if parent
+          { foreign_key => params["#{parent}_id"] }
         end
       end
 

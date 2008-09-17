@@ -123,8 +123,22 @@ module AdministrateMe
       end
       
       # Used to specity the parent resource of the current resource.
-      def set_parent(parent)
+      # 
+      # basic usage:
+      #
+      #   administrate_me do |a|
+      #     a.set_parent :branch
+      #   end
+      #
+      # usage with an specific foreign key
+      # 
+      #   administrate_me do |a|
+      #     a.set_parent :branch, :foreign_key => 'a01_branch'
+      #   end
+      #
+      def set_parent(parent,options={})
         @options[:parent] = parent
+        @options[:foreign_key] = options[:foreign_key] if options[:foreign_key]
       end
       
       # Used to specify the model name of the resource this controller handles. 
