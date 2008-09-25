@@ -24,7 +24,7 @@ module AdminView
   def row_for(label, value)
     html  = '<div class="rc-block">'
     html << '  <div class="rc-row rc-caption">'+label+'</div>'
-    html << '  <div class="rc-row rc-content">'+value+'</div>'
+    html << '  <div class="rc-row rc-content">'+(value.blank? ? '-' : value)+'</div>'
     html << '</div>'
     html
   end
@@ -32,7 +32,7 @@ module AdminView
   def area_for(label, value)
     html  = '<div class="rc-block">'
     html << '  <div class="rc-area rc-label">'+label+'</div>'
-    html << '  <div class="rc-area rc-detail">'+value+'</div>'
+    html << '  <div class="rc-area rc-detail">'+(value.blank? ? '-' : value)+'</div>'
     html << '</div>'
     html
   end
