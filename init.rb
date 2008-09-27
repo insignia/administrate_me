@@ -6,7 +6,7 @@ require 'elegant_presentation'
 require 'presenter'
 require 'presentation_builder'
 require 'rspec_matchers'
-require 'merge_conditions_backport'
+require 'merge_conditions_backport' 
 
 ActionController::Base.extend AdministrateMeBase
 ActionController::Base.extend AdministrateMe::ClassMethods
