@@ -286,7 +286,8 @@ module AdminView
     rtn << @resource                         if     @resource
     rtn
   end
-  
+
+  # Deprecated: filters_for() helper should be used instead
   def show_filters_for(filters = [])
     html = ""
     lis  = ""
@@ -294,12 +295,13 @@ module AdminView
       html << content_tag(:div, 'Filtrar registros por...', :class => 'f_header')     
       filters.each do |filter|
         link = link_to(filter[:caption], filter[:url])
-        lis << content_tag(:li, link, :class => set_current(filter[:name_space]))
+        lis << content_tag(:li, link, :class => current_class(filter[:name_space].to_s == params[:filter]))
       end
       html << content_tag(:ul, lis, :class => 'filters')
     end
     html
-  end 
+  end
+  deprecate :show_filters_for
 
   def list_for(group, settings = {})
     header  = (settings[:label]) ? settings[:label] : group.to_s.humanize
@@ -327,13 +329,8 @@ module AdminView
     content_tag(:div, html, :class => 'more')
   end
   
-  def set_current(name_space)
-    if name_space == session[:c_filter]
-      css = "current"
-    else
-      css = nil
-    end
-    css
+  def current_class(is_current)
+    is_current ? 'current' : nil
   end
   
 end

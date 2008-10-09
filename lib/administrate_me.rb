@@ -167,6 +167,59 @@ module AdministrateMe
       def excel_available!
         @options[:excel] = true
       end
+
+      class FilterConfig
+        attr_accessor :filters
+
+        def initialize
+          @filters = []
+        end
+
+        def conditions_for_filter(filter_name)
+          filter = @filters.find {|f| f.first.to_s == filter_name.to_s}
+          filter ? filter.last : nil
+        end
+
+        def set(name, conditions)
+          @filters << [name, conditions]
+        end
+      end
+
+      # Settings filters. One example is better than one thousand words.
+      #
+      # === Example:
+      #
+      #   administrate_me do |a|
+      #     a.filters do |f|
+      #       # Assigning a name and a search condition to each filter.
+      #       f.set :active,   {:status => 'active'}
+      #       f.set :inactive, "active <> 'active'"
+      #     end
+      #   end
+      #
+      # Then on your _list.html.erb file you just use this helpers to show the
+      # filter links:
+      #
+      #   <% content_for :extras do %>
+      #     <% filters_for do %>
+      #       <%= filter_by 'All' %>
+      #       <%= filter_by 'Active records', :active %>
+      #       <%= filter_by 'Inactive records', :inactive %>
+      #     <% end %>
+      #   <% end %>
+      #
+      # Using a filter is just a matter of calling the index action on the
+      # controller using a filter parameter. So something like this would work
+      # too:
+      #
+      #   <%= link_to 'Active records', users_path(:filter => 'active') %>
+      #
+      def filters
+        filter_config = FilterConfig.new
+        yield filter_config
+        @options[:filter_config] = filter_config
+      end
+
     end
     
     # Use this macro to include all the necesary methods that a controller
@@ -191,16 +244,6 @@ module AdministrateMe
 
     module Base
       
-      def filters
-        yield
-      end
-      
-      def set(name, conditions)
-        define_method(name) do
-          set_filter_for(name, conditions)
-        end
-      end
-          
       def build(config)
         instance_variable_set("@administrate_me_options", config.options)
         layout :set_layout

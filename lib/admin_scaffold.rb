@@ -6,20 +6,20 @@ module AdministrateMe
         session[:mini] = ''
         params[:search_key] ||= session["#{controller_name}_search_key"] if session["#{controller_name}_search_key"]
         @search_key = params[:search_key]
-        model_class.send(:with_scope, :find => { :conditions => parent_scope }) do
-          model_class.send(:with_scope, :find => { :conditions => global_scope }) do
-            model_class.send(:with_scope, :find => { :conditions => search_scope }) do
-              if model_class.respond_to?('paginate')
-                @records = model_class.paginate(:include => get_includes, :page => params[:page], :per_page => get_per_page, :order => get_order )
-              else
-                @records = model_class.find(:all, :include => get_includes, :order => get_order )
-              end
-              set_search_message
-            end
-          end
-        end
+        get_records
+        set_search_message
         session["#{controller_name}_search_key"] = @search_key
-      end  
+      end
+
+      def get_records
+        conditions = model_class.merge_conditions_backport(*[parent_scope, global_scope, search_scope, filter_scope])
+        options = {:conditions => conditions, :include => get_includes, :order => get_order}
+        if model_class.respond_to?('paginate')
+          @records = model_class.paginate(options.merge(:page => params[:page], :per_page => get_per_page))
+        else
+          @records = model_class.find(:all, options)
+        end
+      end
 
       def get_per_page
         options[:per_page] || 15
@@ -55,18 +55,16 @@ module AdministrateMe
       end
 
       def global_scope
-        gc = respond_to?('general_conditions') ? general_conditions : nil
-        if gc
-          gc.merge(session["#{controller_name}"]) if session["#{controller_name}"]          
-        else
-          gc = session["#{controller_name}"] if session["#{controller_name}"]  
-        end
-        gc
+        respond_to?('general_conditions') ? general_conditions : nil
       end   
 
       def search_scope
         !@search_key.blank? && options[:search] ? conditions_for(options[:search]) : nil
-      end   
+      end
+
+      def filter_scope
+        options[:filter_config] ? options[:filter_config].conditions_for_filter(params[:filter]) : nil
+      end
 
       def index
         get_list
@@ -160,7 +158,10 @@ module AdministrateMe
         end
       end
 
-      def path_to_index(prefix=nil)
+      #FIXME: I need some testing!
+      def path_to_index(*args)
+        local_options = args.last.is_a?(Hash) ? args.pop : nil
+        prefix  = args.first
         parts = []
         # add prefix
         parts << prefix if prefix
@@ -176,9 +177,10 @@ module AdministrateMe
         #
         parts << 'path'
         helper_name = parts.join('_')
-        ids = []
-        ids << params[:"#{parent}_id"] unless parent.blank?
-        send(helper_name, *ids)
+        parameters = []
+        parameters << params[:"#{parent}_id"] unless parent.blank?
+        parameters << local_options if local_options
+        send(helper_name, *parameters)
       end
 
       def path_to_element(element, options = {})
@@ -232,10 +234,6 @@ module AdministrateMe
         eval("[\"#{predicate.join(' OR ')}\", #{values.join(',')}]")
       end
 
-      def all
-        set_filter_for nil, nil
-      end
-
       protected
 
         def if_available(action)
@@ -284,12 +282,6 @@ module AdministrateMe
           html << "@resource)"
           html
         end            
-
-        def set_filter_for(name_space, condition)
-          session[:c_filter] = name_space
-          session["#{controller_name}"] = condition
-          redirect_to :action => 'index' unless name_space.to_s == 'index'
-        end
 
         def call_before_render
           before_render if respond_to?('before_render')
