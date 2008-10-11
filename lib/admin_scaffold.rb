@@ -16,8 +16,10 @@ module AdministrateMe
         options = {:conditions => conditions, :include => get_includes, :order => get_order}
         if model_class.respond_to?('paginate')
           @records = model_class.paginate(options.merge(:page => params[:page], :per_page => get_per_page))
+          @count_for_search = @records.total_entries
         else
           @records = model_class.find(:all, options)
+          @count_for_search = @records.size
         end
       end
 
@@ -41,8 +43,8 @@ module AdministrateMe
       end
 
       def set_search_message
-        if options[:search] && !params[:search_key].blank?        
-          session[:mini] = search_message(@search_key) 
+        if options[:search] && !params[:search_key].blank?
+          session[:mini] = "se encontraron #{@count_for_search} resultados con \"<b>#{@search_key}</b>\""
         end
       end
 
@@ -196,10 +198,6 @@ module AdministrateMe
         eval(path)
       end
 
-      def search_message(search_key)
-        "se encontraron #{count_selected} resultados con \"<b>#{search_key}</b>\""
-      end
-
       def get_resource
         @resource = model_class.find(params[:id])
       end   
@@ -242,10 +240,6 @@ module AdministrateMe
           else
             raise ActionController::UnknownAction
           end
-        end
-
-        def count_selected
-          model_class.count(:include => get_includes)
         end
 
         def save_model
