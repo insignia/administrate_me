@@ -295,13 +295,35 @@ module AdminView
       html << content_tag(:div, 'Filtrar registros por...', :class => 'f_header')     
       filters.each do |filter|
         link = link_to(filter[:caption], filter[:url])
-        lis << content_tag(:li, link, :class => current_class(filter[:name_space].to_s == params[:filter]))
+        lis << content_tag(:li, link, :class => current_class(filter[:name_space].to_s == controller.active_filter))
       end
       html << content_tag(:ul, lis, :class => 'filters')
     end
     html
   end
   deprecate :show_filters_for
+
+  def filters_for(&block)
+    concat("<div class=\"f_header\">Filtrar registros por...</div>",  block.binding)
+    concat("<ul class=\"filters\">", block.binding)
+    yield
+    concat("</ul>",                  block.binding)
+    concat("</div>",                 block.binding)
+  end
+
+  def all_filters
+    results = []
+    results << filter_by('Todos', :none)
+    controller.options[:filter_config].filter_names.each do |filter_name|
+      results << filter_by(filter_name.to_s.humanize, filter_name)
+    end
+    results.join("\n")
+  end
+
+  def filter_by(name, filter_name = nil)
+    link = link_to(name, path_to_index(:filter => filter_name))
+    content_tag(:li, link, :class => current_class(filter_name.to_s == 'none' && !controller.active_filter || filter_name.to_s == controller.active_filter))
+  end
 
   def list_for(group, settings = {})
     header  = (settings[:label]) ? settings[:label] : group.to_s.humanize

@@ -65,7 +65,7 @@ module AdministrateMe
       end
 
       def filter_scope
-        options[:filter_config] ? options[:filter_config].conditions_for_filter(params[:filter]) : nil
+        options[:filter_config].conditions_for_filter(active_filter) if options[:filter_config]
       end
 
       def index
@@ -232,6 +232,10 @@ module AdministrateMe
         eval("[\"#{predicate.join(' OR ')}\", #{values.join(',')}]")
       end
 
+      def active_filter
+        session[:active_filters] ? session[:active_filters][self.class] : nil
+      end
+
       protected
 
         def if_available(action)
@@ -265,6 +269,13 @@ module AdministrateMe
               redirect_to ''
               return false
             end
+          end
+        end
+
+        def set_active_filter
+          if params[:filter]
+            session[:active_filters] ||= {}
+            session[:active_filters][self.class] = params[:filter] != 'none' ? params[:filter] : nil
           end
         end
 

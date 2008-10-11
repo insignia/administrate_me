@@ -177,15 +177,27 @@ module AdministrateMe
 
         def conditions_for_filter(filter_name)
           filter = @filters.find {|f| f.first.to_s == filter_name.to_s}
-          filter ? filter.last : nil
+          filter ? filter.last : conditions_for_dynamic_filter(filter_name)
+        end
+
+        def conditions_for_dynamic_filter(filter_name)
+          @dynamic_filter.call(filter_name) if @dynamic_filter
         end
 
         def set(name, conditions)
           @filters << [name, conditions]
         end
+
+        def dynamic(&block)
+          @dynamic_filter = block
+        end
+
+        def filter_names
+          @filters.map(&:first)
+        end
       end
 
-      # Settings filters. One example is better than one thousand words.
+      # Setting automatic filters. One example is better than one thousand words.
       #
       # === Example:
       #
@@ -208,11 +220,50 @@ module AdministrateMe
       #     <% end %>
       #   <% end %>
       #
+      # You can also use this simplified form:
+      #
+      #   <% content_for :extras do %>
+      #     <% filters_for do %>
+      #       <%= all_filter %>
+      #     <% end %>
+      #   <% end %>
+      #
       # Using a filter is just a matter of calling the index action on the
       # controller using a filter parameter. So something like this would work
       # too:
       #
       #   <%= link_to 'Active records', users_path(:filter => 'active') %>
+      #
+      # === Dynamic filters
+      #
+      # You can also set dynamic filters. This way, you can create a condition
+      # to be used depending the filter parameter received on the request:
+      #
+      #   administrate_me do |a|
+      #     a.filters do |f|
+      #       # Assigning a name and a search condition to each filter.
+      #       f.set :active,   {:status => 'active'}
+      #       f.set :inactive, "active <> 'active'"
+      #
+      #       filter.dynamic do |filter_name|
+      #         # Create a find condition based on the received filter paramter.
+      #         if filter_name =~ ROLE_FILTER_RE
+      #           "roles.name = '#{$1}'"
+      #         end
+      #       end
+      #     end
+      #   end
+      #
+      # Then on the view:
+      #
+      #   <% content_for :extras do %>
+      #     <% filters_for do %>
+      #       <%= all_filter %>
+      #       <% @roles.each do |role| %>
+      #         <%= filter_by role.name, "role_#{role.name}"  %>
+      #       <% end %>
+      #     <% end %>
+      #   <% end %>
       #
       def filters
         filter_config = FilterConfig.new
@@ -254,6 +305,7 @@ module AdministrateMe
           hide_action :path_to_element
           before_filter :get_resource, :only => actions_for_get_resource
           before_filter :get_parent
+          before_filter :set_active_filter
         end
         
       end        
