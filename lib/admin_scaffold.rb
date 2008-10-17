@@ -150,8 +150,10 @@ module AdministrateMe
 
       def destroy
         if_available(:destroy) do
-          @success = @resource.destroy
-          call_before_render
+          call_callback_on_action 'before', 'destroy'
+          if @success = @resource.destroy
+            call_callback_on_action 'after', 'destroy'
+          end
           respond_to do |format|
             if @success
               flash[:notice] = 'El registro fue eliminado exitosamente.'
@@ -254,15 +256,30 @@ module AdministrateMe
         def save_model
           begin
             model_class.transaction do 
-              before_save if respond_to?('before_save')
+              call_callback           'before', 'save'
+              call_callback_on_action 'before', 'create'
+              call_callback_on_action 'before', 'update'
               if @success = @resource.save!
-                after_save if respond_to?('after_save')
+                call_callback           'after', 'save'
+                call_callback_on_action 'after', 'create'
+                call_callback_on_action 'after', 'update'
               end
             end 
           rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid
             logger.error("Ocurrió una exception al salvar el registro: " + $!)
             @success = false
           end
+        end       
+
+        # will execute the callback only when the controller executes the 
+        # specific action.
+        def call_callback_on_action(hook, action)
+          call_callback(hook, action) if action_name == action
+        end
+        
+        # will execute a callback
+        def call_callback(hook, action)
+          send("#{hook}_#{action}") if respond_to?("#{hook}_#{action}")
         end
 
         def get_parent
