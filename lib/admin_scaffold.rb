@@ -150,12 +150,17 @@ module AdministrateMe
 
       def destroy
         if_available(:destroy) do
-          @resource.destroy
+          @success = @resource.destroy
           call_before_render
           respond_to do |format|
-            flash[:notice] = 'El registro fue eliminado exitosamente.'
-            format.html { redirect_to path_to_index }      
-            format.xml  { head :ok }
+            if @success
+              flash[:notice] = 'El registro fue eliminado exitosamente.'
+              format.html { redirect_to path_to_index }
+              format.xml  { head :ok }
+            else
+              format.html { render :template => "commons/base_form" }
+              format.xml  { head :error }
+            end
           end
         end
       end
