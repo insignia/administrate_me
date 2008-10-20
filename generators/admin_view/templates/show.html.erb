@@ -20,9 +20,10 @@
   end
 %>
 <%%# Esta sección se puede borrar si no es necesaria -%>
+<%% if false %>
 <%% content_for :support do %>    
-    <%%# related_info_for 'Tareas de soporte', 
-          [ 
-            { :link => 'Enlace a otra página', :url => otra_pagina_path(@resource), :method => :post}
-          ] %>
+  <%% support_bar do %>
+    <%%= option_link :caption => 'Link to another resource', :url => some_resource_path(@resource) %>
+  <%% end %>   
+<%% end %>
 <%% end %>

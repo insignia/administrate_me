@@ -136,10 +136,17 @@ module AdministrateMe
       #     a.set_parent :branch, :foreign_key => 'a01_branch'
       #   end
       #
+      # or you can specify the relation in a more "rails way", like this:
+      #
+      #   administrate_me do |a|
+      #     a.belongs_to :branch
+      #   end
+      #
       def set_parent(parent,options={})
         @options[:parent] = parent
         @options[:foreign_key] = options[:foreign_key] if options[:foreign_key]
       end
+      alias_method "belongs_to", "set_parent"
       
       # Used to specify the model name of the resource this controller handles. 
       # It's optional and it has to be used only when the model name is different from 
