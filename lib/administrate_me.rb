@@ -148,6 +148,28 @@ module AdministrateMe
       end
       alias_method "belongs_to", "set_parent"
       
+      #
+      #  AdministrateMe supports the HABTM associations of a given resource.
+      #
+      #  Usage:
+      #
+      #   In the controller definition: 
+      #
+      #   administrate_me do |a|
+      #     a.has_and_belongs_to_many :tags
+      #   end
+      #
+      #   In the _form partial definition: 
+      #
+      #   <%= f.has_and_belongs_to_many :tags %>
+      #
+      #  This feature is inspired by Ryan Bates' railscasts.com
+      #  http://railscasts.com/episodes/17-habtm-checkboxes
+      #
+      def has_and_belongs_to_many(*habtms)
+        @options[:habtms] = habtms
+      end
+      
       # Used to specify the model name of the resource this controller handles. 
       # It's optional and it has to be used only when the model name is different from 
       # the controller name.
@@ -309,10 +331,13 @@ module AdministrateMe
         unless config.options[:scaffold] == false
           include AdministrateMe::InstanceMethods
           include AdministrateMe::AdminScaffold::InstanceMethods
-          hide_action :path_to_element
+          hide_action   :path_to_element
           before_filter :get_resource, :only => actions_for_get_resource
           before_filter :get_parent
-          before_filter :set_active_filter
+          before_filter :set_active_filter          
+          if options[:habtms]
+            before_filter :habtm_callback, :only => "update"
+          end 
         end
         
       end        

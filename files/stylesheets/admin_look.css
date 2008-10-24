@@ -586,3 +586,23 @@ div.pagination a {
 .resource-card .buttons a:hover {
   background-color: #848381;
 }
+
+.habtm-box {
+  padding: 10px 0x;
+}
+
+.habtm-box h3 {
+  border-bottom: 1px solid #cfcfcf;
+  margin-bottom: 10px;
+  color: #666666;
+  font-weight: bold;
+}
+
+.habtm-box input {
+  margin: 0px 5px 5px 0px;
+}
+
+.habtm-box span {
+  color: #333333;
+}
+

@@ -21,6 +21,32 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       end
     end
     
+    def has_and_belongs_to_many(habtm_relation, label_field, collection)
+      habtm_options = build_habtm_collection(habtm_relation, collection, label_field)
+      build_habtm_box_with(habtm_relation, habtm_options)
+    end
+    
+    def build_habtm_collection(habtm_relation, collection, label_field)
+      html = ""  
+      collection.each do |item|    
+        html << "    <li>"
+        html << '      <div class="habtm-option">'
+        html << @template.check_box_tag("#{@object.class.to_s.underscore}[#{habtm_relation.to_s.singularize}_ids][]", item.id, @object.send(habtm_relation).include?(item))
+        html << "<span>#{item.send(label_field).titleize}</span>"
+        html << "      </div>"
+        html << "    </li>"
+      end
+      html
+    end
+    
+    def build_habtm_box_with(habtm_relation, habtm_options)
+      html  = '<div class="habtm-box">'
+      html << "  <h3>#{habtm_relation.to_s.titleize}</h3>"
+      html << "  <ul>#{habtm_options}</ul>"
+      html << '</div>'
+      html
+    end    
+    
     def hidden_field(fld, options = {})
       return '' if no_show?(fld, options)
       super(fld, options)

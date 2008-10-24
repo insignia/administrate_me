@@ -245,6 +245,12 @@ module AdministrateMe
 
       protected
 
+        def habtm_callback
+          options[:habtms].each do |habtm|
+            params[model_name.to_sym]["#{habtm.to_s.singularize}_ids".to_sym] ||= []
+          end
+        end
+
         def if_available(action)
           if self.class.accepted_action?(action)
             yield
