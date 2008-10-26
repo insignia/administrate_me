@@ -118,6 +118,19 @@ module AdministrateMe
       end
       
       # Use per_page to indicate the number of records to be listed per page.
+      # To set the number of records per page administrate_me uses this priorities:
+      # - per_page setting on the controller
+      # - per_page class method on the model
+      # - a default of 15 records per page.
+      #
+      # ==== Example
+      #
+      #   class ProductsController < ApplicationController
+      #     administrate_me do |a|
+      #       a.per_page 15
+      #     end
+      #   end
+      #
       def per_page(records)
         @options[:per_page] = records
       end

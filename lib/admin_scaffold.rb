@@ -24,7 +24,7 @@ module AdministrateMe
       end
 
       def get_per_page
-        options[:per_page] || 15
+        options[:per_page] || model_class.per_page || 15
       end
 
       def get_includes
