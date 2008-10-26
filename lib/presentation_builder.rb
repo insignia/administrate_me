@@ -24,9 +24,9 @@ module AdminView::PresentationBuilder
 
       def related_value_for(value)
         if value.is_a?(Array)
-          rtn = value.map{|x| x.send(@options[:with])}.join(", ")
+          rtn = value.map{|x| safe_send(x, @options[:with])}.join(", ")
         else
-          rtn = value.send(@options[:with])
+          rtn = safe_send(value, @options[:with])
         end
         rtn
       end
@@ -48,6 +48,16 @@ module AdminView::PresentationBuilder
         customizations << "text-align:#{@options[:align]}" if @options[:align]
         customizations.join(';')
       end
+
+      private
+
+      def safe_send(object, method)
+        [*method].each do |m|
+          object = object && object.respond_to?(m) ? object.send(m) : nil
+        end
+        object
+      end
+
     end
 
     def initialize(collection)
