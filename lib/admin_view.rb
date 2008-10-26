@@ -100,14 +100,15 @@ module AdminView
   
   def files_to_load(type)
     if type == :css
-      files = controller.respond_to?('admin_style') ? controller.admin_style : ["admin_look", "reset-fonts-grids"] 
+      controller.respond_to?('admin_style') ? controller.admin_style : ["admin_look", "reset-fonts-grids"] 
     else    
-      files = controller.respond_to?('admin_scripts') ? controller.admin_scripts : [:defaults, "admin_ui.js"]
+      controller.respond_to?('admin_scripts') ? controller.admin_scripts : [:defaults, "admin_ui.js"]
     end
   end
   
   def file_inclusion(type, file)
-    (type == :css) ? stylesheet_link_tag(file) : javascript_include_tag(file)
+    args = [*file]
+    (type == :css) ? stylesheet_link_tag(*args) : javascript_include_tag(*args)
   end
   
   def get_modules
