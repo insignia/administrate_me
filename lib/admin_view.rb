@@ -3,14 +3,14 @@ module AdminView
   # resource_card helper
   # this helper render a very elegant presentation card for a resource.
   #   
-  # <% resource_card do %>  
-  #   <%= row_for  "Name",        @resource.name %>
-  #   <%= row_for  "Name",        @resource.name %>  
-  #   <%= area_for "Description", @resource.description %>
-  #   <%= row_for  "Name",        @resource.name %>
-  #   <%= row_for  "Date",        Date.today.to_s %>
-  #   <%= render_buttons %>  
-  # <% end %>
+  #   <% resource_card do %>
+  #     <%= row_for  "Name",        @resource.name %>
+  #     <%= row_for  "Name",        @resource.name %>
+  #     <%= area_for "Description", @resource.description %>
+  #     <%= row_for  "Name",        @resource.name %>
+  #     <%= row_for  "Date",        Date.today.to_s %>
+  #     <%= render_buttons %>
+  #   <% end %>
   #
   def resource_card(&block)
     content = capture(&block)
@@ -52,12 +52,12 @@ module AdminView
   # 
   # usage: in a _form.html.erb
   # 
-  # <% field_block do %>
-  #   <%= t.text_field :name %>
-  #   <%= t.text_field :code %>
-  # <% end %>
+  #   <% field_block do %>
+  #     <%= t.text_field :name %>
+  #     <%= t.text_field :code %>
+  #   <% end %>
   # 
-  # note: this two input boxes will be render in a single row
+  # note: this two input boxes will be rendered in a single row
   #
   def field_block(&block)
     content = capture(&block)

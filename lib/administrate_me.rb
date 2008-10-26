@@ -33,6 +33,19 @@
 # Be careful about it's use, you should consider as first option to include this
 # kind of logic on +before_save+ and +after_save+ callbacks of your model. 
 # Just use them when they're really controller related.
+#
+# ==== admin_style
+#
+# This callback will be called if defined to override the stylesheets included
+# on the pages.
+#
+#   def admin_style
+#     ['admin_look', 'my-css']
+#   end
+#
+# This will include de default admin_look.css file and will add the custom my-css.css
+# file to all templates.
+# Is can be specified on application.rb or in any particular controller.
 # 
 # == Search
 # 

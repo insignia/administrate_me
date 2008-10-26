@@ -229,6 +229,21 @@ module AdministrateMe
         options[:foreign_key] || "#{options[:parent]}_id".to_sym
       end
 
+      # By default the search conditions will be created OR'ing all fields
+      # on the administrate_me configuration using the LIKE sql clause.
+      #
+      # == Example
+      #
+      #   class PeopleController < ApplicationController
+      #     administrate_me do |a|
+      #       a.search :first_name, :last_name
+      #     end
+      #   end
+      #
+      # The condition will be along the lines of:
+      #
+      #   lower(first_name) LIKE '%john%' OR lower(last_name) LIKE '%john%'
+      #
       def conditions_for(fields=[])
         predicate = []
         values    = []
