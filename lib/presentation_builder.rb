@@ -12,10 +12,8 @@ module AdminView::PresentationBuilder
         @options = options
       end
 
-      def value_for(item)
-        if @field.is_a?(Proc)
-          @field
-        elsif @options[:with]
+      def value_for(item, template)
+        if @options[:with]
           related_value_for(item.send(@field))
         else
           item.send(@field)
@@ -60,6 +58,27 @@ module AdminView::PresentationBuilder
 
     end
 
+    # This class handles the special case for columns that are resolved calling a
+    # block to generate html.
+    class ProcColumn < ListColumn
+      def value_for(item, template)
+        @field.call(item)
+      end
+    end
+
+    # This class handles the special case for columns that are resolved calling a
+    # helper with a field value as a parameter.
+    class HelperColumn < ListColumn
+      def initialize(helper_method, field, options={})
+        @helper_method = helper_method
+        super(field, options)
+      end
+
+      def value_for(item, template)
+        template.send(@helper_method, item.send(@field))
+      end
+    end
+
     def initialize(collection)
       @collection = collection
       @columns = []
@@ -79,7 +98,11 @@ module AdminView::PresentationBuilder
     
     def html(options = {}, &block)
       options[:caption] = 'html' unless options[:caption]
-      @columns << ListColumn.new(block, options)
+      @columns << ProcColumn.new(block, options)
+    end
+
+    def field_with_helper(helper_method, field, options = {})
+      @columns << HelperColumn.new(helper_method, field, {:caption => field.to_s.titleize}.merge(options))
     end
 
     def method_missing(field, options={})
@@ -172,6 +195,19 @@ module AdminView::PresentationBuilder
   #         end
   #       end -%>
   # 
+  # ==== Calling a helper
+  #
+  # You can directly call a helper using a particular field of the record.
+  #
+  # In this example the currency_helper will be called receiving the amount value
+  # for each instance. The helper's output will be used as output for that column
+  # of the table.
+  #
+  #   <%= list_builder_for @records do |list|
+  #         list.date
+  #         list.field_with_helper(:currency_helper, :amount)
+  #       end -%>
+  #
   # ==== Report mode
   # 
   # Using this mode the grid will be displayed without showing links to the actions
@@ -222,8 +258,7 @@ module AdminView::PresentationBuilder
   def build_row_for(pb, item, css_class, options)
     html = ""
     pb.gpb_columns.each do |column|
-      value = column.value_for(item)
-      value = value.call(item) if value.is_a?(Proc)
+      value = column.value_for(item, self)
       html << "<td style='#{column.style}'> #{value} </td>"
     end
     html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report]
