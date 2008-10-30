@@ -110,6 +110,24 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       end
     end
     
+    def auto_complete(association, fields, options = {})
+      return '' if no_show?(association, options)
+      if read_only(options)
+        field(association, options)
+      else
+        hidden_field_id = "#{@object_name}_#{association}_id"
+        spinner_id = "auto_complete_#{association}_spinner"
+        method_name = fields.is_a?(Array) ? fields.join('_and_') : fields
+        @template.instance_variable_set("@#{association}", @object.send(association))
+        rtn = wrapper(association, label(fields, options) +
+                               @template.text_field_with_auto_complete(association, method_name, {:class => :entrada}, :indicator => spinner_id,
+                                           :after_update_element => "function(e, v) {$('#{hidden_field_id}').value = v.id.replace('#{association}_auto_complete_id_', '');}"),
+                               options)
+        rtn << @template.spinner(:id => spinner_id)
+        rtn << hidden_field(:"#{association}_id")
+      end
+    end
+
     def field(fld, options = {})
       return '' if no_show?(fld, options)
       if fld.to_s =~ /([\w]+)_id$/

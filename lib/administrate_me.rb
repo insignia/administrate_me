@@ -195,6 +195,43 @@ module AdministrateMe
       def has_and_belongs_to_many(*habtms)
         @options[:habtms] = habtms
       end
+
+      # Handy and improved autocomplete for forms.
+      #
+      # ==== Example
+      #
+      # The model you're administrating:
+      #
+      #   class Account < ActiveRecord::Base
+      #     belongs_to :person
+      #   end
+      #
+      # In the controller definition
+      #
+      #   class AccountController < ApplicationController
+      #     administrate_me do |a|
+      #       a.auto_complete_for :person, [:first_name, :last_name]
+      #     end
+      #   end
+      #
+      # On the _form.html.erb
+      #
+      #   <%= f.auto_complete :person, [:first_name, :last_name]
+      #
+      # This will create a text_field_with_auto_complete that will be able
+      # to correctly to inform the selected record.
+      #
+      # A controller action named <code>auto_complete_for_person_first_name_and_last_name</code>
+      # will be created on the controller that will search on the People model using first_name
+      # and last_name fields. On the form, javascript will be used to not only store
+      # the description of the record on the text field as the regular auto_complete does,
+      # but it will also store the record's id on a hidden field.
+      # This hidden data will allow the correct record to be associated to the
+      # edited instance.
+      #
+      def auto_complete_for(association, fields, options = {})
+        (@options[:auto_complete_for] ||= []) << [association, fields, options]
+      end
       
       # Used to specify the model name of the resource this controller handles. 
       # It's optional and it has to be used only when the model name is different from 
@@ -360,10 +397,15 @@ module AdministrateMe
           hide_action   :path_to_element
           before_filter :get_resource, :only => actions_for_get_resource
           before_filter :get_parent
-          before_filter :set_active_filter          
+          before_filter :set_active_filter
+
           if options[:habtms]
             before_filter :habtm_callback, :only => "update"
-          end 
+          end
+
+          (options[:auto_complete_for] || []).each do |auto_complete_for|
+            administrate_me_auto_complete_for(*auto_complete_for)
+          end
         end
         
       end        
@@ -409,7 +451,39 @@ module AdministrateMe
         end
         options[:except].empty? || !options[:except].include?(translated_action)
       end
-    end    
+
+      # Improved text_field_with_auto_complete for administrate_me.
+      # See AdministrateMeConfig#auto_complete_for
+      def administrate_me_auto_complete_for(association, fields, options = {})
+        fields = [*fields]
+        method_suffix = fields.map(&:to_s).join('_and_')
+        define_method("auto_complete_for_#{association}_#{method_suffix}") do
+          like = fields.map {|m| "LOWER(#{m}) LIKE ?"}.join(' OR ')
+          conditions = [like]
+          conditions << fields.map {|m| '%' + params[association][method_suffix].to_s.downcase + '%'}
+          model = (options.delete(:model) || association)
+          model_class = model.to_s.camelize.constantize
+          extra_conditions = options.delete(:conditions)
+          # search conditions
+          find_options = {
+            :conditions => conditions.flatten,
+            :order => "#{fields.first} ASC",
+            :limit => 10 }.merge!(options)
+          # Additional conditions received as a parameter
+          model_class.send(:with_scope, :find => {:conditions => extra_conditions}) do
+            @items = model_class.find(:all, find_options)
+          end
+          @methods = fields
+          render :inline => <<-erb_end
+            <ul>
+              <% for item in @items %>
+                <li id="<%= "#{association}_auto_complete_id_" + item.id.to_s %>"><%= @methods.map {|m| item.send(m)}.join(' - ') %></li>
+              <% end %>
+            </ul>
+          erb_end
+        end
+      end
+    end
   end
   
   module InstanceMethods
