@@ -343,7 +343,6 @@ module AdminView
   end
 
   def combo_select_tag(filter, combo_name)
-    logger.info ">>> combo_select_tag: #{session[:combo_filters][controller.class][filter.name]}"
     select_tag(combo_name,
       options_for_select(filter.options_for_select, session[:combo_filters][controller.class][filter.name]), :id => combo_name)
   end
