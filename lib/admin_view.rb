@@ -315,15 +315,37 @@ module AdminView
   def all_filters
     results = []
     results << filter_by('Todos', :none)
-    controller.options[:filter_config].filter_names.each do |filter_name|
-      results << filter_by(filter_name.to_s.humanize, filter_name)
+    controller.options[:filter_config].all_filters.each do |filter|
+      results << filter_by(filter.label, filter.name)
     end
     results.join("\n")
   end
 
-  def filter_by(name, filter_name = nil)
-    link = link_to(name, path_to_index(:filter => filter_name))
-    content_tag(:li, link, :class => current_class(filter_name.to_s == 'none' && !controller.active_filter || filter_name.to_s == controller.active_filter))
+  def filter_by(label, filter_name = nil)
+    if controller.options[:filter_config].is_combo?(filter_name)
+      filter_by_combo(label, filter_name)
+    else
+      filter_by_link(label, filter_name)
+    end
+  end
+
+  def filter_by_link(label, filter_name)
+    link = link_to(label, path_to_index(:filter => filter_name))
+    content_tag(:li, link, :class => current_class(filter_name == 'none' && !controller.active_filter || filter_name == controller.active_filter))
+  end
+
+  def filter_by_combo(label, filter_name)
+    filter = controller.options[:filter_config].filter_by_name(filter_name)
+    combo_name = "combo_filter_#{filter.name}"
+    content = content_tag(:label, label) + combo_select_tag(filter, combo_name)
+    content_tag(:li, content, :class => 'combo_filter') +
+      observe_field(combo_name, :url => path_to_index(:combo_filter => filter.name), :with => 'combo_value', :method => :get)
+  end
+
+  def combo_select_tag(filter, combo_name)
+    logger.info ">>> combo_select_tag: #{session[:combo_filters][controller.class][filter.name]}"
+    select_tag(combo_name,
+      options_for_select(filter.options_for_select, session[:combo_filters][controller.class][filter.name]), :id => combo_name)
   end
 
   def list_for(group, settings = {})

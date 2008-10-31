@@ -260,15 +260,53 @@ module AdministrateMe
         @options[:excel] = true
       end
 
+      class Filter
+        attr_accessor :name, :conditions, :options
+
+        def name=(value)
+          @name = value.to_s
+        end
+
+        def label
+          self.options[:label] || self.name.humanize
+        end
+      end
+
+      class ComboFilter < Filter
+        attr_accessor :block
+
+        def options_for_select
+          [[self.options[:all] || 'No filtrar', nil]] + stringyfied_options
+        end
+
+        def conditions(value)
+          {self.name.to_s => value}
+        end
+
+        protected 
+        
+        def stringyfied_options
+          opts = self.block.call
+          opts.first.is_a?(Array) ? opts.map{|e| [e.first, e.last.to_s]} : opts
+        end
+
+      end
+
       class FilterConfig
         attr_accessor :filters
+        attr_accessor :combos
 
         def initialize
           @filters = []
+          @combos  = []
+        end
+
+        def filter_by_name(filter_name)
+          (@filters + @combos).find {|f| f.name == filter_name.to_s}
         end
 
         def conditions_for_filter(filter_name)
-          filter = @filters.find {|f| f.first.to_s == filter_name.to_s}
+          filter = filter_by_name(filter_name)
           filter ? filter.last : conditions_for_dynamic_filter(filter_name)
         end
 
@@ -277,16 +315,32 @@ module AdministrateMe
         end
 
         def set(name, conditions)
-          @filters << [name, conditions]
+          filter = Filter.new
+          filter.name = name
+          filter.conditions = conditions
+          @filters << filter
         end
 
         def dynamic(&block)
           @dynamic_filter = block
         end
 
-        def filter_names
-          @filters.map(&:first)
+        def combo(name, options = {}, &block)
+          filter = ComboFilter.new
+          filter.name = name
+          filter.options = options
+          filter.block = block
+          @combos << filter
         end
+
+        def all_filters
+          @filters + @combos
+        end
+
+        def is_combo?(filter_name)
+          !!@combos.find{|filter| filter.name == filter_name.to_s}
+        end
+
       end
 
       # Setting automatic filters. One example is better than one thousand words.
@@ -316,7 +370,7 @@ module AdministrateMe
       #
       #   <% content_for :extras do %>
       #     <% filters_for do %>
-      #       <%= all_filter %>
+      #       <%= all_filters %>
       #     <% end %>
       #   <% end %>
       #
@@ -325,6 +379,31 @@ module AdministrateMe
       # too:
       #
       #   <%= link_to 'Active records', users_path(:filter => 'active') %>
+      #
+      # === Combo filters
+      #
+      # You can also add multiple combo filters on each controller. This will
+      # filters will add conditions that will be added to the regular ones.
+      # Having multiple combo filters will allow you apply multiple conditions
+      # on the same dataset.
+      #
+      #   class ProductsController < ApplicationController
+      #   administrate_me do |a|
+      #     f.combo :brand_id do
+      #       Brand.all.map{|b| [b.name, b.id]}
+      #     end
+      #     # In case you have the to_select plugin installed you can do this
+      #     f.combo :category_id do
+      #       Category.to_select
+      #     end
+      #     # Also using a simple list of values
+      #     f.combo :state do
+      #       ['active', 'deleted']
+      #     end
+      #   end
+      #
+      # See http://github.com/insignia/to_select or similar hacks will be very
+      # useful defining this combo filters.
       #
       # === Dynamic filters
       #
@@ -337,7 +416,7 @@ module AdministrateMe
       #       f.set :active,   {:status => 'active'}
       #       f.set :inactive, "active <> 'active'"
       #
-      #       filter.dynamic do |filter_name|
+      #       f.dynamic do |filter_name|
       #         # Create a find condition based on the received filter paramter.
       #         if filter_name =~ ROLE_FILTER_RE
       #           "roles.name = '#{$1}'"
@@ -350,7 +429,7 @@ module AdministrateMe
       #
       #   <% content_for :extras do %>
       #     <% filters_for do %>
-      #       <%= all_filter %>
+      #       <%= all_filters %>
       #       <% @roles.each do |role| %>
       #         <%= filter_by role.name, "role_#{role.name}"  %>
       #       <% end %>
@@ -395,9 +474,9 @@ module AdministrateMe
           include AdministrateMe::InstanceMethods
           include AdministrateMe::AdminScaffold::InstanceMethods
           hide_action   :path_to_element
+          before_filter :set_active_filter
           before_filter :get_resource, :only => actions_for_get_resource
           before_filter :get_parent
-          before_filter :set_active_filter
 
           if options[:habtms]
             before_filter :habtm_callback, :only => "update"

@@ -65,7 +65,17 @@ module AdministrateMe
       end
 
       def filter_scope
-        options[:filter_config].conditions_for_filter(active_filter) if options[:filter_config]
+        if options[:filter_config]
+          conditions = []
+          conditions << options[:filter_config].conditions_for_filter(active_filter)
+          session[:combo_filters][self.class].each do |filter_name, value|
+            if value
+              filter = options[:filter_config].filter_by_name(filter_name)
+              conditions << filter.conditions(value)
+            end
+          end
+          model_class.merge_conditions_backport(*conditions)
+        end
       end
 
       def index
@@ -316,9 +326,14 @@ module AdministrateMe
         end
 
         def set_active_filter
+          session[:active_filters] ||= {}
+          session[:combo_filters] ||= {}
+          session[:combo_filters][self.class] ||= {}
           if params[:filter]
-            session[:active_filters] ||= {}
             session[:active_filters][self.class] = params[:filter] != 'none' ? params[:filter] : nil
+          end
+          if params[:combo_filter]
+            session[:combo_filters][self.class][params[:combo_filter]] = !params[:combo_value].blank? ? params[:combo_value] : nil
           end
         end
 
