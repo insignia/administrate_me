@@ -229,7 +229,7 @@ module AdminView::PresentationBuilder
     html  = ""
     html << show_mini_flash rescue ""
     html << render_grid(list, options) if type == :grid
-    html << render(:partial => 'commons/pagination') if controller.model_class.respond_to?('paginate')
+    html << render(:partial => 'commons/pagination', :locals => {:collection => list.gpb_data}) if list.gpb_data.respond_to?('total_pages')
     html
   end
 
