@@ -331,7 +331,7 @@ module AdminView
 
   def filter_by_link(label, filter_name)
     link = link_to(label, path_to_index(:filter => filter_name))
-    content_tag(:li, link, :class => current_class(filter_name == 'none' && !controller.active_filter || filter_name == controller.active_filter))
+    content_tag(:li, link, :class => current_class(filter_name.to_s == 'none' && !controller.active_filter || filter_name == controller.active_filter))
   end
 
   def filter_by_combo(label, filter_name)

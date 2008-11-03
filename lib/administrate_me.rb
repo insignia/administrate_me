@@ -268,7 +268,7 @@ module AdministrateMe
         end
 
         def label
-          self.options[:label] || self.name.humanize
+          (self.options && self.options[:label]) || self.name.humanize
         end
       end
 
@@ -307,7 +307,7 @@ module AdministrateMe
 
         def conditions_for_filter(filter_name)
           filter = filter_by_name(filter_name)
-          filter ? filter.last : conditions_for_dynamic_filter(filter_name)
+          filter ? filter.conditions : conditions_for_dynamic_filter(filter_name)
         end
 
         def conditions_for_dynamic_filter(filter_name)
