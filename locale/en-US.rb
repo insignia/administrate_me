@@ -1,5 +1,5 @@
-I18n.store_translations :'en-US',
-  :yes => 'SI',
+{:en => {
+  :yes => 'YES',
   :no  => 'NO',
   :views => {
     :prev => 'Previous',
@@ -36,3 +36,4 @@ I18n.store_translations :'en-US',
     :modules_not_defined => "Must define application modules. See AdministrateMe::Base#set_module documentation for further information.",
     :exception_on_save => "An exception ocurred saving the record: {{message}}"
   }
+}}
