@@ -1,4 +1,22 @@
-module AdminView::ElegantPresentation  
+module AdminView::ElegantPresentation
+  # 
+  #   TODO: add some documentation about this helper
+  #  
+  def support_bar(title="Tareas de Soporte", &block)
+    content = capture(&block)
+    concat('<div class="related_info">',      block.binding)
+    concat("#{content_tag(:h3, title)}<ul>",  block.binding)
+    concat(content,                           block.binding)
+    concat('</ul></div>',                      block.binding)
+  end
+  
+  def option_link(options={})
+    content_tag('li', link_to(options[:caption], options[:url], :method => options[:method] || nil))
+  end  
+  # 
+  #   
+  # 
+
   def render_context_with(attr)
     condition = controller.respond_to?("render_context_condition") ? controller.render_context_condition : true
     nspace  = controller.class.namespace ? "#{controller.class.namespace}_" : ""

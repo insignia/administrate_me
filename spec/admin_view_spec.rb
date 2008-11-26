@@ -45,3 +45,45 @@ describe AdminView, 'show_section_content' do
     @controller
   end
 end
+
+describe AdminView, 'admin_file_loader' do
+  include AdminView
+  before do
+    @controller = mock('controller')
+  end
+
+  it "should always load the default files" do
+    self.should_receive(:stylesheet_link_tag).with('admin_look').and_return('A')
+    self.should_receive(:stylesheet_link_tag).with('reset-fonts-grids').and_return('B')
+    self.should_receive(:javascript_include_tag).with(:defaults).and_return('C')
+    self.should_receive(:javascript_include_tag).with('admin_ui.js').and_return('D')
+    admin_file_loader.should == 'ABCD'
+  end
+
+  it "should allow override the default files with the admin_style callback" do
+    controller.stub!(:admin_style).and_return(['my-css', 'other-css'])
+    self.should_receive(:stylesheet_link_tag).with('my-css').and_return('A')
+    self.should_receive(:stylesheet_link_tag).with('other-css').and_return('B')
+    self.stub!(:javascript_include_tag).and_return('C')
+    admin_file_loader.should == 'ABCC'
+  end
+
+  it "should allow override the default files with the admin_scripts callback" do
+    controller.stub!(:admin_scripts).and_return(['my-js', 'other-js'])
+    self.stub!(:stylesheet_link_tag).and_return('A')
+    self.should_receive(:javascript_include_tag).with('my-js').and_return('C')
+    self.should_receive(:javascript_include_tag).with('other-js').and_return('D')
+    admin_file_loader.should == 'AACD'
+  end
+
+  it "should allow override the default file with the admin_style callback" do
+    controller.stub!(:admin_style).and_return([['my-css', {:media => 'screen'}]])
+    self.should_receive(:stylesheet_link_tag).with('my-css', :media => 'screen').and_return('A')
+    self.stub!(:javascript_include_tag).and_return('C')
+    admin_file_loader.should == 'ACC'
+  end
+
+  def controller
+    @controller
+  end
+end

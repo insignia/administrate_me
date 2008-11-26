@@ -6,23 +6,25 @@ module AdministrateMe
         session[:mini] = ''
         params[:search_key] ||= session["#{controller_name}_search_key"] if session["#{controller_name}_search_key"]
         @search_key = params[:search_key]
-        model_class.send(:with_scope, :find => { :conditions => parent_scope }) do
-          model_class.send(:with_scope, :find => { :conditions => global_scope }) do
-            model_class.send(:with_scope, :find => { :conditions => search_scope }) do
-              if model_class.respond_to?('paginate')
-                @records = model_class.paginate(:include => get_includes, :page => params[:page], :per_page => get_per_page, :order => get_order )
-              else
-                @records = model_class.find(:all, :include => get_includes, :order => get_order )
-              end
-              set_search_message
-            end
-          end
-        end
+        get_records
+        set_search_message
         session["#{controller_name}_search_key"] = @search_key
       end
 
+      def get_records
+        conditions = model_class.merge_conditions_backport(*[parent_scope, global_scope, search_scope, filter_scope])
+        options = {:conditions => conditions, :include => get_includes, :order => get_order}
+        if model_class.respond_to?('paginate')
+          @records = model_class.paginate(options.merge(:page => params[:page], :per_page => get_per_page))
+          @count_for_search = @records.total_entries
+        else
+          @records = model_class.find(:all, options)
+          @count_for_search = @records.size
+        end
+      end
+
       def get_per_page
-        options[:per_page] || 15
+        options[:per_page] || model_class.per_page || 15
       end
 
       def get_includes
@@ -42,28 +44,38 @@ module AdministrateMe
 
       def set_search_message
         if options[:search] && !params[:search_key].blank?
-          session[:mini] = search_message(@search_key)
+          session[:mini] = I18n.t('messages.search_message', :count => @count_for_search, :search_key => @search_key)
         end
       end
 
       def parent_scope
-        if parent = options[:parent]
-          { "#{parent}_id" => params["#{parent}_id"] }
+        parent = options[:parent]
+        foreign_key = options[:foreign_key].blank? ? "#{options[:parent]}_id" : options[:foreign_key]
+        if parent
+          { foreign_key => params["#{parent}_id"] }
         end
       end
 
       def global_scope
-        gc = respond_to?('general_conditions') ? general_conditions : nil
-        if gc
-          gc.merge(session["#{controller_name}"]) if session["#{controller_name}"]
-        else
-          gc = session["#{controller_name}"] if session["#{controller_name}"]
-        end
-        gc
-      end
+        respond_to?('general_conditions') ? general_conditions : nil
+      end   
 
       def search_scope
         !@search_key.blank? && options[:search] ? conditions_for(options[:search]) : nil
+      end
+
+      def filter_scope
+        if options[:filter_config]
+          conditions = []
+          conditions << options[:filter_config].conditions_for_filter(active_filter)
+          session[:combo_filters][self.class].each do |filter_name, value|
+            if value
+              filter = options[:filter_config].filter_by_name(filter_name)
+              conditions << filter.conditions(value)
+            end
+          end
+          model_class.merge_conditions_backport(*conditions)
+        end
       end
 
       def index
@@ -148,17 +160,27 @@ module AdministrateMe
 
       def destroy
         if_available(:destroy) do
-          @resource.destroy
-          call_before_render
+          call_callback_on_action 'before', 'destroy'
+          if @success = @resource.destroy
+            call_callback_on_action 'after', 'destroy'
+          end
           respond_to do |format|
-            flash[:notice] = I18n.t('messages.destroy_success')
-            format.html { redirect_to path_to_index }
-            format.xml  { head :ok }
+            if @success
+              flash[:notice] = I18n.t('messages.destroy_success')
+              format.html { redirect_to path_to_index }
+              format.xml  { head :ok }
+            else
+              format.html { render :template => "commons/base_form" }
+              format.xml  { head :error }
+            end
           end
         end
       end
 
-      def path_to_index(prefix=nil)
+      #FIXME: I need some testing!
+      def path_to_index(*args)
+        local_options = args.last.is_a?(Hash) ? args.pop : nil
+        prefix  = args.first
         parts = []
         # add prefix
         parts << prefix if prefix
@@ -174,9 +196,10 @@ module AdministrateMe
         #
         parts << 'path'
         helper_name = parts.join('_')
-        ids = []
-        ids << params[:"#{parent}_id"] unless parent.blank?
-        send(helper_name, *ids)
+        parameters = []
+        parameters << params[:"#{parent}_id"] unless parent.blank?
+        parameters << local_options if local_options
+        send(helper_name, *parameters)
       end
 
       def path_to_element(element, options = {})
@@ -190,10 +213,6 @@ module AdministrateMe
           path << "(params[:#{options[:parent].to_s}_id])"
         end
         eval(path)
-      end
-
-      def search_message(search_key)
-        I18n.t('messages.search_message', :count => count_selected, :search_key => search_key)
       end
 
       def get_resource
@@ -220,6 +239,21 @@ module AdministrateMe
         options[:foreign_key] || "#{options[:parent]}_id".to_sym
       end
 
+      # By default the search conditions will be created OR'ing all fields
+      # on the administrate_me configuration using the LIKE sql clause.
+      #
+      # == Example
+      #
+      #   class PeopleController < ApplicationController
+      #     administrate_me do |a|
+      #       a.search :first_name, :last_name
+      #     end
+      #   end
+      #
+      # The condition will be along the lines of:
+      #
+      #   lower(first_name) LIKE '%john%' OR lower(last_name) LIKE '%john%'
+      #
       def conditions_for(fields=[])
         predicate = []
         values    = []
@@ -230,11 +264,17 @@ module AdministrateMe
         eval("[\"#{predicate.join(' OR ')}\", #{values.join(',')}]")
       end
 
-      def all
-        set_filter_for nil, nil
+      def active_filter
+        session[:active_filters] ? session[:active_filters][self.class] : nil
       end
 
       protected
+
+        def habtm_callback
+          options[:habtms].each do |habtm|
+            params[model_name.to_sym]["#{habtm.to_s.singularize}_ids".to_sym] ||= []
+          end
+        end
 
         def if_available(action)
           if self.class.accepted_action?(action)
@@ -244,22 +284,33 @@ module AdministrateMe
           end
         end
 
-        def count_selected
-          model_class.count(:include => get_includes)
-        end
-
         def save_model
           begin
-            model_class.transaction do
-              before_save if respond_to?('before_save')
+            model_class.transaction do 
+              call_callback           'before', 'save'
+              call_callback_on_action 'before', 'create'
+              call_callback_on_action 'before', 'update'
               if @success = @resource.save!
-                after_save if respond_to?('after_save')
+                call_callback           'after', 'save'
+                call_callback_on_action 'after', 'create'
+                call_callback_on_action 'after', 'update'
               end
             end
           rescue ActiveRecord::RecordNotSaved, ActiveRecord::RecordInvalid
             logger.error(I18n.t('errors.exception_on_save', :message => $!))
             @success = false
           end
+        end       
+
+        # will execute the callback only when the controller executes the 
+        # specific action.
+        def call_callback_on_action(hook, action)
+          call_callback(hook, action) if action_name == action
+        end
+        
+        # will execute a callback
+        def call_callback(hook, action)
+          send("#{hook}_#{action}") if respond_to?("#{hook}_#{action}")
         end
 
         def get_parent
@@ -275,6 +326,18 @@ module AdministrateMe
           end
         end
 
+        def set_active_filter
+          session[:active_filters] ||= {}
+          session[:combo_filters] ||= {}
+          session[:combo_filters][self.class] ||= {}
+          if params[:filter]
+            session[:active_filters][self.class] = params[:filter] != 'none' ? params[:filter] : nil
+          end
+          if params[:combo_filter]
+            session[:combo_filters][self.class][params[:combo_filter]] = !params[:combo_value].blank? ? params[:combo_value] : nil
+          end
+        end
+
         def generate_url
           html  = "url("
           unless options[:parent].blank?
@@ -282,12 +345,6 @@ module AdministrateMe
           end
           html << "@resource)"
           html
-        end
-
-        def set_filter_for(name_space, condition)
-          session[:c_filter] = name_space
-          session["#{controller_name}"] = condition
-          redirect_to :action => 'index' unless name_space.to_s == 'index'
         end
 
         def call_before_render

@@ -1,4 +1,72 @@
 module AdminView
+
+  # resource_card helper
+  # this helper render a very elegant presentation card for a resource.
+  #   
+  #   <% resource_card do %>
+  #     <%= row_for  "Name",        @resource.name %>
+  #     <%= row_for  "Name",        @resource.name %>
+  #     <%= area_for "Description", @resource.description %>
+  #     <%= row_for  "Name",        @resource.name %>
+  #     <%= row_for  "Date",        Date.today.to_s %>
+  #     <%= render_buttons %>
+  #   <% end %>
+  #
+  def resource_card(&block)
+    content = capture(&block)
+    concat(show_section_label,                block.binding)
+    concat('<div class="resource-card">',     block.binding)
+    concat(content,                           block.binding)
+    concat('</div>',                          block.binding)
+    concat('<div style="clear:both;"></div>', block.binding)
+  end
+  
+  def row_for(label, value)
+    html  = '<div class="rc-block">'
+    html << '  <div class="rc-row rc-caption">'+label+'</div>'
+    html << '  <div class="rc-row rc-content">'+"#{value.blank? ? '-' : value}"+'</div>'
+    html << '</div>'
+    html
+  end
+  
+  def area_for(label, value)
+    html  = '<div class="rc-block">'
+    html << '  <div class="rc-area rc-label">'+label+'</div>'
+    html << '  <div class="rc-area rc-detail">'+"#{value.blank? ? '-' : value}"+'</div>'
+    html << '</div>'
+    html
+  end
+  
+  def render_buttons
+    html  = '<div class="buttons">'
+    html << edit_action    if controller.class.accepted_action?(:edit)
+    html << destroy_action if controller.class.accepted_action?(:destroy)
+    html << back_action
+    html << '</div>'
+    html
+  end  
+
+  # field_block helper
+  # 
+  # Use this helper to set a two column fieldset layout for an admin form.
+  # 
+  # usage: in a _form.html.erb
+  # 
+  #   <% field_block do %>
+  #     <%= t.text_field :name %>
+  #     <%= t.text_field :code %>
+  #   <% end %>
+  # 
+  # note: this two input boxes will be rendered in a single row
+  #
+  def field_block(&block)
+    content = capture(&block)
+    concat('<div class="float_left">',        block.binding)
+    concat(content,                           block.binding)
+    concat('</div>',                          block.binding)
+    concat('<div style="clear:both;"></div>', block.binding)
+  end
+
   def generate_navigation
     html = ""
     if modules = get_modules
@@ -32,14 +100,15 @@ module AdminView
   
   def files_to_load(type)
     if type == :css
-      files = controller.respond_to?('admin_style') ? controller.admin_style : ["admin_look", "reset-fonts-grids"] 
+      controller.respond_to?('admin_style') ? controller.admin_style : ["admin_look", "reset-fonts-grids"] 
     else    
-      files = controller.respond_to?('admin_scripts') ? controller.admin_scripts : [:defaults, "admin_ui.js"]
+      controller.respond_to?('admin_scripts') ? controller.admin_scripts : [:defaults, "admin_ui.js"]
     end
   end
   
   def file_inclusion(type, file)
-    (type == :css) ? stylesheet_link_tag(file) : javascript_include_tag(file)
+    args = [*file]
+    (type == :css) ? stylesheet_link_tag(*args) : javascript_include_tag(*args)
   end
   
   def get_modules
@@ -209,9 +278,14 @@ module AdminView
   end
 
   def form_name_space
-    @parent ? [@parent, @resource] : @resource
+    rtn  = [] 
+    rtn << controller.class.namespace.to_sym unless controller.class.namespace.blank?
+    rtn << @parent                           if     @parent
+    rtn << @resource                         if     @resource
+    rtn
   end
-  
+
+  # Deprecated: filters_for() helper should be used instead
   def show_filters_for(filters = [])
     html = ""
     lis  = ""
@@ -219,12 +293,56 @@ module AdminView
       html << content_tag(:div, t('views.filter_records_by'), :class => 'f_header')     
       filters.each do |filter|
         link = link_to(filter[:caption], filter[:url])
-        lis << content_tag(:li, link, :class => set_current(filter[:name_space]))
+        lis << content_tag(:li, link, :class => current_class(filter[:name_space].to_s == controller.active_filter))
       end
       html << content_tag(:ul, lis, :class => 'filters')
     end
     html
-  end 
+  end
+  deprecate :show_filters_for
+
+  def filters_for(&block)
+    concat("<div class=\"f_header\">Filtrar registros por...</div>",  block.binding)
+    concat("<ul class=\"filters\">", block.binding)
+    yield
+    concat("</ul>",                  block.binding)
+    concat("</div>",                 block.binding)
+  end
+
+  def all_filters
+    results = []
+    results << filter_by('Todos', :none)
+    controller.options[:filter_config].all_filters.each do |filter|
+      results << filter_by(filter.label, filter.name)
+    end
+    results.join("\n")
+  end
+
+  def filter_by(label, filter_name = nil)
+    if controller.options[:filter_config].is_combo?(filter_name)
+      filter_by_combo(label, filter_name)
+    else
+      filter_by_link(label, filter_name)
+    end
+  end
+
+  def filter_by_link(label, filter_name)
+    link = link_to(label, path_to_index(:filter => filter_name))
+    content_tag(:li, link, :class => current_class(filter_name.to_s == 'none' && !controller.active_filter || filter_name == controller.active_filter))
+  end
+
+  def filter_by_combo(label, filter_name)
+    filter = controller.options[:filter_config].filter_by_name(filter_name)
+    combo_name = "combo_filter_#{filter.name}"
+    content = content_tag(:label, label) + combo_select_tag(filter, combo_name)
+    content_tag(:li, content, :class => 'combo_filter') +
+      observe_field(combo_name, :url => path_to_index(:combo_filter => filter.name), :with => 'combo_value', :method => :get)
+  end
+
+  def combo_select_tag(filter, combo_name)
+    select_tag(combo_name,
+      options_for_select(filter.options_for_select, session[:combo_filters][controller.class][filter.name]), :id => combo_name)
+  end
 
   def list_for(group, settings = {})
     header  = (settings[:label]) ? settings[:label] : group.to_s.humanize
@@ -252,13 +370,8 @@ module AdminView
     content_tag(:div, html, :class => 'more')
   end
   
-  def set_current(name_space)
-    if name_space == session[:c_filter]
-      css = "current"
-    else
-      css = nil
-    end
-    css
+  def current_class(is_current)
+    is_current ? 'current' : nil
   end
   
 end

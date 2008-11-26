@@ -21,6 +21,32 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       end
     end
     
+    def has_and_belongs_to_many(habtm_relation, label_field, collection)
+      habtm_options = build_habtm_collection(habtm_relation, collection, label_field)
+      build_habtm_box_with(habtm_relation, habtm_options)
+    end
+    
+    def build_habtm_collection(habtm_relation, collection, label_field)
+      html = ""  
+      collection.each do |item|    
+        html << "    <li>"
+        html << '      <div class="habtm-option">'
+        html << @template.check_box_tag("#{@object.class.to_s.underscore}[#{habtm_relation.to_s.singularize}_ids][]", item.id, @object.send(habtm_relation).include?(item))
+        html << "<span>#{item.send(label_field).titleize}</span>"
+        html << "      </div>"
+        html << "    </li>"
+      end
+      html
+    end
+    
+    def build_habtm_box_with(habtm_relation, habtm_options)
+      html  = '<div class="habtm-box">'
+      html << "  <h3>#{habtm_relation.to_s.titleize}</h3>"
+      html << "  <ul>#{habtm_options}</ul>"
+      html << '</div>'
+      html
+    end    
+    
     def hidden_field(fld, options = {})
       return '' if no_show?(fld, options)
       super(fld, options)
@@ -84,6 +110,24 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       end
     end
     
+    def auto_complete(association, fields, options = {})
+      return '' if no_show?(association, options)
+      if read_only(options)
+        field(association, options)
+      else
+        hidden_field_id = "#{@object_name}_#{association}_id"
+        spinner_id = "auto_complete_#{association}_spinner"
+        method_name = fields.is_a?(Array) ? fields.join('_and_') : fields
+        @template.instance_variable_set("@#{association}", @object.send(association))
+        rtn = wrapper(association, label(fields, options) +
+                               @template.text_field_with_auto_complete(association, method_name, {:class => :entrada}, :indicator => spinner_id,
+                                           :after_update_element => "function(e, v) {$('#{hidden_field_id}').value = v.id.replace('#{association}_auto_complete_id_', '');}"),
+                               options)
+        rtn << @template.spinner(:id => spinner_id)
+        rtn << hidden_field(:"#{association}_id")
+      end
+    end
+
     def field(fld, options = {})
       return '' if no_show?(fld, options)
       if fld.to_s =~ /([\w]+)_id$/
