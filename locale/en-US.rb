@@ -20,7 +20,10 @@ I18n.store_translations :'en-US',
     :new_record => "New {{model}}",
     :edit_record => "Editting a {{model}}",
     :back => 'Go back',
-    :search_prompt => "Search (type the word you're looking for)"
+    :search_prompt => "Search (type the word you're looking for)",
+    :support_tasks => "Support Tasks",
+    :filter_by => "Filter by...",
+    :filter_show_all => 'All'
   },
   :messages => {
     :create_success => 'Record was successfully created',

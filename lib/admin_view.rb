@@ -302,7 +302,7 @@ module AdminView
   deprecate :show_filters_for
 
   def filters_for(&block)
-    concat("<div class=\"f_header\">Filtrar registros por...</div>",  block.binding)
+    concat("<div class=\"f_header\">#{t('views.filter_by')}</div>",  block.binding)
     concat("<ul class=\"filters\">", block.binding)
     yield
     concat("</ul>",                  block.binding)
@@ -311,7 +311,7 @@ module AdminView
 
   def all_filters
     results = []
-    results << filter_by('Todos', :none)
+    results << filter_by(t('views.filter_show_all'), :none)
     controller.options[:filter_config].all_filters.each do |filter|
       results << filter_by(filter.label, filter.name)
     end

@@ -2,7 +2,7 @@ module AdminView::ElegantPresentation
   # 
   #   TODO: add some documentation about this helper
   #  
-  def support_bar(title="Tareas de Soporte", &block)
+  def support_bar(title=t('views.support_tasks'), &block)
     content = capture(&block)
     concat('<div class="related_info">',      block.binding)
     concat("#{content_tag(:h3, title)}<ul>",  block.binding)
