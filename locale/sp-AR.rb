@@ -5,10 +5,10 @@
     :prev => 'Anterior',
     :next => 'Siguiente',
     :logout => 'Salir',
-    :save_this_changes => 'Guardar estos cambios!!!!!',
+    :save_this_changes => 'Guardar estos cambios',
     :cancel => 'Cancelar',
     :add_new_record => 'Agregar nuevo registro',
-    :default_title => 'Administraci�n',
+    :default_title => 'Administración',
     :download_to_excel => "Descargar a Excel",
     :see_more => 'ver más...',
     :edit_this_record => 'Editar este registro',
@@ -33,7 +33,7 @@
     :missing_parent => "No existe el padre del elemento solicitado"
   },
   :errors => {
-    :modules_not_defined => "Debe definir los m�dulos para la aplicaci�n. Ver documentacion de AdministrateMe::Base#set_module para mayor informaci�n",
-    :exception_on_save => "Ocurri� una exception al salvar el registro: {{message}}"
+    :modules_not_defined => "Debe definir los módulos para la aplicación. Ver documentacion de AdministrateMe::Base#set_module para mayor información",
+    :exception_on_save => "Ocurrió una exception al salvar el registro: {{message}}"
   }
 }}
