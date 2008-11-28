@@ -143,7 +143,7 @@ module TestAdministrateMe
     end
     
     def test_if_accepted(a_name)
-      if @controller.class.accepted_action?(a_name)
+      if @controller.accepted_action?(a_name)
         yield
       else
         assert_raises ActionController::UnknownAction, "No deberia poder usarse la accion: #{a_name}" do

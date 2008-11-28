@@ -95,8 +95,31 @@ module AdministrateMe
       # 
       # With this configuration, the plugin load a read-only controller, that will only
       # accept the index and the show actions.
+      #
+      # It can also use a block to tell when an action will be allowed.
+      #
+      #   class ProductsController < ApplicationController
+      #     administrate_me do |a|
+      #       a.search :name, :description, :price
+      #       a.except :show do |method|
+      #         if method == :new
+      #           current_user.has_role('admin')
+      #         else
+      #           true
+      #         end
+      #       end
+      #     end
+      #   end
+      #
+      # The block should return true for the action to be allowed. Keep in mind
+      # that you can combine parameters and the block to filter actions. In the
+      # previous example the show action won't be available in any case, the new
+      # action will be available only when the current user is an admin and
+      # all the other action will always be available.
+      #
       def except(*actions)
         @options[:except] = actions
+        @options[:except_block] = proc if block_given?
       end
       
       # Use search to indicate the fields to be looked up when the search action
@@ -475,7 +498,7 @@ module AdministrateMe
           include AdministrateMe::AdminScaffold::InstanceMethods
           hide_action   :path_to_element
           before_filter :set_active_filter
-          before_filter :get_resource, :only => actions_for_get_resource
+          before_filter :get_resource
           before_filter :get_parent
 
           if options[:habtms]
@@ -488,16 +511,7 @@ module AdministrateMe
         end
         
       end        
-      
-      def actions_for_get_resource
-        list = []
-        list << :edit    if accepted_action?(:edit)
-        list << :update  if accepted_action?(:edit)
-        list << :show    if accepted_action?(:show)
-        list << :destroy if accepted_action?(:destroy)
-        list
-      end
-      
+
       def namespace
         to_s =~ /(.*)::/
         $1 ? $1.underscore : nil
@@ -519,18 +533,6 @@ module AdministrateMe
         @administrate_me_options
       end
       
-      def accepted_action?(action)
-        translated_action = case action
-        when :update
-          :edit
-        when :create
-          :new
-        else
-          action
-        end
-        options[:except].empty? || !options[:except].include?(translated_action)
-      end
-
       # Improved text_field_with_auto_complete for administrate_me.
       # See AdministrateMeConfig#auto_complete_for
       def administrate_me_auto_complete_for(association, fields, options = {})

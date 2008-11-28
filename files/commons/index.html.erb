@@ -1,7 +1,7 @@
 <%= show_section_content %>
 
 <% content_for :support do %>
-    <% if controller.class.accepted_action?(:new) %>
+    <% if controller.accepted_action?(:new) %>
       <div id="add_new">
         <%= link_to '<span>Agregar nuevo registro</span>', path_to_index(:new), :id => :add_new, :class => :button, :onclick => "this.blur();" %>
       </div>
