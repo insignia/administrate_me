@@ -39,8 +39,8 @@ module AdminView
   
   def render_buttons
     html  = '<div class="buttons">'
-    html << edit_action    if controller.class.accepted_action?(:edit)
-    html << destroy_action if controller.class.accepted_action?(:destroy)
+    html << edit_action    if controller.accepted_action?(:edit)
+    html << destroy_action if controller.accepted_action?(:destroy)
     html << back_action
     html << '</div>'
     html

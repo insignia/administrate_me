@@ -216,8 +216,10 @@ module AdministrateMe
       end
 
       def get_resource
-        @resource = model_class.find(params[:id])
-      end
+        if [:show, :edit, :update, :destroy].include?(self.action_name) && accepted_action?(self.action_name)
+          @resource = model_class.find(params[:id])
+        end
+      end   
 
       def model_name
         self.class.model_name
@@ -268,6 +270,27 @@ module AdministrateMe
         session[:active_filters] ? session[:active_filters][self.class] : nil
       end
 
+      # Simplifies action_name handling for accepted_action?()
+      def translated_action_name(action)
+        case action
+        when :update
+          :edit
+        when :create
+          :new
+        else
+          action
+        end
+      end
+
+      def accepted_action?(action)
+        translated_action = translated_action_name(action)
+        allowed = options[:except].empty? || !options[:except].include?(translated_action)
+        if allowed && options[:except_block]
+          allowed = self.instance_exec(translated_action, &options[:except_block])
+        end
+        allowed
+      end
+
       protected
 
         def habtm_callback
@@ -277,7 +300,7 @@ module AdministrateMe
         end
 
         def if_available(action)
-          if self.class.accepted_action?(action)
+          if self.accepted_action?(action)
             yield
           else
             raise ActionController::UnknownAction
