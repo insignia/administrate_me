@@ -124,8 +124,12 @@ module AdministrateMe
       
       # Use search to indicate the fields to be looked up when the search action
       # is executed.
-      # Note that the option includes was set up, the fields selected for search
-      # should be specified with its table name, i.e.: 'products.name'.
+      # Note that when the option <code>includes</code> was set up, the fields
+      # included on <code>search</code> should be specified with its table name,
+      # i.e.:
+      # 
+      #   search 'products.name'
+      #
       def search(*fields)
         @options[:search] = fields
       end
