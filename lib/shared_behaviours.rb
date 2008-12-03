@@ -52,7 +52,9 @@ describe 'basic administrate_me', :shared => true do
 
     it "should expose all models as @records" do
       if will_paginate_installed?
-        @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return([mock_model_instance])
+        records = [mock_model_instance]
+        records.stub!(:total_entries).and_return(1)
+        @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return(records)
       else
         @mock_model_class.should_receive(:find).with(:all, an_instance_of(Hash)).and_return([mock_model_instance])
       end      
@@ -64,10 +66,12 @@ describe 'basic administrate_me', :shared => true do
 
       it "should render all models as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
+        models = mock("Array of models")
         if will_paginate_installed?
-          @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return(models = mock("Array of models"))
+          models.stub!(:total_entries).and_return(1)
+          @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return(models)
         else
-          @mock_model_class.should_receive(:find).with(:all, an_instance_of(Hash)).and_return(models = mock("Array of models"))
+          @mock_model_class.should_receive(:find).with(:all, an_instance_of(Hash)).and_return(models)
         end
         models.should_receive(:to_xml).and_return("generated XML")
         get :index
@@ -267,7 +271,9 @@ describe 'basic administrate_me with parent', :shared => true do
   
     it "should expose all models as @records" do
       if will_paginate_installed?
-        @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return([mock_model_instance])
+        records = [mock_model_instance]
+        records.stub!(:total_entries).and_return(1)
+        @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return(records)
       else
         @mock_model_class.should_receive(:find).with(:all, an_instance_of(Hash)).and_return([mock_model_instance])
       end      
@@ -279,10 +285,12 @@ describe 'basic administrate_me with parent', :shared => true do
 
       it "should render all models as xml" do
         request.env["HTTP_ACCEPT"] = "application/xml"
+        models = mock("Array of models")
         if will_paginate_installed?
-          @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return(models = mock("Array of models"))
+          models.stub!(:total_entries).and_return(1)
+          @mock_model_class.should_receive(:paginate).with(an_instance_of(Hash)).and_return(models)
         else
-          @mock_model_class.should_receive(:find).with(:all, an_instance_of(Hash)).and_return(models = mock("Array of models"))
+          @mock_model_class.should_receive(:find).with(:all, an_instance_of(Hash)).and_return(models)
         end
         models.should_receive(:to_xml).and_return("generated XML")
         get :index, parent_parameter_id => mock_model_parent.id
