@@ -327,13 +327,15 @@ module AdministrateMe
 
         # will execute the callback only when the controller executes the 
         # specific action.
-        def call_callback_on_action(hook, action)
-          call_callback(hook, action) if action_name == action
+        def call_callback_on_action(hook, actions)
+          actions_array = [*actions]
+          call_callback(hook, actions_array.join('_and_')) if actions_array.include?(action_name.to_sym)
         end
         
         # will execute a callback
         def call_callback(hook, action)
-          send("#{hook}_#{action}") if respond_to?("#{hook}_#{action}")
+          method_name = "#{hook}_#{action}"
+          send(method_name) if respond_to?(method_name)
         end
 
         def get_parent
@@ -371,6 +373,16 @@ module AdministrateMe
 
         def call_before_render
           before_render if respond_to?('before_render')
+          call_callback_on_action :before_render, :new
+          call_callback_on_action :before_render, :create
+          call_callback_on_action :before_render, [:new, :create]
+          call_callback_on_action :before_render, :edit
+          call_callback_on_action :before_render, :update
+          call_callback_on_action :before_render, [:edit, :update]
+          before_render_with_form if [:new, :create, :edit, :update].include?(action_name.to_sym) && respond_to?('before_render_with_form')
+          call_callback_on_action :before_render, :index
+          call_callback_on_action :before_render, :show
+          call_callback_on_action :before_render, :delete
         end
         
     end

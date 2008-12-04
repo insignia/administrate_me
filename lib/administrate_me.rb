@@ -26,6 +26,27 @@
 # This method will be called on the controller just before the respond_to block
 # on every administrate_me action. It can be used to define some extra instance
 # variables to use them on the views.
+#
+# There are also specific before_render callbacks that are called before render
+# on specific actions. This actions will also be called before rendering it's
+# the respective action:
+#
+#   before_render_new
+#   before_render_create
+#   before_render_edit
+#   before_render_update
+#   before_render_index
+#   before_render_show
+#   before_render_delete
+#
+# This methods will be called on any of the metioned actions.
+# <code>before_render_new_and_create</code> will be called on new and create actions and
+# <code>before_render_edit_and_update</code> will be called on edit and update actions.
+# They can be useful to prefill some values on instance variables on new or edit forms respectively.
+#
+# Also a <code>before_render_with_form</code> method will be called on new, create, edit
+# and update actions. This is useful for prefilling values that will be needed on any action
+# that includes a form.
 # 
 # ==== before_save and after_save
 # 
