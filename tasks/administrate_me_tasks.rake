@@ -1,35 +1,54 @@
-namespace :admin do
-  desc "Importar al proyecto los archivos para el admin"
+namespace(:admin) do        
+  desc "import administrate_me files into current project"
   task :import_files do
     require 'railties_path'
+    include ImportMethods
     
-    path_to_css = RAILS_ROOT + "/public/stylesheets/"
-    stylesheets = Dir["./vendor/plugins/administrate_me/files/stylesheets/*.css"]
-    FileUtils.cp(stylesheets, path_to_css, :verbose => true)
-    
-    path_to_js = RAILS_ROOT + "/public/javascripts/"
-    javascripts = Dir["./vendor/plugins/administrate_me/files/javascripts/*.js"]
-    FileUtils.cp(javascripts, path_to_js, :verbose => true)
-
-    path_to_images = RAILS_ROOT + "/public/images/admin_ui/"
-    FileUtils.mkdir(path_to_images) unless File.exist?(path_to_images)
-    images = Dir["./vendor/plugins/administrate_me/files/images/*.*"]
-    FileUtils.cp(images, path_to_images, :verbose => true)
-    
-    path_to_layouts = RAILS_ROOT + "/app/views/layouts/"
-    layouts = Dir["./vendor/plugins/administrate_me/files/layouts/*.html.erb"]
-    FileUtils.cp(layouts, path_to_layouts, :verbose => true)
-    
-    path_to_commons = RAILS_ROOT + "/app/views/commons/"
-    FileUtils.mkdir(path_to_commons) unless File.exist?(path_to_commons)
-    commons = Dir["./vendor/plugins/administrate_me/files/commons/*.html.erb"]
-    FileUtils.cp(commons, path_to_commons, :verbose => true)
-
-    FileUtils.cp(
-      "./vendor/plugins/administrate_me/files/initializers/administrate_me.rb",
-      "./config/initializers",
-      :verbose => true
-    )
-    puts "Files were copied..."
+    css
+    js
+    images
+    layout
+    commons
+    initializers
   end
+  
+  module ImportMethods    
+    FILES_ROOT = "./vendor/plugins/administrate_me/files"
+    
+    def css
+      FileUtils.cp( Dir["#{FILES_ROOT}/stylesheets/*.css"],
+                    RAILS_ROOT + "/public/stylesheets/", :verbose => true )
+    end
+    
+    def js
+      FileUtils.cp( Dir["#{FILES_ROOT}/javascripts/*.js"],
+                    RAILS_ROOT + "/public/javascripts/", :verbose => true )
+    end
+    
+    def images
+      path_to_images = RAILS_ROOT + "/public/images/admin_ui/"
+      FileUtils.mkdir(path_to_images) unless File.exist?(path_to_images)
+      FileUtils.cp( Dir["#{FILES_ROOT}/images/*.*"], path_to_images, 
+                    :verbose => true )
+    end
+    
+    def layout
+      FileUtils.cp( Dir["#{FILES_ROOT}/layouts/*.html.erb"],
+                    RAILS_ROOT + "/app/views/layouts/", :verbose => true )
+    end
+    
+    def commons
+      path_to_commons = RAILS_ROOT + "/app/views/commons/"
+      FileUtils.mkdir(path_to_commons) unless File.exist?(path_to_commons)
+      FileUtils.cp( Dir["#{FILES_ROOT}/commons/*.html.erb"], path_to_commons, 
+                    :verbose => true )
+    end
+    
+    def initializers
+      FileUtils.cp( "#{FILES_ROOT}/initializers/administrate_me.rb",
+                    "./config/initializers", :verbose => true )
+    end
+  end
+  
 end
+
