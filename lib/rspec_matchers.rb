@@ -116,6 +116,13 @@ module Spec
         end
       end
 
+      # Validates that a controller using administrate_me sets an specific tab name
+      def use_tab(tab_name)
+        simple_matcher("controller use the tab name '#{tab_name}'") do |controller_class|
+          controller.class.options[:tab] == tab_name
+        end
+      end
+
     end
   end
 end

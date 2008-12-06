@@ -32,7 +32,13 @@
          <div style="clear:both"></div>
 
          <div id="navigation">
-           <%= generate_navigation %>
+           <ul id="navs">
+             <% generate_navigation.each do |tab| %>
+               <li id="<%= tab.name %>">
+                 <%= link_to "<span>#{tab.caption}</span>", tab.url, :class => tab.class_name %>
+               </li>
+             <% end %>
+           </ul>
          </div>
        </div>
        <div id="bd">
