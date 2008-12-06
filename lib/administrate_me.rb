@@ -303,6 +303,29 @@ module AdministrateMe
       def set_foreign_key(foreign_key)
         @options[:foreign_key] = foreign_key
       end
+
+      # Used to specify exactly which tab will be lit on the current controller.
+      # This is supposed to be used only when the tab name cant be detected automatically.
+      # administrate_me provides several ways to set the current module/tab.
+      #
+      #   - tab() callback on the controller: Defining a <code>tab()</code> method on the controller that returns the name of the tab to turn on.
+      #   - The tab keyword: This will set a static tab name to be set as active on the current controller.
+      #   - The parent name of the controller: For controllers using set_parent or belongs_to, the current tab name will be guessed using the parent name.
+      #   - The current controller name.
+      #
+      # ==== Example
+      #
+      #   class AccountController < ApplicationController
+      #     administrate_me do |a|
+      #       a.tab :listing
+      #     end
+      #   end
+      #
+      # On this example, the tab with the 'listing' name will be marked as current on the screen.
+      #
+      def tab(tab_name)
+        @options[:tab] = tab_name
+      end
       
       def excel_available!
         @options[:excel] = true

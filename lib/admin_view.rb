@@ -68,18 +68,15 @@ module AdminView
   end
 
   def generate_navigation
-    html = ""
+    tabs = []
     if modules = get_modules
       modules.each do |tab|
-        tab_name = get_tab_name
-        selector = (tab_name == tab[:name].to_s) ? 'current' : 'available'        
-        html << content_tag('li', 
-                            link_to(content_tag('span', tab[:caption].humanize), tab[:url], :class => selector), 
-                            :id => tab[:name] )
+        selector = (get_tab_name == tab[:name].to_s) ? 'current' : 'available'
+        tabs << OpenStruct.new(:caption => tab[:caption].humanize, :url => tab[:url], :class_name => selector, :name => tab[:name])
       end    
-      content_tag('ul', html, :id => 'navs')
+      tabs
     else
-      raise Exception, "Debe definir los m√≥dulos para la aplicaci√≥n. Ver: http://code.google.com/p/administrateme/wiki/ConfiguracionDeModulos"
+      raise Exception, "Debe definir los mÛdulos para la aplicaciÛn. Ver: http://code.google.com/p/administrateme/wiki/ConfiguracionDeModulos"
     end
   end
   
@@ -123,9 +120,13 @@ module AdminView
 
   def get_tab_name
     if controller.respond_to?('tab')
-      tname = controller.tab.to_s
+      controller.tab.to_s
+    elsif controller.options[:tab]
+      controller.options[:tab].to_s
+    elsif controller.options[:parent]
+      controller.options[:parent].to_s.pluralize
     else
-      tname = controller.controller_name.to_s
+      controller.controller_name.to_s
     end
   end
   
@@ -228,16 +229,13 @@ module AdminView
     html = ""
     if actions
       if actions.include?('show')
-        html << link_to(image_tag('show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver m√°s...')
-#        html << link_to(image_tag('admin_ui/show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver m√°s...')
+        html << link_to(image_tag('show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver m·s...')
       end
       if actions.include?('edit')
         html << link_to(image_tag('edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
-#        html << link_to(image_tag('admin_ui/edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
       end
       if actions.include?('destroy')
-        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro ser√° eliminado definitivamente. ¬øDesea continuar?', :method => :delete, :title => 'eliminar este registro')
-#        html << link_to(image_tag('admin_ui/destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro ser√° eliminado definitivamente. ¬øDesea continuar?', :method => :delete, :title => 'eliminar este registro')
+        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro ser· eliminado definitivamente. øDesea continuar?', :method => :delete, :title => 'eliminar este registro')
       end
       unless html.blank?
         html = content_tag('div', html, :align => 'right')     
