@@ -4,6 +4,7 @@
 
 administrate_me is a Rails plugin conceived to simplify the creation of administrative backend interfases on a Rails project. This way you can have basic CRUD with a nice user interfase almost for free.
 
+
 == Install and setup:
 
 If you're already running Rails 2.1 you can just run the next command:
