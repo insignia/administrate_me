@@ -76,7 +76,7 @@ module AdminView
       end    
       tabs
     else
-      raise Exception, "Debe definir los mÛdulos para la aplicaciÛn. Ver: http://code.google.com/p/administrateme/wiki/ConfiguracionDeModulos"
+      raise Exception, "Debe definir los m√≥dulos para la aplicaci√≥n. Ver: http://code.google.com/p/administrateme/wiki/ConfiguracionDeModulos"
     end
   end
   
@@ -229,13 +229,13 @@ module AdminView
     html = ""
     if actions
       if actions.include?('show')
-        html << link_to(image_tag('show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver m·s...')
+        html << link_to(image_tag('show.png'), eval("#{name_space}_#{generate_path(item)}"), :title => 'ver m√°s...')
       end
       if actions.include?('edit')
         html << link_to(image_tag('edit.png'), eval("edit_#{name_space}_#{generate_path(item)}"), :title => 'editar este registro')
       end
       if actions.include?('destroy')
-        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro ser· eliminado definitivamente. øDesea continuar?', :method => :delete, :title => 'eliminar este registro')
+        html << link_to(image_tag('destroy.png'), eval("#{name_space}_#{generate_path(item)}"), :confirm => 'El registro ser√° eliminado definitivamente. ¬øDesea continuar?', :method => :delete, :title => 'eliminar este registro')
       end
       unless html.blank?
         html = content_tag('div', html, :align => 'right')     
@@ -373,6 +373,29 @@ module AdminView
   
   def current_class(is_current)
     is_current ? 'current' : nil
+  end
+
+  # Add a spinner, hidden by default, with the specified id.
+  def spinner(spinner_id = :spinner, hidden = true)
+    options = {:id => spinner_id}
+    options.merge!(:style => 'display:none') if hidden
+    image_tag('admin_ui/indicator.gif', options)
+  end
+
+  # Provide options for ajax helpers with default loading and complete options.
+  #
+  # ==== Example
+  #
+  #   observe_field(:some_field_id, loading_with_spinner(:spinner_id, :url => update_path, :with => 'value')
+  #
+  # the <code>loading_with_spinner</code> helper will add loading and complete
+  # actions to the observe_field options to show and hide the spinner while the
+  # action is being executed,
+  def loading_with_spinner(spinner_id, options)
+    options.merge(
+      :loading  => "$('#{spinner_id}').show(); #{options[:loading]}",
+      :complete => "$('#{spinner_id}').hide(); #{options[:complete]}"
+    )
   end
   
 end
