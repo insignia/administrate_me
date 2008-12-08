@@ -374,6 +374,29 @@ module AdminView
   def current_class(is_current)
     is_current ? 'current' : nil
   end
+
+  # Add a spinner, hidden by default, with the specified id.
+  def spinner(spinner_id = :spinner, hidden = true)
+    options = {:id => spinner_id}
+    options.merge!(:style => 'display:none') if hidden
+    image_tag('admin_ui/indicator.gif', options)
+  end
+
+  # Provide options for ajax helpers with default loading and complete options.
+  #
+  # ==== Example
+  #
+  #   observe_field(:some_field_id, loading_with_spinner(:spinner_id, :url => update_path, :with => 'value')
+  #
+  # the <code>loading_with_spinner</code> helper will add loading and complete
+  # actions to the observe_field options to show and hide the spinner while the
+  # action is being executed,
+  def loading_with_spinner(spinner_id, options)
+    options.merge(
+      :loading  => "$('#{spinner_id}').show(); #{options[:loading]}",
+      :complete => "$('#{spinner_id}').hide(); #{options[:complete]}"
+    )
+  end
   
 end
 
