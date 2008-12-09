@@ -13,10 +13,9 @@ module AdminView
   #   <% end %>
   #
   def resource_card(&block)
-    content = capture(&block)
     concat(show_section_label,                block.binding)
     concat('<div class="resource-card">',     block.binding)
-    concat(content,                           block.binding)
+    yield
     concat('</div>',                          block.binding)
     concat('<div style="clear:both;"></div>', block.binding)
   end
@@ -60,9 +59,8 @@ module AdminView
   # note: this two input boxes will be rendered in a single row
   #
   def field_block(&block)
-    content = capture(&block)
     concat('<div class="float_left">',        block.binding)
-    concat(content,                           block.binding)
+    yield
     concat('</div>',                          block.binding)
     concat('<div style="clear:both;"></div>', block.binding)
   end
@@ -305,11 +303,10 @@ module AdminView
   deprecate :show_filters_for
 
   def filters_for(&block)
-    concat("<div class=\"f_header\">#{t('views.filter_by')}</div>",  block.binding)
-    concat("<ul class=\"filters\">", block.binding)
+    concat("<div class='f_header'>#{t('views.filter_by')}</div>",  block.binding)
+    concat("<ul class='filters'>",   block.binding)
     yield
     concat("</ul>",                  block.binding)
-    concat("</div>",                 block.binding)
   end
 
   def all_filters

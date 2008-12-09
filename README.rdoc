@@ -145,10 +145,9 @@ This partial is used to show navigation breadcrumbs on the children page.
 We should now modify the file app/views/products/show.html.erb to provide a link to each product prices. Remove the commented <% content_for :support %> block, and add this:
 
   <% content_for :support do %>    
-      <%= related_info_for 'Support tasks', 
-            [ 
-              { :link => 'Prices', :url => product_prices_path(@resource)}
-            ] %>
+    <% support_bar do %>
+      <%= option_link :caption => 'Link to another resource', :url => resource_path(@resource) %>
+    <% end %>              
   <% end %>
 
 
