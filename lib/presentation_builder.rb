@@ -268,9 +268,9 @@ module AdminView::PresentationBuilder
   def build_row_links(item)
     html = ""
     #FIXME: should refactor to use link_to_destroy, link_to_edit, etc, merging with edit_action and destroy_action on presenter.rb
-    html << link_to(image_tag('admin_ui/show.png'), path_to_element(item), :title => 'ver más...') if controller.accepted_action?(:show)
-    html << link_to(image_tag('admin_ui/edit.png'), path_to_element(item, :prefix => :edit), :title => 'editar este registro') if controller.accepted_action?(:edit)
-    html << link_to(image_tag('admin_ui/destroy.png'), path_to_element(item), :confirm => 'El registro será eliminado definitivamente. ¿Desea continuar?', :method => :delete, :title => 'eliminar este registro') if controller.accepted_action?(:destroy)
+    html << link_to(t('views.view_action'), path_to_element(item), :title => 'ver más...') if controller.accepted_action?(:show)
+    html << link_to(t('views.edit_action'), path_to_element(item, :prefix => :edit), :title => 'editar este registro') if controller.accepted_action?(:edit)
+    html << link_to(t('views.destroy_action'), path_to_element(item), :confirm => 'El registro será eliminado definitivamente. ¿Desea continuar?', :method => :delete, :title => 'eliminar este registro', :class => :destroy) if controller.accepted_action?(:destroy)
     html
   end
 

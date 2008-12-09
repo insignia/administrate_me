@@ -15,8 +15,9 @@ module AdminView::Presenter
         @fields    = []
       end
       def field(label, value)
-        @fields << @mybuilder.span(label)
-        @fields << @mybuilder.div(pretty_value(value))
+        data_block  = @mybuilder.span(label) 
+        data_block << @mybuilder.div(pretty_value(value))
+        @fields << "<div class='data-block'>#{data_block}</div>"
       end
       def text(value)
         @fields << value

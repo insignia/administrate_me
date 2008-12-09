@@ -1,11 +1,1 @@
 <%= show_section_content %>
-
-<% content_for :support do %>
-    <% if controller.accepted_action?(:new) %>
-      <div id="add_new">
-        <% link_to path_to_index(:new), :id => :add_new, :class => :button, :onclick => "this.blur();" do %>
-          <span><%= t('views.add_new_record') %></span>
-        <% end %>
-      </div>
-    <% end %>
-<% end %>

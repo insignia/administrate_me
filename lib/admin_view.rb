@@ -186,7 +186,7 @@ module AdminView
   def path_to_element(*args)
     controller.path_to_element(*args)
   end
-      
+
   def generate_grid_table_for(options = {})
     unless @records.blank?    
       html = generate_grid_table_heads(options[:fields])
@@ -396,6 +396,25 @@ module AdminView
       :loading  => "$('#{spinner_id}').show(); #{options[:loading]}",
       :complete => "$('#{spinner_id}').hide(); #{options[:complete]}"
     )
+  end
+  
+  def link_to_new_action
+    if controller.accepted_action?(:new)
+      link_to( "#{t('views.add_new_record')} #{controller.model_name.titleize}", 
+               path_to_index(:new), :class => :add_new )
+    end    
+  end
+  
+  def title
+    controller.respond_to?('title') ? controller.title : t('views.default_title')
+  end
+  
+  def owner
+    controller.respond_to?('owner') ? controller.owner : 'nobody'
+  end
+  
+  def app_name
+    controller.respond_to?('app_name') ? controller.app_name : 'administrate_me'
   end
   
 end

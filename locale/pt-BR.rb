@@ -7,7 +7,7 @@
     :logout => 'Sair',
     :save_this_changes => 'Salvar alterações',
     :cancel => 'Cancelar',
-    :add_new_record => 'Agregar novo registro',
+    :add_new_record => 'Agregar novo',
     :default_title => 'Administração',
     :download_to_excel => "Descarregar no Excel",
     :see_more => 'ver mais...', 
@@ -21,9 +21,13 @@
     :edit_record => "Editando um {{model}}",
     :back => 'Voltar',
     :search_prompt => 'Pesquisar (digite a palavra que procura)',
+    :search_button => "Pesquisar",
     :support_tasks => "Tarefas de Suporte",
     :filter_by => "Filtrar registros por...",
-    :filter_show_all => 'Todos'
+    :filter_show_all => 'Todos',
+    :edit_action => 'editar', 
+    :view_action => 'ver',
+    :destroy_action => 'excluir'
   },
   :messages => {
     :create_success => 'O registro foi criado com sucesso.',
