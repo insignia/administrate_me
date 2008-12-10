@@ -101,6 +101,7 @@ module AdministrateMe
       def no_scaffold!
         @options[:scaffold] = false
       end
+      alias_method 'without_scaffold!', 'no_scaffold!'
       
       # The except method specifies the action that will not be allowed
       # in the controller.
@@ -626,6 +627,10 @@ module AdministrateMe
     def set_layout
       self.respond_to?('admin_layout') ? admin_layout : "admin_layout" 
     end
+    
+    def options
+      self.class.options
+    end    
   end
   
 end
