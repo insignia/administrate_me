@@ -58,8 +58,10 @@ module AdminView
   # 
   # note: this two input boxes will be rendered in a single row
   #
-  def field_block(&block)
-    concat('<div class="float_left">',        block.binding)
+  def field_block(cols = 2, &block)
+    css_class  = "float_left"
+    css_class << "_#{cols}" unless cols == 2
+    concat('<div class="'+ css_class +'">',        block.binding)
     yield
     concat('</div>',                          block.binding)
     concat('<div style="clear:both;"></div>', block.binding)
