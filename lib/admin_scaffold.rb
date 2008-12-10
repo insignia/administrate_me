@@ -229,10 +229,6 @@ module AdministrateMe
         self.class.model_class
       end
 
-#      def options
-#        self.class.options
-#      end
-
       def parent_class
         self.class.parent_class
       end
