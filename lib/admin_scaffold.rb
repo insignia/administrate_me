@@ -206,6 +206,10 @@ module AdministrateMe
         options[:parent] ||= self.options[:parent]
         create_path(self.controller_name.singularize, element, self.class.namespace, @parent, options)
       end
+      
+      def path_to_parent(parent, options = {})
+        create_path(parent.class.to_s.underscore, parent, self.class.namespace, options)
+      end
 
       def get_index
         path  = "#{controller_name}_path"
