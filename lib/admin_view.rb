@@ -162,9 +162,13 @@ module AdminView
     links
   end
   
+  #
+  # This method will be deprecated in future versions. 
+  #
   def show_section_label
     show_label("#{controller.controller_name.humanize}")
   end
+  deprecate :show_section_label
   
   def show_label(label)
     content_tag('h1', label, :id => 'section_label')
@@ -177,7 +181,9 @@ module AdminView
   end
   
   def show_search_form
-    content_tag('div', render(:partial => 'commons/search_form'), :id => 'search')
+    content_tag( 'div', 
+                 render(:partial => 'commons/search_form'), 
+                 :id => 'search' ) if controller.options[:search]
   end
 
   # This helper is used to show the main index sections. 
@@ -190,6 +196,7 @@ module AdminView
     html << show_section_body
     html
   end
+  deprecate :show_section_content
     
   def show_mini_flash
     unless session[:mini].blank?      
@@ -322,19 +329,25 @@ module AdminView
   deprecate :show_filters_for
 
   def filters_for(&block)
-    concat("<div class='f_header'>#{t('views.filter_by')}</div>",  block.binding)
-    concat("<ul class='filters'>",   block.binding)
-    yield
-    concat("</ul>",                  block.binding)
+    unless controller.options[:filter_config].nil?
+      concat("<div id='filter-list'>", block.binding)
+      concat("<div class='f_header'>#{t('views.filter_by')}</div>",  block.binding)
+      concat("<ul class='filters'>",   block.binding)
+      yield
+      concat("</ul>",                  block.binding)
+      concat("</div>",                 block.binding)
+    end
   end
 
   def all_filters
-    results = []
-    results << filter_by(t('views.filter_show_all'), :none)
-    controller.options[:filter_config].all_filters.each do |filter|
-      results << filter_by(filter.label, filter.name)
+    unless controller.options[:filter_config].nil?
+      results = []
+      results << filter_by(t('views.filter_show_all'), :none)
+      controller.options[:filter_config].all_filters.each do |filter|
+        results << filter_by(filter.label, filter.name)
+      end
+      results.join("\n")
     end
-    results.join("\n")
   end
 
   def filter_by(label, filter_name = nil)
