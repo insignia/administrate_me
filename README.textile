@@ -1,0 +1,328 @@
+h1. All about administrate_me plugin
+
+administrate_me is a Rails plugin conceived to simplify the creation of administrative backend interfases on a Rails project. This way you can have basic CRUD with a nice user interfase almost for free.
+
+
+h3. Dependencies
+
+administrate_me master version requires *rails 2.2.2* or *edge rails*. 
+
+If you need to run administrate_me with a previous rails version, you can use *rails2* branch; this version works fine with rails 2.0.x and 2.1.x.
+
+It will also take advange of other installed plugins on the same project, such as will_paginate and bundle_fu.
+
+will_paginate will be used to paginate records of each table and bundle_fu to automatically bundle assets files (javascripts and stylesheets) to increase loading performace.
+
+_*Important!:* unfortunately administrate_me doesn't support rails gems older than 2.0. It likes the life on the edge :)_
+
+
+h3. Installation
+
+To install administrate_me plugin into your rails project (rails version >= 2.1) just run:
+
+<pre><code>
+  ruby script/plugin install git://github.com/insignia/administrate_me.git 
+</code></pre>
+
+For projects running with rails < 2.1, you'll have to clone plugin's git repository and delete .git folder  after it, just like this:
+
+<pre><code>
+  git clone git://github.com/insignia/administrate_me.git vendor/plugins/administrate_me
+  rm vendor/plugins/administrate_me/.git -rf
+</code></pre>
+
+Or you can download a tarball from github, and extract the files into vendor/plugins/ folder.
+
+
+h3. Setup
+
+Once you've installed the plugin, you'll have to import plugin's asset files into your project, in order to do that, you can run:
+
+<pre><code>
+  rake admin:import_files
+</code></pre>
+
+Then, administrate_me requires a little extra configuration which you can put into your application.rb:
+
+<pre><code>
+  class ApplicationController < ActionController::Base
+    helper :all # include all helpers, all the time
+    protect_from_forgery # :secret => 'ed1896d8d25a5a534d1a14d0f74664f4'
+    
+    # This will set a products module or tab on the backend interfase
+    set_module :products 
+  end
+</code></pre>
+
+also, you can provide administrate_me with an optionally set of info for beautifying your application's backend:
+
+<pre><code>
+  class ApplicationController < ActionController::Base
+    helper :all # include all helpers, all the time
+    protect_from_forgery # :secret => 'ed1896d8d25a5a534d1a14d0f74664f4'
+    
+    # owner and app_name methods will be published into application's backend
+    def owner
+      "who's the owner?"
+    end
+    
+    def app_name
+      "your app's name"
+    end    
+    
+    # This will set a products module or tab on the backend interfase
+    set_module :products 
+  end
+</code></pre>
+
+
+h1. Usage (..or building a rails application with administrate_me)
+
+
+h3. Basic usage
+
+Let's say you need to create a little backend to manage a products database. Here's the recipe:
+
+* *Create a new rails application*
+
+<pre><code>
+  rails store
+  cd store
+</code></pre>
+
+* *Install administrate_me plugin*
+
+<pre><code>
+  ruby script/plugin install git://github.com/insignia/administrate_me.git 
+</code></pre>
+
+* *Copy plugin's asset files into your project*
+
+<pre><code>
+  rake admin:import_files
+</code></pre>
+
+* *Create a very simple product model and run the migration*
+
+<pre><code>
+  ruby script/generate model Product name:string description:text
+  rake db:migrate
+</code></pre>
+
+* *Create an empty controller to admin the created model*
+
+<pre><code>
+  ruby script/generate controller products
+</code></pre>
+
+* *Add a new route to product resources on config/routes.rb*
+
+<pre><code>
+  map.resources :products
+</code></pre>
+
+* *Create views for you controller*
+
+Automatically create controller's views with this generator. All templates needed will be created using all the table fields, you can edit those files later to include/exclude fields on your demand.
+
+<pre><code>
+  ruby script/generate admin_view products
+</code></pre>
+
+* *Include administrate_me configuration into your controller*
+
+<pre><code>
+  class ProductsController < ApplicationController
+    administrate_me do |a|
+      a.search :name, :description
+      a.order  :name
+    end
+  end
+</code></pre>
+
+* *Add general configuration for the application*
+
+<pre><code>
+  class ApplicationController < ActionController::Base
+    helper :all # include all helpers, all the time
+    protect_from_forgery # :secret => 'ed1896d8d25a5a534d1a14d0f74664f4'
+    
+    # owner and app_name methods will be published into application's backend
+    def owner
+      "Lorem Ipsum Inc."
+    end
+    
+    def app_name
+      "Store Administration"
+    end    
+    
+    # This will set a products module or tab on the backend interfase
+    set_module :products 
+  end
+</code></pre>
+
+* *So, what are waiting for!? Run the application!*
+
+<pre><code>
+   ruby script/server
+</code></pre>
+
+Awesome!? Have fun playing aroung with your brand new backend :)
+
+
+h3. What about nested resources?
+
+Now, let's say you need to add a set of prices for each product.
+
+* *Create a simple price model*
+
+<pre><code>
+  ruby script/generate model Price product_id:integer value:decimal
+  rake db:migrate
+</code></pre>
+
+* *Create another empty controller for the generated model*
+
+<pre><code>
+  ruby script/generate controller prices
+</code></pre>
+
+* *Edit your routes.rb file*
+
+<pre><code>
+  map.resources :products, :has_many => :prices
+</code></pre>
+
+* *Create views for this controller* 
+
+<pre><code>
+  ruby script/generate admin_view prices
+</code></pre>
+
+* *Setup administrate in the controller*
+
+<pre><code>
+  class PricesController < ApplicationController
+    administrate_me do |a|
+      a.belongs_to :product, :context => :name
+      a.search :value
+    end
+  end
+</code></pre>
+
+* *Modify your product page to link to prices*
+
+<pre><code>
+  <%# app/views/products/show.html.erb %>
+  <%=
+    present :elegant do |p|
+      p.header do |r|
+        r.field 'Name', @resource.name
+      end
+      p.body do |r|
+        r.field 'Description', @resource.description
+        r.field 'Created at', @resource.created_atrequire File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+
+describe Box::HitsController do
+
+  before(:each) do
+    @mock_model_class = Hit
+    @user = mock_model(User)
+    @user.stub!(:id).and_return(1)
+    controller.stub!(:current_user).and_return(@user)
+    controller.stub!(:before_save).and_return(true)
+  end
+
+  it_should_behave_like 'basic administrate_me'
+
+end
+        r.field 'Updated at', @resource.updated_at
+      end
+      p.actions do |r|
+        r.text link_to('manage prices', product_prices_path(@resource))
+        r.text edit_action
+        r.text destroy_action
+        r.text back_action
+      end
+    end
+  %>  
+</code></pre>
+
+* *Modify your product listing page to add a quick link to prices*
+
+<pre><code>
+  <%# app/views/products/_list.html.erb %>
+  <%= list_builder_for @records do |list|
+        list.name
+        list.description
+        list.html :caption => '' do |product|
+          link_to('manage prices', product_prices_path(product))
+        end
+      end %>  
+</code></pre>
+
+* *Ready for rock 'n roll?*
+
+Be kind and refresh your brower, please? :D
+
+
+h3. Don't be a bad boy and cover your code with specs!
+
+administrate_me includes a set of rspec shared behaviours and matchers to help you to cover your controller's code with spec.
+
+_Note: in order for this to work, you'll have to add rspec support into your project_
+
+* *Tell your controllers to behave*
+
+<pre><code>
+  # this code should go into spec/controllers/products_controller_spec.rb
+  require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+
+  describe ProductsController do
+
+    before(:each) do
+      @mock_model_class = Product
+    end
+
+    it_should_behave_like 'basic administrate_me'
+
+  end
+  
+  describe ProductsController do
+    it "should be searchable by name" do
+      ProductsController.should be_searchable_by(:name)
+    end
+    
+    it "should be searchable by description" do
+      ProductsController.should be_searchable_by(:description)
+    end
+  end  
+</code></pre>
+
+administrate_me also includes rspec support for nested controllers...
+
+<pre><code>
+   # this code should go into spec/controllers/prices_controller_spec.rb
+   require File.expand_path(File.dirname(__FILE__) + '/../../spec_helper')
+
+   describe PricesController do
+     before do
+       @mock_model_class = Price
+       @parent_name      = 'product'
+     end
+
+     it_should_behave_like 'basic administrate_me with parent'
+
+   end
+</code></pre>
+
+now you have a very solid rails application :D
+
+Enjoy!
+
+
+h1. Credits
+
+administrate_me put together by people at "(in)signia":http://www.insignia4u.com/
+
+Don't forget to read our "blog":http://www.railslife.com.ar/
