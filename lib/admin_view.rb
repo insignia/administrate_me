@@ -322,19 +322,25 @@ module AdminView
   deprecate :show_filters_for
 
   def filters_for(&block)
-    concat("<div class=\"f_header\">Filtrar registros por...</div>",  block.binding)
-    concat("<ul class=\"filters\">", block.binding)
-    yield
-    concat("</ul>",                  block.binding)
+    unless controller.options[:filter_config].nil?
+      concat("<div id='filter-list'>", block.binding)
+      concat("<div class=\"f_header\">Filtrar registros por...</div>",  block.binding)
+      concat("<ul class=\"filters\">", block.binding)
+      yield
+      concat("</ul>",                  block.binding)
+      concat("</div>",                 block.binding)
+    end
   end
 
   def all_filters
-    results = []
-    results << filter_by('Todos', :none)
-    controller.options[:filter_config].all_filters.each do |filter|
-      results << filter_by(filter.label, filter.name)
+    unless controller.options[:filter_config].nil?
+      results = []
+      results << filter_by('Todos', :none)
+      controller.options[:filter_config].all_filters.each do |filter|
+        results << filter_by(filter.label, filter.name)
+      end
+      results.join("\n")
     end
-    results.join("\n")
   end
 
   def filter_by(label, filter_name = nil)
