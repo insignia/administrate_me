@@ -18,16 +18,18 @@ _*Important!:* unfortunately administrate_me doesn't support rails gems older th
 
 h3. Installation
 
-To install administrate_me plugin into your rails project (rails version >= 2.1) just run:
+To install administrate_me plugin into your rails project (rails version >= 2.2.2) just run:
 
 <pre><code>
   ruby script/plugin install git://github.com/insignia/administrate_me.git 
 </code></pre>
 
-For projects running with rails < 2.1, you'll have to clone plugin's git repository and delete .git folder  after it, just like this:
+For projects running with rails < 2.2, you'll have to clone plugin's git repository, checkout rails2 branch and delete .git folder  after it, just like this:
 
 <pre><code>
   git clone git://github.com/insignia/administrate_me.git vendor/plugins/administrate_me
+  cd vendor/plugins/administrate_me
+  git checkout -b rails2 origin/rails2
   rm vendor/plugins/administrate_me/.git -rf
 </code></pre>
 
