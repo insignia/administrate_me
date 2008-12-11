@@ -1,5 +1,22 @@
 module AdminView
 
+  def link_to_parent
+    context = controller.options[:context]
+    caption = context ? @parent.send(context) : @parent.class
+    link_to(caption, controller.path_to_parent(@parent))
+  end
+  
+  def admin_context
+    parts  = []
+    parts << ">"
+    if @parent
+      parts << link_to_parent
+      parts << ">"
+    end
+    parts << controller.controller_name.titleize
+    parts.join(" ")
+  end
+
   # resource_card helper
   # this helper render a very elegant presentation card for a resource.
   #   

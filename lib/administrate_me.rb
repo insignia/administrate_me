@@ -217,9 +217,17 @@ module AdministrateMe
       #     a.belongs_to :branch
       #   end
       #
+      # you can also specify the name of the field to be render in the context
+      # breadcrumb:
+      #
+      #   administrate_me do |a|
+      #     a.belongs_to :branch, :context => :name
+      #   end     
+      #
       def set_parent(parent,options={})
         @options[:parent] = parent
         @options[:foreign_key] = options[:foreign_key] if options[:foreign_key]
+        @options[:context]     = options[:context]     if options[:context]
       end
       alias_method "belongs_to", "set_parent"
       
