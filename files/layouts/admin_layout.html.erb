@@ -1,83 +1,61 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
- "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-<% title = controller.respond_to?('title') ? controller.title : 'Administración' -%>
-<% app_name = controller.respond_to?('app_name') ? controller.app_name : 'administrate_me' -%>
-<% owner = controller.respond_to?('owner') ? controller.owner : 'nobody' -%>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
-<html>
   <head>
-     <title><%= title %> :: <%= app_name %></title>
-     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />     
-
-     <% if respond_to?('bundle') -%>
-       <% bundle :name => :admin_me do -%>
-         <%= admin_file_loader %>
-       <% end -%>
-     <% else -%>
-       <%= admin_file_loader %>
-     <% end -%>
-     
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title><%= owner %> :: <%= app_name %></title>
+    
+    <% if respond_to?('bundle') -%>
+      <% bundle :name => :admin_me do -%>
+        <%= admin_file_loader %>
+      <% end -%>
+    <% else -%>
+      <%= admin_file_loader %>
+    <% end -%>
+    
   </head>
-  <body>
-    <div id="doc3" class="yui-t4">
-       <div id="hd">
-         
-         <div id="titles">
-           <span><%= owner %></span> > <%= app_name %>
-         </div>
-
-         <%= render :partial => 'commons/session' %>      
-
-         <div style="clear:both"></div>
-
-         <div id="navigation">
-           <ul id="navs">
-             <% generate_navigation.each do |tab| %>
-               <li id="<%= tab.name %>">
-                 <%= link_to "<span>#{tab.caption}</span>", tab.url, :class => tab.class_name %>
-               </li>
-             <% end %>
-           </ul>
-         </div>
-       </div>
-       <div id="bd">
-            <div id="yui-main">
-              <div class="yui-b">
-                <div class="yui-g">
-
-                  <%= render(:partial => 'commons/flasher') if flash[:notice] || flash[:error] %>
-                  
-                  <%=  render :partial => resource_context_path if @parent %>                  
-
-                  <div id="shadow-container">
-                    <div class="shadow1">
-                      <div class="shadow2">
-                        <div class="shadow3">
-                          <div id="paper_sheet">            
-                            <div id="content" class="container">                                
-                              <%= yield %>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+  
+  <body>    
+    <div id="container" class="grid-960">
+      <div id="content">
+        <div class="main">
+          <%= render :partial => 'commons/session' %>
+          <div class="be-header">
+            <small><%= owner %> /</small>
+            <h1><%= app_name %></h1>
+          </div>
+          <div class="box">
+            <div class="box-content"> 
+              <div class="top-panel">              
+                <div class="navigation">
+                  <% generate_navigation.each do |tab| %>
+                    <%= link_to tab.caption, tab.url, :class => tab.class_name %>
+                  <% end %>
+                </div>
+                <div class="label">                
+                  <%= admin_context %>
                 </div>
               </div>
-            </div>
-            <div class="yui-b">
-              <div id="support">
-                <%= yield :support %>
-                <%= yield :extras %>
-              </div>
-            </div>
-
-            </div>
-       <div id="ft">
-         powered by <%= link_to 'ruby on rails', 'http://www.rubyonrails.org', :target => '_blank' %>
-         & <%= link_to 'administrate_me', 'http://github.com/insignia/administrate_me', :target => '_blank' %>
-       </div>
+              <div class="inner-content">
+                <%= flash_messages %>
+                <%= yield %>
+              </div>              
+            </div>            
+          </div>
+          <div class="bottom"></div>
+          <div class="footer">
+            2008. <b><%= owner %></b>. All rights reserved.
+            <small>
+              powered by <%= link_to 'ruby on rails', 'http://www.rubyonrails.org', 
+                                     :target => '_blank' %> 
+              & <%= link_to 'administrate_me', 
+                    'http://github.com/insignia/administrate_me', :target => '_blank' %>
+            </small>            
+          </div>
+        </div>
+      </div>
     </div>
   </body>
 </html>
