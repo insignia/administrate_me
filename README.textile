@@ -307,6 +307,10 @@ now you have a very solid rails application :D
 Enjoy!
 
 
+h3. More info...
+
+you can visit "administrate_me online documentation":http://ame-doc.insignia4u.com/
+
 h1. Credits
 
 administrate_me put together by people at "insignia":http://www.insignia4u.com/
