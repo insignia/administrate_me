@@ -448,6 +448,18 @@ module AdminView
     controller.respond_to?('app_name') ? controller.app_name : 'administrate_me'
   end
   
+  # 
+  # This helper method is inspired by Fudgestudio's bort rails app.
+  # http://github.com/fudgestudios/bort/tree/master
+  #
+  def flash_messages
+    messages = []
+    %w(notice warning error).each do |msg|
+      messages << content_tag(:div, html_escape(flash[msg.to_sym]), :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
+    end
+    messages
+  end
+  
 end
 
 ActionView::Base.send :include, AdminView
