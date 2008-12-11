@@ -1,4 +1,3 @@
-<%%= show_section_label %>
 <% columns = klass.content_columns.dup -%> 
 <%%=
   present :elegant do |p|
@@ -13,17 +12,10 @@
     end
 <% end -%>
     p.actions do |r|
+#      r.text link_to('manage some nested resource', path_to_some_resource_path(@resource))
       r.text edit_action
       r.text destroy_action
       r.text back_action
     end
   end
 %>
-<%%# Esta sección se puede borrar si no es necesaria -%>
-<%% if false %>
-<%% content_for :support do %>    
-  <%% support_bar do %>
-    <%%= option_link :caption => 'Link to another resource', :url => some_resource_path(@resource) %>
-  <%% end %>   
-<%% end %>
-<%% end %>
