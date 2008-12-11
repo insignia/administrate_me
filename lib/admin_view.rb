@@ -416,6 +416,37 @@ module AdminView
     )
   end
   
+  def link_to_new_action
+    if controller.accepted_action?(:new)
+      link_to( "#{t('views.add_new_record')} #{controller.model_name.titleize}", 
+               path_to_index(:new), :class => :add_new )
+    end    
+  end
+  
+  def title
+    controller.respond_to?('title') ? controller.title : t('views.default_title')
+  end
+  
+  def owner
+    controller.respond_to?('owner') ? controller.owner : 'nobody'
+  end
+  
+  def app_name
+    controller.respond_to?('app_name') ? controller.app_name : 'administrate_me'
+  end
+  
+  # 
+  # This helper method is inspired by Fudgestudio's bort rails app.
+  # http://github.com/fudgestudios/bort/tree/master
+  #
+  def flash_messages
+    messages = []
+    %w(notice warning error).each do |msg|
+      messages << content_tag(:div, html_escape(flash[msg.to_sym]), :id => "flash-#{msg}") unless flash[msg.to_sym].blank?
+    end
+    messages
+  end
+
 end
 
 ActionView::Base.send :include, AdminView
