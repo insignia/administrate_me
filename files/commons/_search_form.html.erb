@@ -1,19 +1,11 @@
-<% form_tag('javascript:void(0)') do %>
+<%= link_to_new_action %>
 
-    <label for="">
-        <span><%= t('views.search_prompt') %></span><br/>
-        <%= text_field_tag :search_key, @search_key %>
-        <span id="indicator" style="display:none">
-            <%= image_tag 'admin_ui/indicator.gif' %>
-        </span>
-    </label>
-
-  <%= observe_field :search_key,
-                    :frequency => 0.5,
-                    :before    => "Element.show('indicator')",
-                    :complete  => "Element.hide('indicator')",
-                    :url       => path_to_index,
-                    :method    => :get,
-                    :with      => "'search_key=' + encodeURIComponent(value)" %>
-
+<% remote_form_for "", :url => path_to_index, :method => :get,
+  :before    => "Element.show('spinner');Element.hide('search_submit')",
+  :complete  => "Element.hide('spinner');Element.show('search_submit')" do |f| %>
+  
+  <%= text_field_tag :search_key, @search_key, :class => :search_key %>
+  <%= submit_tag t('views.search_button'), 
+                 :id => :search_submit, :class => :search_button %>
+  <%= spinner %>
 <% end %>

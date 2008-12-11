@@ -1,11 +1,13 @@
 <%= show_section_label %>
 
-<%= error_messages_for :resource %>
+<div id="base_form">
+  <%= error_messages_for :resource %>
 
-<% form_for(form_name_space, :builder => AdminBuilder, :html => html) do |f| %>
-  <%= render :partial => "form", :locals => {:f => f} %>
-  <div class="actions">
-    <%= submit_tag t('views.save_this_changes') %> o
-    <%= link_to t('views.cancel'), path_to_index %>
-  </div>
-<% end %>
+  <% form_for(form_name_space, :builder => AdminBuilder, :html => html) do |f| %>
+    <%= render :partial => "form", :locals => {:f => f} %>
+    <div class="actions">
+      <%= submit_tag t('views.save_this_changes') %> o
+      <%= link_to t('views.cancel'), path_to_index %>
+    </div>
+  <% end %>
+</div>

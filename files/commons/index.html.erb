@@ -1,1 +1,9 @@
-<%= show_section_content %>
+<%= show_section_header %>
+
+<%= show_search_form    %>
+
+<% filters_for do %>
+  <%= all_filters %>
+<% end %>
+
+<%= show_section_body   %>
