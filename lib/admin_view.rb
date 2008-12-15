@@ -175,24 +175,22 @@ module AdminView
   end
   
   def show_section_body
+    show_search_form if controller.options[:search]
     content_tag('div', 
                 render(:partial => 'list'), 
                 :id => 'list_area')
   end
   
   def show_search_form
-    content_tag( 'div', 
-                 render(:partial => 'commons/search_form'), 
-                 :id => 'search' ) if controller.options[:search]
+    content_for(:search) do
+      content_tag('div', render(:partial => 'commons/search_form'), :id => 'search')
+    end
   end
 
   # This helper is used to show the main index sections. 
   # Returns the header, search form and renders de list of elements.
-  def show_section_content
+  def show_section_content    
     html  = show_section_header
-    if controller.options[:search]
-      html << show_search_form
-    end
     html << show_section_body
     html
   end
