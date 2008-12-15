@@ -613,3 +613,37 @@ div.elegant div.actions a.neutro:hover {
 }
 
 /* flash-notice && flash-error */
+
+/* related_info */
+.related_info {
+  margin: 5px 0px 10px 0px;
+}
+.related_info h3 {
+  font-size: 12px;
+  font-weight: bold;
+  color: #666666;
+}
+.related_info ul li {
+  float: left;
+  margin-bottom: 10px;
+}
+
+.related_info ul li a {
+  display: block;
+  position: relative;
+  top: 4px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;  
+  text-align: center;
+  text-decoration: none;
+  padding: 3px 5px;
+  width: 149px;
+  width: auto;
+  min-width: 149px;
+  background-color: #ebebeb;
+  color: #333333;
+}
+.elegant {
+  clear: both;
+}
+/* related_info */
