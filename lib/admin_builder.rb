@@ -169,7 +169,7 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
 
       def wrapper(fld, text, options)
         id = @object.class.to_s.underscore + '_' + fld.to_s
-        opts = {:id => "div_#{id}"}
+        opts = {:id => "div_#{id}", :class => 'field'}
         opts.merge! :style => 'display:none;' if options[:hidden]
         opts[:class] = 'check_box' if options[:check_box]
         spnr = options[:spinner] ? @template.spinner("#{id}_spinner") : ''
