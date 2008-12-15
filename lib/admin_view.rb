@@ -424,7 +424,7 @@ module AdminView
   
   def link_to_new_action
     if controller.accepted_action?(:new)
-      link_to( "#{t('views.add_new_record')} #{controller.model_name.titleize}", 
+      link_to( "Agregar #{controller.model_name.titleize}", 
                path_to_index(:new), :class => :add_new )
     end    
   end
