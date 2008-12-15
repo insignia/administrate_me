@@ -40,6 +40,8 @@
               </div>
               <div class="inner-content">
                 <%= flash_messages %>
+                <%= yield :support %>
+                <%= yield :extras  %>
                 <%= yield %>
               </div>              
             </div>            
