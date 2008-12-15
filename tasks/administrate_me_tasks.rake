@@ -9,7 +9,6 @@ namespace(:admin) do
     images
     layout
     commons
-    initializers
   end
   
   module ImportMethods    
