@@ -81,23 +81,27 @@ module AdministrateMe
       def index
         get_list
         call_before_render
-        respond_to do |format|
-          format.html { render :template => 'commons/index' }
-          format.js   {
-            render :update do |page|
-              page.replace_html :list_area, :partial => 'list'
-            end
-          }
-          format.xml  { render :xml => @records.to_xml }
+        unless performed?
+          respond_to do |format|
+            format.html { render :template => 'commons/index' }
+            format.js   {
+              render :update do |page|
+                page.replace_html :list_area, :partial => 'list'
+              end
+            }
+            format.xml  { render :xml => @records.to_xml }
+          end
         end
       end    
 
       def show
         if_available(:show) do 
           call_before_render
-          respond_to do |format|
-            format.html # show.rhtml
-            format.xml  { render :xml => @resource.to_xml }      
+          unless performed?
+            respond_to do |format|
+              format.html # show.rhtml
+              format.xml  { render :xml => @resource.to_xml }
+            end
           end
         end
       end
@@ -106,14 +110,18 @@ module AdministrateMe
         if_available(:new) do
           @resource = ( options[:model] ? options[:model] : controller_name ).classify.constantize.new
           call_before_render
-          render :template => 'commons/base_form'
+          unless performed?
+            render :template => 'commons/base_form'
+          end
         end
       end
 
       def edit
         if_available(:edit) do
           call_before_render
-          render :template => 'commons/base_form'
+          unless performed?
+            render :template => 'commons/base_form'
+          end
         end
       end
 
@@ -126,15 +134,17 @@ module AdministrateMe
           @resource = model_class.new(create_params)
           save_model
           call_before_render
-          respond_to do |format|
-            if @success
-              flash[:notice] = 'El registro fue creado exitosamente'
-              session["#{controller_name}_search_key"] = nil
-              format.html { redirect_to path_to_index }
-              format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
-            else
-              format.html { render :template => "commons/base_form" }
-              format.xml  { render :xml => @resource.errors.to_xml }        
+          unless performed?
+            respond_to do |format|
+              if @success
+                flash[:notice] = 'El registro fue creado exitosamente'
+                session["#{controller_name}_search_key"] = nil
+                format.html { redirect_to path_to_index }
+                format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
+              else
+                format.html { render :template => "commons/base_form" }
+                format.xml  { render :xml => @resource.errors.to_xml }
+              end
             end
           end
         end
@@ -145,14 +155,16 @@ module AdministrateMe
           @resource.attributes = params[model_name.to_sym]
           save_model
           call_before_render
-          respond_to do |format|
-            if @success
-              flash[:notice] = 'Los cambios fueron guardados exitosamente'
-              format.html { redirect_to path_to_element(@resource) }
-              format.xml  { head :ok }
-            else
-              format.html { render :template => "commons/base_form" }
-              format.xml  { render :xml => @resource.errors.to_xml }
+          unless performed?
+            respond_to do |format|
+              if @success
+                flash[:notice] = 'Los cambios fueron guardados exitosamente'
+                format.html { redirect_to path_to_element(@resource) }
+                format.xml  { head :ok }
+              else
+                format.html { render :template => "commons/base_form" }
+                format.xml  { render :xml => @resource.errors.to_xml }
+              end
             end
           end
         end
