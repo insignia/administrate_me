@@ -27,6 +27,9 @@
 # on every administrate_me action. It can be used to define some extra instance
 # variables to use them on the views.
 #
+# You can perform a render or redirect on this callbacks to override the default
+# administrate_me behaviour for the restful actions.
+#
 # There are also specific before_render callbacks that are called before render
 # on specific actions. This actions will also be called before rendering it's
 # the respective action:
