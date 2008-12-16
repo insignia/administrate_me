@@ -431,7 +431,7 @@ module AdministrateMe
       #     a.filters do |f|
       #       # Assigning a name and a search condition to each filter.
       #       f.set :active,   {:status => 'active'}
-      #       f.set :inactive, "active <> 'active'"
+      #       f.set :inactive, "status <> 'active'"
       #     end
       #   end
       #
@@ -469,16 +469,18 @@ module AdministrateMe
       #
       #   class ProductsController < ApplicationController
       #   administrate_me do |a|
-      #     f.combo :brand_id do
-      #       Brand.all.map{|b| [b.name, b.id]}
-      #     end
-      #     # In case you have the to_select plugin installed you can do this
-      #     f.combo :category_id do
-      #       Category.to_select
-      #     end
-      #     # Also using a simple list of values
-      #     f.combo :state do
-      #       ['active', 'deleted']
+      #     a.filters do |f|
+      #       f.combo :brand_id do
+      #         Brand.all.map{|b| [b.name, b.id]}
+      #       end
+      #       # In case you have the to_select plugin installed you can do this
+      #       f.combo :category_id do
+      #         Category.to_select
+      #       end
+      #       # Also using a simple list of values
+      #       f.combo :state do
+      #         ['active', 'deleted']
+      #       end
       #     end
       #   end
       #
