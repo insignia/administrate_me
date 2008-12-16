@@ -232,7 +232,8 @@ module AdministrateMe
       end
 
       def get_resource
-        if %w{show edit update destroy}.include?(self.action_name) && accepted_action?(self.action_name)
+        verified_action = %w{show edit update destroy}.include?(self.action_name)
+        if verified_action && accepted_action?(self.action_name) || !verified_action
           @resource = model_class.find(params[:id])
         end
       end   
