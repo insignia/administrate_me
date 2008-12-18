@@ -231,12 +231,6 @@ module AdministrateMe
         eval(path)
       end
 
-      def get_resource
-        if %w{show edit update destroy}.include?(self.action_name) && accepted_action?(self.action_name)
-          @resource = model_class.find(params[:id])
-        end
-      end   
-
       def model_name
         self.class.model_name
       end
@@ -304,6 +298,12 @@ module AdministrateMe
       end
 
       protected
+
+        def get_resource
+          if %w{show edit update destroy}.include?(self.action_name) && accepted_action?(self.action_name)
+            @resource = model_class.find(params[:id])
+          end
+        end   
 
         def habtm_callback
           options[:habtms].each do |habtm|
