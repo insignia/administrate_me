@@ -242,6 +242,7 @@ div.pagination a:hover {
   padding: 5px;
   background-color: #ebebeb;
   color: #666666;
+  height: 21px;
 }
 
 #search form input.search_key {

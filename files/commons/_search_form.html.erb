@@ -1,11 +1,13 @@
 <%= link_to_new_action %>
 
-<% remote_form_for "", :url => path_to_index, :method => :get,
-  :before    => "Element.show('spinner');Element.hide('search_submit')",
-  :complete  => "Element.hide('spinner');Element.show('search_submit')" do |f| %>
-  
-  <%= text_field_tag :search_key, @search_key, :class => :search_key %>
-  <%= submit_tag t('views.search_button'), 
-                 :id => :search_submit, :class => :search_button %>
-  <%= spinner %>
+<% if controller.options[:search] %>
+  <% remote_form_for "", :url => path_to_index, :method => :get,
+    :before    => "Element.show('spinner');Element.hide('search_submit')",
+    :complete  => "Element.hide('spinner');Element.show('search_submit')" do |f| %>
+    
+    <%= text_field_tag :search_key, @search_key, :class => :search_key %>
+    <%= submit_tag t('views.search_button'), 
+                   :id => :search_submit, :class => :search_button %>
+    <%= spinner %>
+  <% end %>
 <% end %>
