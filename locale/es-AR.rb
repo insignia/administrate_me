@@ -1,4 +1,4 @@
-{:sp => {
+{:es => {
   :yes => 'SI',
   :no  => 'NO',
   :views => {
