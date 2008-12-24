@@ -171,7 +171,7 @@ module AdminView
   end
   
   def show_section_body
-    show_search_form if controller.options[:search]
+    show_search_form
     content_tag('div', 
                 render(:partial => 'list'), 
                 :id => 'list_area')
