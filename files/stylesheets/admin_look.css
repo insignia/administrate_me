@@ -474,7 +474,8 @@ div.elegant div.actions a.neutro:hover {
   margin-bottom: 5px;
 }
 
-#base_form div.field div.fieldWithErrors input {
+#base_form div.field div.fieldWithErrors input, 
+#base_form div.field div.fieldWithErrors textarea {
   background-color:#FEE2E2;
   border: 1px solid #b30000;  
 }
