@@ -39,7 +39,9 @@ namespace(:admin) do
     def commons
       path_to_commons = RAILS_ROOT + "/app/views/commons/"
       FileUtils.mkdir(path_to_commons) unless File.exist?(path_to_commons)
-      FileUtils.cp( Dir["#{FILES_ROOT}/commons/*.html.erb"], path_to_commons, 
+      files_to_copy = Dir["#{FILES_ROOT}/commons/*.html.erb"]
+      files_to_copy.reject! {|filename| File.basename('_session.html.erb')}
+      FileUtils.cp( files_to_copy, path_to_commons, 
                     :verbose => true )
     end
     
