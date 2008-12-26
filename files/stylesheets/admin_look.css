@@ -403,6 +403,7 @@ div.elegant div.actions a.neutro:hover {
   margin-right: 10px;
 }
 
+#base_form div.float_left div.field,
 #base_form div.float_left div.field input,
 #base_form div.float_left div.field select,
 #base_form div.float_left div.check_box {
@@ -414,10 +415,16 @@ div.elegant div.actions a.neutro:hover {
   margin-right: 4px;
 }
 
+#base_form div.float_left_3 div.field,
 #base_form div.float_left_3 div.field input,
 #base_form div.float_left_3 div.field select,
 #base_form div.float_left_3 div.check_box {
   width: 300px;  
+}
+
+#base_form div.float_left div.field span select,
+#base_form div.float_left_3 div.field span select {
+  width: auto;
 }
 
 #base_form div.field input.highlight {
