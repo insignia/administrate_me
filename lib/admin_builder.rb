@@ -137,7 +137,7 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       opts.delete(:columns)
       opts[:label] = {:id => 'label_' + @object_name.to_s + fld.to_s}
       opts[:label].merge! :style => 'display:none' if options[:hidden]
-      @template.field_label_tag(label(fld, options), fld_value(fld, options).to_s, opts)
+      "#{label(fld, options)} #{@template.content_tag(:span, fld_value(fld, options))}"
     end
 
     private
