@@ -28,7 +28,7 @@ module AdminView::Presenter
       def pretty_value(value)
         case value
           when TrueClass, FalseClass
-            value ? t(:yes) : t(:no)
+            value ? I18n.translate(:yes) : I18n.translate(:no)
           when Date
             #FIXME: Revisit this, it needs to be localized.
             value.to_s.split('-').reverse.join('/')
