@@ -136,8 +136,13 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       opts = options[:highlight] ? {:span => {:class => 'highlight'}} : {}
       opts.delete(:columns)
       opts[:label] = {:id => 'label_' + @object_name.to_s + fld.to_s}
-      opts[:label].merge! :style => 'display:none' if options[:hidden]
-      "#{label(fld, options)} #{@template.content_tag(:span, fld_value(fld, options))}"
+      opts[:label].merge! :style => 'display:none' if options[:hidden]      
+      @template.content_tag(
+                  :div, 
+                  "#{label(fld, options)} 
+                  #{@template.content_tag(:span, fld_value(fld, options))}",
+                  :class => :field
+                 )
     end
 
     private
