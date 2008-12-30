@@ -353,6 +353,14 @@ module AdministrateMe
         def label
           (self.options && self.options[:label]) || self.name.humanize
         end
+
+        def get_conditions(controller)
+          if Proc === conditions
+            controller.instance_eval(&conditions)
+          else
+            conditions
+          end
+        end
       end
 
       class ComboFilter < Filter
@@ -388,9 +396,9 @@ module AdministrateMe
           (@filters + @combos).find {|f| f.name == filter_name.to_s}
         end
 
-        def conditions_for_filter(filter_name)
+        def conditions_for_filter(controller, filter_name)
           filter = filter_by_name(filter_name)
-          filter ? filter.conditions : conditions_for_dynamic_filter(filter_name)
+          filter ? filter.get_conditions(controller) : conditions_for_dynamic_filter(filter_name)
         end
 
         def conditions_for_dynamic_filter(filter_name)
@@ -435,6 +443,8 @@ module AdministrateMe
       #       # Assigning a name and a search condition to each filter.
       #       f.set :active,   {:status => 'active'}
       #       f.set :inactive, "status <> 'active'"
+      #       # A block can also be used an expresion that will be evaluated at runtime
+      #       f.set :my_items, lambda { {:owner_id => current_user.id} }
       #     end
       #   end
       #
