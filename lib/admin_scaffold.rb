@@ -67,7 +67,7 @@ module AdministrateMe
       def filter_scope
         if options[:filter_config]
           conditions = []
-          conditions << options[:filter_config].conditions_for_filter(active_filter)
+          conditions << options[:filter_config].conditions_for_filter(self, active_filter)
           session[:combo_filters][self.class].each do |filter_name, value|
             if value
               filter = options[:filter_config].filter_by_name(filter_name)
