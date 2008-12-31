@@ -433,6 +433,13 @@ div.elegant div.actions a.neutro:hover {
   color: #666666;
 }
 
+#base_form input[type=text]:focus,
+#base_form select:focus,
+#base_form textarea:focus {
+    background-color: #ffb;
+    border-color: #bbb;
+}
+
 #base_form div.actions {
   font-size: 11px;
 }
