@@ -443,10 +443,10 @@ module AdministrateMe
       #   administrate_me do |a|
       #     a.filters do |f|
       #       # Assigning a name and a search condition to each filter.
-      #       f.set :active,   {:status => 'active'}
-      #       f.set :inactive, "status <> 'active'"
+      #       f.set :active,   :conditions => {:status => 'active'}
+      #       f.set :inactive, :conditions => "status <> 'active'"
       #       # A block can also be used an expresion that will be evaluated at runtime
-      #       f.set :my_items, lambda { {:owner_id => current_user.id} }
+      #       f.set :my_items, lambda { {:conditions => {:owner_id => current_user.id}} }
       #     end
       #   end
       #
