@@ -12,15 +12,36 @@ module AdministrateMe
       end
 
       def get_records
-        conditions = model_class.merge_conditions_backport(*[parent_scope, global_scope, search_scope, filter_scope])
+        conditions = model_class.merge_conditions_backport(*[parent_scope, global_scope, search_scope])
         options = {:conditions => conditions, :include => get_includes, :order => get_order}
         if model_class.respond_to?('paginate')
-          @records = model_class.paginate(options.merge(:page => params[:page], :per_page => get_per_page))
+          @records = apply_scopes.paginate(options.merge(:page => params[:page], :per_page => get_per_page))
           @count_for_search = @records.total_entries
         else
-          @records = model_class.find(:all, options)
+          @records = apply_scopes.find(:all, options)
           @count_for_search = @records.size
         end
+      end
+
+      def apply_scopes
+        final_scope = model_class.scoped({})
+        filter_scopes.each do |scope|
+          final_scope = final_scope.scoped(scope)
+        end
+        final_scope
+      end
+
+      def filter_scopes
+        scopes = []
+        if filter_config
+          scopes << filter_config.options_for_filter(self, active_filter)
+          session[:combo_filters][self.class.to_s].each do |filter_name, value|
+            if value
+              scopes << filter_config.options_for_filter(self, filter_name, value)
+            end
+          end
+        end
+        scopes.compact
       end
 
       def get_per_page
@@ -65,12 +86,12 @@ module AdministrateMe
       end
 
       def filter_scope
-        if options[:filter_config]
+        if filter_config
           conditions = []
-          conditions << options[:filter_config].conditions_for_filter(self, active_filter)
-          session[:combo_filters][self.class].each do |filter_name, value|
+          conditions << filter_config.conditions_for_filter(self, active_filter)
+          session[:combo_filters][self.class.to_s].each do |filter_name, value|
             if value
-              filter = options[:filter_config].filter_by_name(filter_name)
+              filter = filter_config.filter_by_name(filter_name)
               conditions << filter.conditions(value)
             end
           end
@@ -273,7 +294,11 @@ module AdministrateMe
       end
 
       def active_filter
-        session[:active_filters] ? session[:active_filters][self.class] : nil
+        session[:active_filters] ? session[:active_filters][self.class.to_s] : nil
+      end
+
+      def active_combo_filters
+        session[:combo_filters][self.class.to_s].keys
       end
 
       # Simplifies action_name handling for accepted_action?()
@@ -295,6 +320,10 @@ module AdministrateMe
           allowed = self.instance_exec(translated_action, &options[:except_block])
         end
         allowed
+      end
+
+      def filter_config
+        self.options[:filter_config]
       end
 
       protected
@@ -366,12 +395,12 @@ module AdministrateMe
         def set_active_filter
           session[:active_filters] ||= {}
           session[:combo_filters] ||= {}
-          session[:combo_filters][self.class] ||= {}
+          session[:combo_filters][self.class.to_s] ||= {}
           if params[:filter]
-            session[:active_filters][self.class] = params[:filter] != 'none' ? params[:filter] : nil
+            session[:active_filters][self.class.to_s] = params[:filter] != 'none' ? params[:filter] : nil
           end
           if params[:combo_filter]
-            session[:combo_filters][self.class][params[:combo_filter]] = !params[:combo_value].blank? ? params[:combo_value] : nil
+            session[:combo_filters][self.class.to_s][params[:combo_filter]] = !params[:combo_value].blank? ? params[:combo_value] : nil
           end
         end
 

@@ -344,7 +344,7 @@ module AdministrateMe
       end
 
       class Filter
-        attr_accessor :name, :conditions, :options
+        attr_accessor :name, :scope, :options
 
         def name=(value)
           @name = value.to_s
@@ -354,11 +354,11 @@ module AdministrateMe
           (self.options && self.options[:label]) || self.name.humanize
         end
 
-        def get_conditions(controller)
-          if Proc === conditions
-            controller.instance_eval(&conditions)
+        def get_scope(controller, value = nil)
+          if Proc === scope
+            controller.instance_eval(&scope)
           else
-            conditions
+            scope
           end
         end
       end
@@ -366,19 +366,26 @@ module AdministrateMe
       class ComboFilter < Filter
         attr_accessor :block
 
-        def options_for_select
-          [[self.options[:all] || 'No filtrar', nil]] + stringyfied_options
+        def options_for_select(controller)
+          if options = stringyfied_options(controller)
+            [[self.options[:all] || 'No filtrar', nil]] + options
+          end
         end
 
-        def conditions(value)
-          {self.name.to_s => value}
+        def get_scope(controller, value)
+          if self.scope
+            controller.instance_exec(value, &scope)
+          elsif value
+            {:conditions => {self.name.to_s => value}}
+          end
         end
 
         protected 
-        
-        def stringyfied_options
-          opts = self.block.call
-          opts.first.is_a?(Array) ? opts.map{|e| [e.first, e.last.to_s]} : opts
+
+        def stringyfied_options(controller)
+          if opts = controller.instance_eval(&self.block)
+            opts.first.is_a?(Array) ? opts.map{|e| [e.first, e.last.to_s]} : opts
+          end
         end
 
       end
@@ -396,29 +403,24 @@ module AdministrateMe
           (@filters + @combos).find {|f| f.name == filter_name.to_s}
         end
 
-        def conditions_for_filter(controller, filter_name)
+        def options_for_filter(controller, filter_name, value = nil)
           filter = filter_by_name(filter_name)
-          filter ? filter.get_conditions(controller) : conditions_for_dynamic_filter(filter_name)
+          filter ? filter.get_scope(controller, value) : nil
         end
 
-        def conditions_for_dynamic_filter(filter_name)
-          @dynamic_filter.call(filter_name) if @dynamic_filter
-        end
-
-        def set(name, conditions)
+        def set(name, scope)
           filter = Filter.new
           filter.name = name
-          filter.conditions = conditions
+          filter.scope = scope
           @filters << filter
         end
 
-        def dynamic(&block)
-          @dynamic_filter = block
-        end
-
-        def combo(name, options = {}, &block)
+        def combo(name, *args, &block)
+          options = args.last.is_a?(Hash) ? args.pop : {}
+          scope = args.first
           filter = ComboFilter.new
           filter.name = name
+          filter.scope = scope
           filter.options = options
           filter.block = block
           @combos << filter
@@ -475,61 +477,53 @@ module AdministrateMe
       #
       # === Combo filters
       #
-      # You can also add multiple combo filters on each controller. This will
+      # You can also add multiple combo filters on each controller. This
       # filters will add conditions that will be added to the regular ones.
       # Having multiple combo filters will allow you apply multiple conditions
-      # on the same dataset.
+      # on the same dataset at the same time.
+      # 
+      # Each combo call should receive a block that will be evaluated on the 
+      # controller instance to get the options that will be available on the combo.
+      # The search conditions will be applied using the combo name (the first parameter)
+      # as a field name with the selected value.
       #
       #   class ProductsController < ApplicationController
-      #   administrate_me do |a|
-      #     a.filters do |f|
-      #       f.combo :brand_id do
-      #         Brand.all.map{|b| [b.name, b.id]}
-      #       end
-      #       # In case you have the to_select plugin installed you can do this
-      #       f.combo :category_id do
-      #         Category.to_select
-      #       end
-      #       # Also using a simple list of values
-      #       f.combo :state do
-      #         ['active', 'deleted']
-      #       end
-      #     end
-      #   end
-      #
-      # See http://github.com/insignia/to_select or similar hacks will be very
-      # useful defining this combo filters.
-      #
-      # === Dynamic filters
-      #
-      # You can also set dynamic filters. This way, you can create a condition
-      # to be used depending the filter parameter received on the request:
-      #
-      #   administrate_me do |a|
-      #     a.filters do |f|
-      #       # Assigning a name and a search condition to each filter.
-      #       f.set :active,   {:status => 'active'}
-      #       f.set :inactive, "active <> 'active'"
-      #
-      #       f.dynamic do |filter_name|
-      #         # Create a find condition based on the received filter paramter.
-      #         if filter_name =~ ROLE_FILTER_RE
-      #           "roles.name = '#{$1}'"
+      #     administrate_me do |a|
+      #       a.filters do |f|
+      #         f.combo :brand_id do
+      #           Brand.all.map{|b| [b.name, b.id]}
       #         end
+      #         # In case you have the to_select plugin installed you can do this
+      #         f.combo :category_id do
+      #           Category.to_select
+      #         end
+      #         # Also using a simple list of values
+      #         f.combo(:state) {['active', 'deleted']}
       #       end
       #     end
       #   end
       #
-      # Then on the view:
+      # You can also add a lambda as a second parameter to use more elaborate
+      # conditions
       #
-      #   <% content_for :extras do %>
-      #     <% filters_for do %>
-      #       <%= all_filters %>
-      #       <% @roles.each do |role| %>
-      #         <%= filter_by role.name, "role_#{role.name}"  %>
-      #       <% end %>
-      #     <% end %>
-      #   <% end %>
+      #   class PeopleController < ApplicationController
+      #     administrate_me do |a|
+      #       a.filters do |f|
+      #         # Some more complex combo filters
+      #         f.combo :new_brand, lambda {|value| {:conditions => {'brands.new' => value}}, :include => :brand } do
+      #           [['New', 1], ['Old', 0]]
+      #         end
+      #         # Given that the code blocks are avaluated on the controller instance context,
+      #         # you can use controller methods to get runtime info, such as the current user
+      #         # or maybe request paramters.
+      #         f.combo :favorite_categories, lambda {|value| {:conditions => {:category_id => value}} do
+      #           current_user.favorite_categories.map {|fc| [fc.name, fc.id]}
+      #         end
+      #     end
+      #   end
+      #
+      # Using http://github.com/insignia/to_select or similar hacks/plugins will be very
+      # useful defining this combo filters.
       #
       def filters
         filter_config = FilterConfig.new
