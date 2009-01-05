@@ -301,6 +301,10 @@ module AdministrateMe
         session[:combo_filters][self.class.to_s].keys
       end
 
+      def combo_filters
+        session[:combo_filters][self.class.to_s]
+      end
+
       # Simplifies action_name handling for accepted_action?()
       def translated_action_name(action)
         case action
