@@ -229,7 +229,7 @@ module AdminView::PresentationBuilder
     html  = ""
     html << show_mini_flash rescue ""
     html << render_grid(list, options) if type == :grid
-    html << render(:partial => 'commons/pagination', :locals => {:collection => list.gpb_data}) if list.gpb_data.respond_to?('total_pages')
+    html << render(:partial => 'commons/pagination', :locals => {:collection => list.gpb_data}) if list.gpb_data.respond_to?('total_pages') && !controller.show_all_records?
     html
   end
 
@@ -261,7 +261,7 @@ module AdminView::PresentationBuilder
       value = column.value_for(item, self)
       html << "<td style='#{column.style}'> #{value} </td>"
     end
-    html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report]
+    html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report] || controller.show_all_records?
     "<tr class='#{css_class}'> #{html} </tr>"
   end
 
