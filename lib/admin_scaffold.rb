@@ -14,7 +14,7 @@ module AdministrateMe
       def get_records
         conditions = model_class.merge_conditions_backport(*[parent_scope, global_scope, search_scope])
         options = {:conditions => conditions, :include => get_includes, :order => get_order}
-        if model_class.respond_to?('paginate')
+        if model_class.respond_to?('paginate') && !show_all_records?
           @records = apply_scopes.paginate(options.merge(:page => params[:page], :per_page => get_per_page))
           @count_for_search = @records.total_entries
         else
@@ -111,6 +111,11 @@ module AdministrateMe
               end
             }
             format.xml  { render :xml => @records.to_xml }
+            format.xls do
+              headers['Content-Disposition'] = %{attachment; filename="#{controller_name}.xls"}
+              headers['Cache-Control'] = ''
+              render :layout => false, :inline => "<%= render :partial => 'list.html.erb' %>"
+            end
           end
         end
       end
@@ -328,6 +333,10 @@ module AdministrateMe
 
       def filter_config
         self.options[:filter_config]
+      end
+
+      def show_all_records?
+        !params[:all].blank? || params[:format] == 'xls'
       end
 
       protected
