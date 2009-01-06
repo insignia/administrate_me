@@ -11,6 +11,7 @@
     :default_title => 'Administration',
     :download_to_excel => "Download to Excel",
     :see_more => 'see more...',
+    :see_all => 'See All',
     :edit_this_record => 'Edit this record',
     :delete_confirm => 'The record will be deleted. Proceed?',
     :delete_this_record => 'Delete this record',

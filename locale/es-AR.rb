@@ -11,6 +11,7 @@
     :default_title => 'Administración',
     :download_to_excel => "Descargar a Excel",
     :see_more => 'ver más...',
+    :see_all => 'Ver Todos',
     :edit_this_record => 'Editar este registro',
     :delete_confirm => 'El registro será eliminado definitivamente. ¿Desea continuar?',
     :delete_this_record => 'Eliminar este registro',
