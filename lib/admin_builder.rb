@@ -31,8 +31,10 @@ class AdminBuilder < ActionView::Helpers::FormBuilder
       collection.each do |item|    
         html << "    <li>"
         html << '      <div class="habtm-option">'
-        html << @template.check_box_tag("#{@object.class.to_s.underscore}[#{habtm_relation.to_s.singularize}_ids][]", item.id, @object.send(habtm_relation).include?(item))
-        html << "<span>#{item.send(label_field).titleize}</span>"
+        name = "#{@object.class.to_s.underscore}[#{habtm_relation.to_s.singularize}_ids][]"
+        id = "#{@object.class.to_s.underscore}_#{habtm_relation.to_s.singularize}_ids_#{item.id}"
+        html << @template.check_box_tag(name, item.id, @object.send(habtm_relation).include?(item), :id => id)
+        html << "<span>#{@template.label_tag(id, item.send(label_field).titleize)}</span>"
         html << "      </div>"
         html << "    </li>"
       end
