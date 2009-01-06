@@ -247,7 +247,7 @@ module AdministrateMe
       #
       #   In the _form partial definition: 
       #
-      #   <%= f.has_and_belongs_to_many :tags %>
+      #   <%= f.has_and_belongs_to_many :tags, :name, Tag.all %>
       #
       #  This feature is inspired by Ryan Bates' railscasts.com
       #  http://railscasts.com/episodes/17-habtm-checkboxes
@@ -574,7 +574,7 @@ module AdministrateMe
           before_filter :get_parent
 
           if options[:habtms]
-            before_filter :habtm_callback, :only => "update"
+            before_filter :habtm_callback, :only => ['update', 'create']
           end
 
           (options[:auto_complete_for] || []).each do |auto_complete_for|
