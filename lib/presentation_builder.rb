@@ -226,11 +226,19 @@ module AdminView::PresentationBuilder
   # Internally used by list_builder_for. Creates html output including a
   # flash message, the grid and the pagination when will_paginate is available.
   def list_renderer(list, options, type)
-    html  = ""
+    html = []
     html << show_mini_flash rescue ""
     html << render_grid(list, options) if type == :grid
     html << render(:partial => 'commons/pagination', :locals => {:collection => list.gpb_data}) if list.gpb_data.respond_to?('total_pages') && !controller.show_all_records?
-    html
+    html << pagination_links
+    html.compact.join("\n")
+  end
+
+  def pagination_links
+    links = []
+    links << link_to('Ver Todos', :all => '1') if !controller.show_all_records?
+    links << link_to('Excel', :format => 'xls')       if controller.params[:format].blank?
+    !links.empty? ? content_tag(:div, links.join("\n"), :class => 'pagination') : nil
   end
 
   def render_grid(pb, options)
@@ -261,7 +269,7 @@ module AdminView::PresentationBuilder
       value = column.value_for(item, self)
       html << "<td style='#{column.style}'> #{value} </td>"
     end
-    html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report] || controller.show_all_records?
+    html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report] || !controller.params[:format].blank?
     "<tr class='#{css_class}'> #{html} </tr>"
   end
 
