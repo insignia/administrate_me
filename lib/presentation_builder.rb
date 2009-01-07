@@ -230,7 +230,7 @@ module AdminView::PresentationBuilder
     html << show_mini_flash rescue ""
     html << render_grid(list, options) if type == :grid
     html << render(:partial => 'commons/pagination', :locals => {:collection => list.gpb_data}) if list.gpb_data.respond_to?('total_pages') && !controller.show_all_records?
-    html << pagination_links
+    html << pagination_links unless options[:report]
     html.compact.join("\n")
   end
 
