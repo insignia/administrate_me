@@ -17,7 +17,7 @@ namespace(:admin) do
     
     def css
       files_to_copy = Dir["#{FILES_ROOT}/stylesheets/*.css"]
-      files_to_copy.reject! {|filename| filename == File.basename('admin_custom.css')}
+      files_to_copy.reject! {|filename| File.basename(filename) == 'admin_custom.css'}
       FileUtils.cp( files_to_copy,
                     RAILS_ROOT + "/public/stylesheets/", :verbose => true )
     end
@@ -43,7 +43,7 @@ namespace(:admin) do
       path_to_commons = RAILS_ROOT + "/app/views/commons/"
       FileUtils.mkdir(path_to_commons) unless File.exist?(path_to_commons)
       files_to_copy = Dir["#{FILES_ROOT}/commons/*.html.erb"]
-      files_to_copy.reject! {|filename| filename == File.basename('_session.html.erb')}
+      files_to_copy.reject! {|filename| File.basename(filename) == '_session.html.erb'}
       FileUtils.cp( files_to_copy, path_to_commons, 
                     :verbose => true )
     end
