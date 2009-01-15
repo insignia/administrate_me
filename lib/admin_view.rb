@@ -341,7 +341,7 @@ module AdminView
     unless controller.filter_config.nil?
       results = []
       results << filter_by(t('views.filter_show_all'), :none)
-      controller.filter_config.all_filters.each do |filter|
+      controller.filter_config.all_filters(controller).each do |filter|
         results << filter_by(filter.label, filter.name)
       end
       results.join("\n")
@@ -349,7 +349,7 @@ module AdminView
   end
 
   def filter_by(label, filter_name = nil)
-    if controller.filter_config.is_combo?(filter_name)
+    if controller.filter_config.is_combo?(controller, filter_name)
       filter_by_combo(label, filter_name)
     else
       filter_by_link(label, filter_name)
@@ -362,7 +362,7 @@ module AdminView
   end
 
   def filter_by_combo(label, filter_name)
-    filter = controller.filter_config.filter_by_name(filter_name)
+    filter = controller.filter_config.filter_by_name(controller, filter_name)
     combo_name = "combo_filter_#{filter.name}"
     if combo = combo_select_tag(filter, combo_name)
       content = content_tag(:label, label) + combo

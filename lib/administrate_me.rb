@@ -361,6 +361,11 @@ module AdministrateMe
             scope
           end
         end
+
+        def enabled?(controller)
+          !(self.options && self.options[:if] && !controller.instance_eval(&self.options[:if]))
+        end
+
       end
 
       class ComboFilter < Filter
@@ -399,19 +404,21 @@ module AdministrateMe
           @combos  = []
         end
 
-        def filter_by_name(filter_name)
-          (@filters + @combos).find {|f| f.name == filter_name.to_s}
+        def filter_by_name(controller, filter_name)
+          filter = (@filters + @combos).find {|f| f.name == filter_name.to_s}
+          filter && filter.enabled?(controller) ? filter : nil
         end
 
         def options_for_filter(controller, filter_name, value = nil)
-          filter = filter_by_name(filter_name)
+          filter = filter_by_name(controller, filter_name)
           filter ? filter.get_scope(controller, value) : nil
         end
 
-        def set(name, scope)
+        def set(name, scope, options = {})
           filter = Filter.new
           filter.name = name
           filter.scope = scope
+          filter.options = options
           @filters << filter
         end
 
@@ -426,12 +433,13 @@ module AdministrateMe
           @combos << filter
         end
 
-        def all_filters
-          @filters + @combos
+        def all_filters(controller)
+          (@filters + @combos).select {|filter| filter.enabled?(controller)}
         end
 
-        def is_combo?(filter_name)
-          !!@combos.find{|filter| filter.name == filter_name.to_s}
+        def is_combo?(controller, filter_name)
+          filter = @combos.find{|f| f.name == filter_name.to_s}
+          filter && filter.enabled?(controller)
         end
 
       end
@@ -524,6 +532,23 @@ module AdministrateMe
       #
       # Using http://github.com/insignia/to_select or similar hacks/plugins will be very
       # useful defining this combo filters.
+      #
+      # === Conditional filters
+      #
+      # You can use an :if option to conditionally enable or disable a filter in a per
+      # request basis.
+      #
+      #   class ProductsController < ApplicationController
+      #     administrate_me do |a|
+      #       a.filters do |f|
+      #         f.set :active, {:conditions => "status = 'active'"}, :if => lambda { current_user.has_role?('admin') }
+      #         f.combo :state, :if => lambda { current_user.has_role?('admin') } do
+      #           ['active', 'deleted']
+      #         end
+      #       end
+      #     end
+      #   end
+      #
       #
       def filters
         filter_config = FilterConfig.new

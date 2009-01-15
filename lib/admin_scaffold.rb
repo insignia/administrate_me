@@ -91,7 +91,7 @@ module AdministrateMe
           conditions << filter_config.conditions_for_filter(self, active_filter)
           session[:combo_filters][self.class.to_s].each do |filter_name, value|
             if value
-              filter = filter_config.filter_by_name(filter_name)
+              filter = filter_config.filter_by_name(self, filter_name)
               conditions << filter.conditions(value)
             end
           end

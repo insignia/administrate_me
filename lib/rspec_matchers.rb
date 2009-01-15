@@ -141,7 +141,7 @@ module Spec
       #
       def combo_filter_options(filter_name, values)
         simple_matcher("controller filter '#{filter_name}' should return #{values.inspect}") do |controller_instance|
-          combo_values = controller_instance.filter_config.filter_by_name(filter_name.to_s).options_for_select(controller_instance)
+          combo_values = controller_instance.filter_config.filter_by_name(controller_instance, filter_name.to_s).options_for_select(controller_instance)
           combo_values.shift if combo_values
           combo_values.should == values
         end
