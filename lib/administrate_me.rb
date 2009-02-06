@@ -40,7 +40,7 @@
 #   before_render_update
 #   before_render_index
 #   before_render_show
-#   before_render_delete
+#   before_render_destroy
 #
 # This methods will be called on any of the metioned actions.
 # <code>before_render_new_and_create</code> will be called on new and create actions and
