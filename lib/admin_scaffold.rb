@@ -202,14 +202,17 @@ module AdministrateMe
           if @success = @resource.destroy
             call_callback_on_action 'after', 'destroy'
           end
-          respond_to do |format|
-            if @success
-              flash[:notice] = I18n.t('messages.destroy_success')
-              format.html { redirect_to path_to_index }
-              format.xml  { head :ok }
-            else
-              format.html { render :template => "commons/base_form" }
-              format.xml  { head :error }
+          call_before_render
+          unless performed?
+            respond_to do |format|
+              if @success
+                flash[:notice] = I18n.t('messages.destroy_success')
+                format.html { redirect_to path_to_index }
+                format.xml  { head :ok }
+              else
+                format.html { render :template => "commons/base_form" }
+                format.xml  { head :error }
+              end
             end
           end
         end
@@ -437,7 +440,7 @@ module AdministrateMe
           before_render_with_form if [:new, :create, :edit, :update].include?(action_name.to_sym) && respond_to?('before_render_with_form')
           call_callback_on_action :before_render, :index
           call_callback_on_action :before_render, :show
-          call_callback_on_action :before_render, :delete
+          call_callback_on_action :before_render, :destroy
         end
 
     end
