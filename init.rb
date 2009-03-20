@@ -1,6 +1,5 @@
 require 'ostruct'
 require 'administrate_me'
-require 'test_administrate_me'
 require 'admin_scaffold'
 require 'admin_view'
 require 'elegant_presentation'
@@ -15,3 +14,4 @@ ActionController::Base.send :include, AdministrateMe::InstanceMethods
 class ActionController::Base
   superclass_delegating_accessor :ame_modules
 end
+
