@@ -1,6 +1,5 @@
 require 'ostruct'
 require 'administrate_me'
-require 'test_administrate_me'
 require 'admin_scaffold'
 require 'admin_view'
 require 'elegant_presentation'
@@ -18,3 +17,4 @@ end
 
 Mime.send(:remove_const, :XLS) rescue NameError
 Mime::Type.register "application/vnd.ms-excel", :xls
+
