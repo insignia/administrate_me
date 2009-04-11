@@ -73,7 +73,7 @@ module AdministrateMe
         parent = options[:parent]
         foreign_key = options[:foreign_key].blank? ? "#{options[:parent]}_id" : options[:foreign_key]
         if parent
-          { foreign_key => params["#{parent}_id"] }
+          { foreign_key => @parent.id }
         end
       end
 
@@ -225,7 +225,7 @@ module AdministrateMe
         parts = []
         # add prefix
         parts << prefix if prefix
-        nspace = self.class.namespace
+        nspace = self.class.namespace ? self.class.namespace.gsub('/', '_') : nil
         # add namespace
         parts << nspace if nspace
         # add parent
@@ -453,7 +453,7 @@ module AdministrateMe
       # add prefix
       parts << options[:prefix] if options[:prefix]
       # add namespace
-      parts << namespace if namespace
+      parts << namespace.gsub('/', '_') if namespace
       # add parent
       parts << options[:parent] if options[:parent]
       # add controller
