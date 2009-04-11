@@ -254,7 +254,7 @@ module AdminView::PresentationBuilder
   def build_grid_header(pb)
     html = ""
     pb.gpb_columns.each {|column| html << "<th> #{column.caption} </th>" }
-    "<tr> #{ html } </tr>"
+    "<tr> #{ html } <th>&nbsp;</th> </tr>"
   end
 
   def build_grid_body(pb, options)
