@@ -3,7 +3,7 @@
 <div id="base_form">
   <%= error_messages_for :resource %>
 
-  <% form_for(form_name_space, :builder => AdminBuilder, :html => html) do |f| %>
+  <% form_for(@resource, :url => form_name_space, :builder => AdminBuilder, :html => html) do |f| %>
     <%= render :partial => "form", :locals => {:f => f} %>
     <div class="actions">
       <%= submit_tag t('views.save_this_changes') %> o
