@@ -298,11 +298,7 @@ module AdminView
   end
 
   def form_name_space
-    rtn  = [] 
-    rtn << controller.class.namespace.to_sym unless controller.class.namespace.blank?
-    rtn << @parent                           if     @parent
-    rtn << @resource                         if     @resource
-    rtn
+    @resource.new_record? ? path_to_index : path_to_element(@resource)
   end
 
   # Deprecated: filters_for() helper should be used instead
