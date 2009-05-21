@@ -34,16 +34,12 @@ module AdminView::PresentationBuilder
       end
 
       def style
-        @options[:style] = ""
-        @options[:style] << custom_grid unless custom_grid.empty?
-      end
-
-      def custom_grid
         customizations = []
         customizations << "width:#{@options[:width]}"      if @options[:width]
         customizations << "color:#{@options[:color]}"      if @options[:color]
         customizations << "font-weight:bold"               if @options[:strong]
         customizations << "text-align:#{@options[:align]}" if @options[:align]
+        customizations <<  @options[:style] if @options[:style]
         customizations.join(';')
       end
 
