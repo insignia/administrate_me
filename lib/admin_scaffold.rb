@@ -466,5 +466,13 @@ module AdministrateMe
       send(helper_name, *ids)
     end
 
+    def default_style
+      ['css-reset', 'admin_look', 'ame-backport', 'admin_custom', ['admin_look_print', {:media => 'print'}]]
+    end
+
+    def default_js
+      [:defaults, 'admin_ui.js']
+    end
+
   end
 end

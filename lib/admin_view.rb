@@ -113,12 +113,10 @@ module AdminView
   end
 
   def files_to_load(type)
-    default_style = ['css-reset', 'admin_look', 'ame-backport', 'admin_custom', ['admin_look_print', {:media => 'print'}]]
-    default_js    = [:defaults,   'admin_ui.js']
     if type == :css
-      controller.respond_to?('admin_style')   ? controller.admin_style   : default_style
+      controller.respond_to?('admin_style')   ? controller.admin_style   : controller.default_style
     else
-      controller.respond_to?('admin_scripts') ? controller.admin_scripts : default_js
+      controller.respond_to?('admin_scripts') ? controller.admin_scripts : controller.default_js
     end
   end
 

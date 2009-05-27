@@ -663,3 +663,65 @@ div.elegant div.actions a.neutro:hover {
   clear: both;
 }
 /* related_info */
+
+.resource-card {
+    margin: 10px;
+}
+
+.resource-card .rc-block {
+    clear: both;
+}
+
+.resource-card .rc-block .rc-row {
+    float: left;
+    padding: 2px 5px;
+    border: 1px solid #cfcfcf;
+    margin-bottom: 5px;
+}
+
+.resource-card .rc-block .rc-caption {
+    background-color: #ebebeb;
+    color: #333333;
+    width: 15%;
+    margin-right: 10px;
+}
+
+.resource-card .rc-block .rc-content {
+    width: 80%;
+}
+
+.resource-card .rc-block .rc-area {
+
+}
+
+.resource-card .rc-block .rc-label {
+    background-color: #ebebeb;
+    border: 1px solid #cfcfcf;
+    color: #333333;
+    width: 15%;
+    padding: 2px 5px;
+}
+
+.resource-card .rc-block .rc-detail {
+    padding: 2px 5px;
+    border: 1px solid #cfcfcf;
+    width: 97%;
+    margin-bottom: 10px;
+}
+
+.resource-card .buttons {
+    clear: both;
+    padding: 10px 0px;
+}
+
+.resource-card .buttons a {
+    margin-right: 5px;
+    padding: 3px 10px;
+    background-color: #666666;
+    color: white;
+    text-decoration: none;
+}
+
+.resource-card .buttons a:hover {
+    background-color: #848381;
+}
