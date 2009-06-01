@@ -258,6 +258,26 @@ Now, let's say you need to add a set of prices for each product.
 
 Be kind and refresh your brower, please? :D
 
+h3. Some sample images
+
+h4. Products list:
+!http://insignia.github.com/administrate_me/images/products_list.png!
+
+h4. Products form:
+!http://insignia.github.com/administrate_me/images/products_form.png!
+
+h4. Products show:
+!http://insignia.github.com/administrate_me/images/products_show.png!
+
+h4. Price list:
+!http://insignia.github.com/administrate_me/images/prices_list.png!
+
+h4. Price form:
+!http://insignia.github.com/administrate_me/images/prices_form.png!
+
+h4. Price show:
+!http://insignia.github.com/administrate_me/images/prices_show.png!
+
 
 h3. Don't be a bad boy and cover your code with specs!
 
@@ -318,8 +338,3 @@ h3. More info...
 
 you can visit "administrate_me online documentation":http://ame-doc.insignia4u.com/
 
-h1. Credits
-
-administrate_me put together by people at "insignia":http://www.insignia4u.com/
-
-Don't forget to read our "blog":http://www.railslife.com.ar/
