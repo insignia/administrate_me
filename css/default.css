@@ -1,0 +1,93 @@
+
+body {
+  text-align: center;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+p, div, tr td, tr th {
+  color: #444;
+  font-size: 101%;
+}
+
+h1, h2, h3 {
+  color: #666;
+}
+
+h3 {
+  border-bottom: 1px solid #ddd;
+}
+
+pre {
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
+  padding: 0 0 10px 0;
+}
+
+pre code {
+  font-family: 'Bitstream Vera Sans Mono', 'Courier', monospace;
+  color: #000;
+  font-weight: bold;
+}
+
+ul {
+  list-style-type: square;
+  padding-left: 20px;
+}
+
+ul li {
+  font-size: 90%;
+  color: #666;
+}
+
+a:link, a:visited {
+  color: #CF2271;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/**
+ * Layout
+ */
+
+#wrapper {
+  width: 780px;
+  margin: 0 auto 0 auto;
+  text-align: left;
+}
+
+#header {
+  padding: 10px 10px;
+  border-bottom: 3px solid #ddd;
+}
+
+#header h1 {
+  text-indent: -9999px;
+  background: url(/images/logo.jpg) 0 0 no-repeat;
+  width: 205px;
+  height: 61px;
+  float: right;
+}
+
+#header h2 {
+  color: #111;
+  float: left;
+}
+
+#footer {
+  border-top: 3px solid #ddd;
+  padding: 10px 0;
+  text-align: right;
+}
+
+/**
+ * Hacks
+ */
+.clear {
+  clear: both;
+  padding: 0 0;
+}
+
