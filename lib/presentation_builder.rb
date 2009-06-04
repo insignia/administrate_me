@@ -233,7 +233,7 @@ module AdminView::PresentationBuilder
   def pagination_links
     links = []
     links << link_to('Ver Todos', :all => '1') if !controller.show_all_records?
-    links << link_to('Excel', :format => 'xls')       if controller.params[:format].blank?
+    links << link_to('Excel', :format => 'xls')       if controller.params[:format] != 'xls'
     !links.empty? ? content_tag(:div, links.join("\n"), :class => 'pagination') : nil
   end
 
