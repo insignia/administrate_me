@@ -103,6 +103,10 @@ module AdministrateMe
         get_list
         call_before_render
         unless performed?
+          # Fix for an ugly IE6/7 bug
+          # http://geminstallthat.wordpress.com/2008/05/14/ie6-accept-header-is-faulty/
+          # The bug is described there and the fix I choose on comment #5.
+          request.format = :html if request.env['HTTP_USER_AGENT'] =~ /msie/i && (request.format.to_s =~ /(text|html|xml|js|application\/vnd\.ms-excel|\*)/).nil?
           respond_to do |format|
             format.html { render :template => 'commons/index' }
             format.js   {
