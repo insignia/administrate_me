@@ -265,7 +265,7 @@ module AdminView::PresentationBuilder
       value = column.value_for(item, self)
       html << "<td style='#{column.style}'> #{value} </td>"
     end
-    html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report] || !controller.params[:format].blank?
+    html << "<td class='link_options'> #{build_row_links(item)} </td>" unless options[:report] || @is_xml
     "<tr class='#{css_class}'> #{html} </tr>"
   end
 
