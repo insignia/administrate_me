@@ -1,6 +1,7 @@
 {:es => {
   :yes => 'SI',
   :no  => 'NO',
+  :no_filter => 'No Filtrar',
   :views => {
     :prev => 'Anterior',
     :next => 'Siguiente',
@@ -26,7 +27,7 @@
     :support_tasks => "Tareas de Soporte",
     :filter_by => "Filtrar registros por...",
     :filter_show_all => 'Todos',
-    :edit_action => 'editar', 
+    :edit_action => 'editar',
     :view_action => 'ver',
     :destroy_action => 'eliminar'
   },
@@ -42,3 +43,4 @@
     :exception_on_save => "Ocurrió una exception al salvar el registro: {{message}}"
   }
 }}
+

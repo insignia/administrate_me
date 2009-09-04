@@ -1,6 +1,7 @@
 {:en => {
   :yes => 'YES',
   :no  => 'NO',
+  :no_filter => 'No Filter',
   :views => {
     :prev => 'Previous',
     :next => 'Next',
@@ -26,7 +27,7 @@
     :support_tasks => "Support Tasks",
     :filter_by => "Filter by...",
     :filter_show_all => 'All',
-    :edit_action => 'edit', 
+    :edit_action => 'edit',
     :view_action => 'view',
     :destroy_action => 'destroy'
   },
@@ -42,3 +43,4 @@
     :exception_on_save => "An exception ocurred saving the record: {{message}}"
   }
 }}
+

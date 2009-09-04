@@ -1,6 +1,7 @@
 {:pt => {
   :yes => 'SIM',
   :no  => 'NÃO',
+  :no_filtrar => 'NÃO Filtrar',
   :views => {
     :prev => 'Anterior',
     :next => 'Seguinte',
@@ -10,7 +11,7 @@
     :add_new_record => 'Agregar novo',
     :default_title => 'Administração',
     :download_to_excel => "Descarregar no Excel",
-    :see_more => 'ver mais...', 
+    :see_more => 'ver mais...',
     :edit_this_record => 'Editar este registro',
     :delete_confirm => 'O registro será excluido definitivamente. Deseja continuar?',
     :delete_this_record => 'Excluir este registro',
@@ -25,7 +26,7 @@
     :support_tasks => "Tarefas de Suporte",
     :filter_by => "Filtrar registros por...",
     :filter_show_all => 'Todos',
-    :edit_action => 'editar', 
+    :edit_action => 'editar',
     :view_action => 'ver',
     :destroy_action => 'excluir'
   },
@@ -41,3 +42,4 @@
     :exception_on_save => "Ocorreu um erro ao salvar o registro: {{message}}"
   }
 }}
+
