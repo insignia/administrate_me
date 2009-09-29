@@ -533,6 +533,11 @@ div.elegant div.actions a.neutro:hover {
   font-size: 12px;
   color: #333333;
 }
+#mini_flash span {
+  background-color: #FFFF88;
+  padding: 3px 7px;
+  -moz-border-radius: 4px;
+}
 #mini_flash span b {
   color: #666666;
 }
@@ -609,6 +614,16 @@ div.elegant div.actions a.neutro:hover {
 
 #list_area {
   clear: both;
+}
+
+#list_area .msg {
+  background-color: #C3D9FF;
+  background-color: #d5e4fd;
+  border: 1px solid #C3D9FF;
+  color: #2453a6;
+  padding: 10px;
+  margin: 10px 0px 30px 0px;
+  font-size: 12px;
 }
 /* filter-list */
 
