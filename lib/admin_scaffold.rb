@@ -79,7 +79,7 @@ module AdministrateMe
 
       def global_scope
         respond_to?('general_conditions') ? general_conditions : nil
-      end   
+      end
 
       def search_scope
         !@search_key.blank? && options[:search] ? conditions_for(options[:search]) : nil
@@ -170,7 +170,7 @@ module AdministrateMe
               if @success
                 flash[:notice] = I18n.t('messages.create_success')
                 session["#{controller_name}_search_key"] = nil
-                format.html { redirect_to path_to_index }
+                format.html { redirect_to smart_path }
                 format.xml  { head :created, :location => eval("#{controller_name.singularize}_url(@resource)") }
               else
                 format.html { render :template => "commons/base_form" }
@@ -190,7 +190,7 @@ module AdministrateMe
             respond_to do |format|
               if @success
                 flash[:notice] = I18n.t('messages.save_success')
-                format.html { redirect_to path_to_element(@resource) }
+                format.html { redirect_to smart_path(@resource) }
                 format.xml  { head :ok }
               else
                 format.html { render :template => "commons/base_form" }
@@ -212,7 +212,7 @@ module AdministrateMe
             respond_to do |format|
               if @success
                 flash[:notice] = I18n.t('messages.destroy_success')
-                format.html { redirect_to path_to_index }
+                format.html { redirect_to smart_path }
                 format.xml  { head :ok }
               else
                 format.html { render :template => "commons/base_form" }
@@ -223,36 +223,14 @@ module AdministrateMe
         end
       end
 
-      #FIXME: I need some testing!
-      def path_to_index(*args)
-        local_options = args.last.is_a?(Hash) ? args.pop : nil
-        prefix  = args.first
-        parts = []
-        # add prefix
-        parts << prefix if prefix
-        nspace = self.class.namespace ? self.class.namespace.gsub('/', '_') : nil
-        # add namespace
-        parts << nspace if nspace
-        # add parent
-        parent = options[:parent]
-        parts << options[:parent] unless parent.blank?
-        # add controller
-        cname = prefix ? controller_name.singularize : controller_name
-        parts << cname
-        #
-        parts << 'path'
-        helper_name = parts.join('_')
-        parameters = []
-        parameters << params[:"#{parent}_id"] unless parent.blank?
-        parameters << local_options if local_options
-        send(helper_name, *parameters)
+      def smart_path(member = nil)
+        to  = []
+        to << self.class.namespace.gsub('/', '_').to_sym if self.class.namespace
+        to << @parent if @parent
+        to << (member ? member : model_class.new)
+        to
       end
 
-      def path_to_element(element, options = {})
-        options[:parent] ||= self.options[:parent]
-        create_path(self.controller_name.singularize, element, self.class.namespace, @parent, options)
-      end
-      
       def path_to_parent(parent, options = {})
         create_path(parent.class.to_s.underscore, parent, self.class.namespace, options)
       end
@@ -353,7 +331,7 @@ module AdministrateMe
           if %w{show edit update destroy}.include?(self.action_name) && accepted_action?(self.action_name)
             @resource = model_class.find(params[:id])
           end
-        end   
+        end
 
         def habtm_callback
           options[:habtms].each do |habtm|
@@ -371,7 +349,7 @@ module AdministrateMe
 
         def save_model
           begin
-            model_class.transaction do 
+            model_class.transaction do
               call_callback           'before', 'save'
               call_callback_on_action 'before', 'create'
               call_callback_on_action 'before', 'update'
@@ -385,15 +363,15 @@ module AdministrateMe
             logger.error(I18n.t('errors.exception_on_save', :message => $!))
             @success = false
           end
-        end       
+        end
 
-        # will execute the callback only when the controller executes the 
+        # will execute the callback only when the controller executes the
         # specific action.
         def call_callback_on_action(hook, actions)
           actions_array = [*actions]
           call_callback(hook, actions_array.join('_and_')) if actions_array.include?(action_name.to_sym)
         end
-        
+
         # will execute a callback
         def call_callback(hook, action)
           method_name = "#{hook}_#{action}"
@@ -481,3 +459,4 @@ module AdministrateMe
 
   end
 end
+

@@ -1,13 +1,13 @@
 module AdminView::Presenter
   class Presenter
     attr_reader :lines
-    
+
     class HTMLBuilder
       def method_missing(tag, content)
         "<#{tag}>#{content}</#{tag}>"
-      end 
+      end
     end
-    
+
     class Fielder
       def initialize(type)
         @type = type
@@ -15,7 +15,7 @@ module AdminView::Presenter
         @fields    = []
       end
       def field(label, value)
-        data_block  = @mybuilder.span(label) 
+        data_block  = @mybuilder.span(label)
         data_block << @mybuilder.div(pretty_value(value))
         @fields << "<div class='data-block'>#{data_block}</div>"
       end
@@ -36,46 +36,47 @@ module AdminView::Presenter
             value
         end
       end
-    end   
-    
+    end
+
     def initialize
       @lines     = []
-    end       
-        
+    end
+
     def method_missing(type, &block)
       block.call(r = Fielder.new(type))
       @lines << render_fielder(r)
-    end        
-        
+    end
+
     def render_fielder(fielder)
       fielder.render
     end
-    
+
     def present
       @lines.join
     end
   end
-  
+
   def present(type, &block)
     block.call(p = Presenter.new)
     render_presentation(p, type.to_s)
   end
- 
+
   def render_presentation(p, type)
     content_tag(:div, p.present, :class => type)
   end
-  
+
   def edit_action
-    link_to(t('views.edit_this_record'), path_to_element(@resource, :prefix => :edit))
+    link_to_edit_action(t('views.edit_this_record'), @resource)
   end
-  
+
   def destroy_action
-    link_to(t('views.delete_this_record'), path_to_element(@resource), :confirm => t('views.delete_confirm'), :method => :delete, :class => 'delete')
+    link_to_destroy_action(t('views.delete_this_record'), @resource)
   end
-  
+
   def back_action
-    link_to t('views.back'), path_to_index, :class => 'neutro'
+    link_to t('views.back'), controller.smart_path, :class => 'neutro'
   end
 end
 
 ActionView::Base.send :include, AdminView::Presenter
+

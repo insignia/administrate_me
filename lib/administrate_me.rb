@@ -587,7 +587,6 @@ module AdministrateMe
         unless config.options[:scaffold] == false
           include AdministrateMe::InstanceMethods
           include AdministrateMe::AdminScaffold::InstanceMethods
-          hide_action   :path_to_element
           before_filter :set_active_filter
           before_filter :get_resource
           before_filter :get_parent

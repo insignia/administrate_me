@@ -91,7 +91,7 @@ module AdminView::PresentationBuilder
     def gpb_data
       @collection
     end
-    
+
     def html(options = {}, &block)
       options[:caption] = 'html' unless options[:caption]
       @columns << ProcColumn.new(block, options)
@@ -136,7 +136,7 @@ module AdminView::PresentationBuilder
   # item represents a product, those products are related to a brand using a
   # belongs_to association and you just want to include a column with the brand
   # name.
-  # On cases like this you'll need to include +:with+ option on the method call 
+  # On cases like this you'll need to include +:with+ option on the method call
   # on the +list+ method. See an example:
   #
   #   <%= list_builder_for @records do |list|
@@ -158,7 +158,7 @@ module AdminView::PresentationBuilder
   # ==== Assigning format to column
   #
   # The calls made to the +list+ variable to define columns on the grid also
-  # accept options to change the format of the data displayed. This options set 
+  # accept options to change the format of the data displayed. This options set
   # the style attribute of the <td> element of each element on that column.
   #
   # Valid options:
@@ -168,29 +168,29 @@ module AdminView::PresentationBuilder
   # * <tt>:align</tt> - Sets the text-align attribute for the column.
   #
   #    <%= list_builder_for @records do |list|
-  #         list.name        :width => '250px', :color => '#666666', :strong => true     
+  #         list.name        :width => '250px', :color => '#666666', :strong => true
   #         list.description
   #         list.price       :width => '100px', :align => :right
   #      end %>
   #
   # ==== Inserting free html
-  # 
-  # You can also insert the html code you want in any cell of the table. To do 
+  #
+  # You can also insert the html code you want in any cell of the table. To do
   # that you just need to call the <code>html</code> method on the list object
   # and pass it a block that can hadle a record of the table as a parameter.
   # Then the result of that block will be included as html on the table.
-  # 
-  # Example: Let's say you have a model that uses the +paperclip+ plugin to 
-  # attach a file and you want to show a link to that file on the grid. You'll 
+  #
+  # Example: Let's say you have a model that uses the +paperclip+ plugin to
+  # attach a file and you want to show a link to that file on the grid. You'll
   # have to do this:
-  # 
+  #
   #   <%= list_builder_for @records do |list|
   #         list.name :caption => 'User name'
   #         list.html :caption => 'Avantar' do |user_instance|
   #           image_tag(user_instance.avatar.url(:thumb))
   #         end
   #       end -%>
-  # 
+  #
   # ==== Calling a helper
   #
   # You can directly call a helper using a particular field of the record.
@@ -205,14 +205,14 @@ module AdminView::PresentationBuilder
   #       end -%>
   #
   # ==== Report mode
-  # 
+  #
   # Using this mode the grid will be displayed without showing links to the actions
   # on each row.
-  #   
+  #
   #   <%= list_builder_for @libros_mas_vendidos, :report => true do |list|
   #         list.nombre
   #         list.total_ventas
-  #       end %>  
+  #       end %>
   #
   def list_builder_for(collection, options = {}, type = :grid)
     yield(list = GridPresentationBuilder.new(collection))
@@ -272,12 +272,13 @@ module AdminView::PresentationBuilder
   def build_row_links(item)
     html = ""
     #FIXME: should refactor to use link_to_destroy, link_to_edit, etc, merging with edit_action and destroy_action on presenter.rb
-    html << link_to(t('views.view_action'), path_to_element(item), :title => t('views.see_more')) if controller.accepted_action?(:show)
-    html << link_to(t('views.edit_action'), path_to_element(item, :prefix => :edit), :title => t('views.edit_this_record')) if controller.accepted_action?(:edit)
-    html << link_to(t('views.destroy_action'), path_to_element(item), :confirm => t('views.delete_confirm'), :method => :delete, :title => t('views.delete_this_record'), :class => :destroy) if controller.accepted_action?(:destroy)
+    html << link_to_show_action(t('views.view_action'), item)
+    html << link_to_edit_action(t('views.edit_action'), item)
+    html << link_to_destroy_action(t('views.destroy_action'), item)
     html
   end
 
 end
 
 ActionView::Base.send :include, AdminView::PresentationBuilder
+

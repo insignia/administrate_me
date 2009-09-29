@@ -23,7 +23,7 @@
   margin-left: 230px;
 }
 .main-sidebar .main, .sidebar-main .main {
-  width: 720px;  
+  width: 720px;
 }
 .main-sidebar .sidebar, .sidebar-main .sidebar {
   width: 220px;
@@ -48,7 +48,7 @@ body {
   clear: both;
 }
 .bottom {
-  background: transparent url(/images/admin_ui/bottom-bg.gif) repeat-x right top; 
+  background: transparent url(/images/admin_ui/bottom-bg.gif) repeat-x right top;
   height: 8px;
 }
 .box-content {
@@ -64,7 +64,7 @@ a {
 a:hover {
   background-color: #dbdbdb;
   text-decoration: none;
-  color: #333333;  
+  color: #333333;
 }
 
 div.be-header {
@@ -205,7 +205,7 @@ table.admin_grid tr td.link_options a.destroy {
   background-color: transparent;
   color: #b30000;
   text-decoration: underline;
-}  
+}
 
 table.admin_grid tr td.link_options a.destroy:hover {
   text-decoration: none;
@@ -220,7 +220,7 @@ div.pagination {
 
 div.pagination a {
   -webkit-border-radius: 2px;
-  -moz-border-radius: 2px;  
+  -moz-border-radius: 2px;
   text-decoration: none;
   padding: 2px 4px;
   background-color: #cfcfcf;
@@ -293,7 +293,7 @@ div.elegant div.header div.data-block div {
   color: #333333;
   margin-bottom: 10px;
   padding: 5px;
-  font-weight: bold;  
+  font-weight: bold;
 }
 
 div.elegant div.body {
@@ -329,15 +329,17 @@ div.elegant div.actions a:hover {
   color: #f4f4f4;
 }
 
-div.elegant div.actions a.delete, 
+div.elegant div.actions a.delete,
+div.elegant div.actions a.destroy,
 div.elegant div.actions a.neutro {
   padding: 0px;
   background-color: transparent;
   text-decoration: underline;
 }
 
-div.elegant div.actions a.delete {  
-  color: #b30000;  
+div.elegant div.actions a.delete,
+div.elegant div.actions a.destroy {
+  color: #b30000;
 }
 
 div.elegant div.actions a.neutro {
@@ -407,7 +409,7 @@ div.elegant div.actions a.neutro:hover {
 #base_form div.float_left div.field input,
 #base_form div.float_left div.field select,
 #base_form div.float_left div.check_box {
-  width: 450px;  
+  width: 450px;
 }
 
 #base_form div.float_left_3 div.field,
@@ -419,7 +421,7 @@ div.elegant div.actions a.neutro:hover {
 #base_form div.float_left_3 div.field input,
 #base_form div.float_left_3 div.field select,
 #base_form div.float_left_3 div.check_box {
-  width: 300px;  
+  width: 300px;
 }
 
 #base_form div.float_left div.field span select,
@@ -461,7 +463,7 @@ div.elegant div.actions a.neutro:hover {
 
 #errorExplanation {
   margin: 10px 0px 20px 0px;
-  padding: 7px;  
+  padding: 7px;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   background-color:#FEE2E2;
@@ -488,10 +490,10 @@ div.elegant div.actions a.neutro:hover {
   margin-bottom: 5px;
 }
 
-#base_form div.field div.fieldWithErrors input, 
+#base_form div.field div.fieldWithErrors input,
 #base_form div.field div.fieldWithErrors textarea {
   background-color:#FEE2E2;
-  border: 1px solid #b30000;  
+  border: 1px solid #b30000;
 }
 
 #base_form span div.fieldWithErrors {
@@ -499,7 +501,7 @@ div.elegant div.actions a.neutro:hover {
   margin-right: 4px;
   border: 1px solid #b30000;
   background-color:#FEE2E2;
-  padding: 3px; 
+  padding: 3px;
 }
 
 #base_form div.habtm-box {
@@ -573,7 +575,7 @@ div.elegant div.actions a.neutro:hover {
 }
 
 #filter-list ul.filters li {
-  float: left;  
+  float: left;
   margin: 0px 4px 10px 0px;
 }
 
@@ -582,7 +584,7 @@ div.elegant div.actions a.neutro:hover {
   position: relative;
   top: 4px;
   -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;  
+  -moz-border-radius: 4px;
   text-align: center;
   text-decoration: none;
   padding: 3px 5px;
@@ -618,8 +620,8 @@ div.elegant div.actions a.neutro:hover {
   font-weight: bold;
 }
 
-#flash-notice { 
-  background-color: #FFFF88;  
+#flash-notice {
+  background-color: #FFFF88;
   color: #666666;
 }
 
@@ -649,7 +651,7 @@ div.elegant div.actions a.neutro:hover {
   position: relative;
   top: 4px;
   -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;  
+  -moz-border-radius: 4px;
   text-align: center;
   text-decoration: none;
   padding: 3px 5px;
@@ -725,3 +727,4 @@ div.elegant div.actions a.neutro:hover {
 .resource-card .buttons a:hover {
     background-color: #848381;
 }
+

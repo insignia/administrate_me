@@ -151,15 +151,6 @@ module AdminView
     show_section_label
   end
 
-  def show_section_links
-    links  = link_to(t('views.add_new_record'),
-                      path_to_index(:new))
-    if controller.options[:excel]
-      links << link_to(t('views.download_to_excel'), eval("excel_#{controller.controller_name}_path"))
-    end
-    links
-  end
-
   def show_section_label
     show_label("#{controller.controller_name.humanize}")
   end
@@ -188,12 +179,34 @@ module AdminView
     end
   end
 
-  def path_to_index(*args)
-    controller.path_to_index(*args)
+  def path_to_index(options = {})
+    polymorphic_path(controller.smart_path, options)
   end
 
-  def path_to_element(*args)
-    controller.path_to_element(*args)
+  def link_to_edit_action(title, resource)
+    rtn = ""
+    if controller.accepted_action?(:edit)
+      rtn = link_to(title, [:edit] + controller.smart_path(resource), :title => t('views.edit_this_record'))
+    end
+    rtn
+  end
+
+  def link_to_destroy_action(title, resource)
+    rtn = ""
+    if controller.accepted_action?(:destroy)
+      rtn = link_to(title, controller.smart_path(resource),
+                    :confirm => t('views.delete_confirm'), :method => :delete,
+                    :title => t('views.delete_this_record'), :class => :destroy)
+    end
+    rtn
+  end
+
+  def link_to_show_action(title, resource)
+    rtn = ""
+    if controller.accepted_action?(:show)
+      rtn = link_to(title, controller.smart_path(resource), :title => t('views.see_more'))
+    end
+    rtn
   end
 
   def generate_grid_table_for(options = {})
@@ -288,7 +301,7 @@ module AdminView
   end
 
   def form_name_space
-    @resource.new_record? ? path_to_index : path_to_element(@resource)
+    controller.smart_path(@resource)
   end
 
   def filters_for(&block)
@@ -399,7 +412,7 @@ module AdminView
   def link_to_new_action
     if controller.accepted_action?(:new)
       link_to( "#{t('views.add_new_record')} #{controller.model_name.titleize}",
-               path_to_index(:new), :class => :add_new )
+               new_polymorphic_url(controller.smart_path), :class => :add_new )
     end
   end
 
