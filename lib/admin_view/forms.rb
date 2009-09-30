@@ -11,7 +11,7 @@ module AdminView
     end
 
     def form_name_space
-      controller.smart_path(@resource)
+      smart_path(@resource)
     end
 
     # Add a spinner, hidden by default, with the specified id.

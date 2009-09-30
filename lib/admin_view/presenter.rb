@@ -75,7 +75,7 @@ module AdminView
     end
 
     def back_action
-      link_to t('views.back'), controller.smart_path, :class => 'neutro'
+      link_to t('views.back'), path_to_index, :class => 'neutro'
     end
   end
 end
