@@ -11,7 +11,7 @@ module AdminView
     end
 
     def form_name_space
-      smart_path(@resource)
+      @resource.new_record? ? path_to_index : path_to_element(@resource)
     end
 
     # Add a spinner, hidden by default, with the specified id.

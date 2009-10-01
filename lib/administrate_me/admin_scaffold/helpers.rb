@@ -2,11 +2,18 @@ module AdministrateMe
   module AdminScaffold
     module Helpers
       def smart_path(member = nil)
+        to                    = {}
+        to[:controller]       = build_to_controller
+        to[:id]               = member.id if member
+        to[parent_key.to_sym] = @parent if @parent
+        to
+      end
+
+      def build_to_controller
         to  = []
         to << self.class.namespace.gsub('/', '_').to_sym if self.class.namespace
-        to << @parent if @parent
-        to << (member ? member : model_class.new)
-        to
+        to << controller_name
+        to.join('/')
       end
 
       def path_to_parent(parent, options = {})
