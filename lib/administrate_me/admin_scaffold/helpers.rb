@@ -6,7 +6,6 @@ module AdministrateMe
         to[:controller]       = build_to_controller
         to[:id]               = member.to_param if member
         to[:action]           = :show           if member
-        to[parent_key.to_sym] = @parent         if @parent
         to
       end
 
@@ -18,7 +17,13 @@ module AdministrateMe
       end
 
       def path_to_parent(parent, options = {})
-        create_path(parent.class.to_s.underscore, parent, self.class.namespace, options)
+        to              = {:action => :show, :id => parent.to_param}
+        to[:controller] = unless self.class.options[:as]
+          self.class.options[:parent].to_s.pluralize
+        else
+          self.class.options[:as].to_s
+        end
+        to
       end
 
       def model_name

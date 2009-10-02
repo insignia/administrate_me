@@ -50,7 +50,7 @@ module AdminView
     def link_to_parent
       context = controller.options[:context]
       caption = context ? @parent.send(context) : @parent.class
-      link_to(caption, controller.path_to_parent(@parent))
+      link_to(caption.titleize, controller.path_to_parent(@parent))
     end
   end
 end

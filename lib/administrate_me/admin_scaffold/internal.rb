@@ -66,7 +66,8 @@ module AdministrateMe
         def get_parent
           if parent = options[:parent]
             begin
-              @parent = parent_class.find(params[:"#{parent}_id"])
+              parent_id_key = options[:as] ? options[:as] : options[:parent]
+              @parent = parent_class.find(params[:"#{parent_id_key}_id"])
             rescue ActiveRecord::RecordNotFound
               flash[:error] = I18n.t('messages.missing_parent')
               #FIXME: Where this case should redirect_to ?

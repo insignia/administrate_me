@@ -227,10 +227,26 @@ module AdministrateMe
       #     a.belongs_to :branch, :context => :name
       #   end
       #
+      # In case a controller is nested to a controller specity with set_model
+      # option:
+      #
+      # for instance, if you have this definition:
+      #
+      #   map.resources :folder, :has_many => :products
+      #
+      # And that folder controller is setup for using branch model.
+      #
+      # You can use:
+      #
+      #   administrate_me do |a|
+      #     a.belongs_to :branch, :context => :name, :as => :folder
+      #   end
+      #
       def set_parent(parent,options={})
-        @options[:parent] = parent
+        @options[:parent]      = parent
         @options[:foreign_key] = options[:foreign_key] if options[:foreign_key]
         @options[:context]     = options[:context]     if options[:context]
+        @options[:as]          = options[:as]          if options[:as]
       end
       alias_method "belongs_to", "set_parent"
 
