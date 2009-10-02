@@ -104,6 +104,11 @@ div.navigation a:hover {
   background-color: #666666;
 }
 
+div.navigation a.current,
+div.navigation a.current:hover {
+  background-color: #bda39b;
+}
+
 div.footer {
   margin: 15px 0px 15px 10px;
   font-size: 12px;
