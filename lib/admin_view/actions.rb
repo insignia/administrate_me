@@ -6,13 +6,11 @@ module AdminView
 
     def path_to_index(options = {})
       options[:action] ||= 'index'
-      RAILS_DEFAULT_LOGGER.debug "*** path_to_index options = #{smart_path.merge(options).inspect}"
       smart_path.merge(options)
     end
 
     def path_to_element(element, options = {})
       options[:action] ||= 'show'
-      RAILS_DEFAULT_LOGGER.debug "*** path_to_element options = #{smart_path(element).merge(options).inspect}"
       smart_path(element).merge(options)
     end
 

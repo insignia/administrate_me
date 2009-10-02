@@ -4,8 +4,9 @@ module AdministrateMe
       def smart_path(member = nil)
         to                    = {}
         to[:controller]       = build_to_controller
-        to[:id]               = member.id if member
-        to[parent_key.to_sym] = @parent if @parent
+        to[:id]               = member.to_param if member
+        to[:action]           = :show           if member
+        to[parent_key.to_sym] = @parent         if @parent
         to
       end
 
