@@ -4,6 +4,14 @@ module AdministrateMe
 
       protected
 
+        def associate_resource_to_parent
+          params[model_name.to_sym][parent_key_param] = @parent.id if @parent
+        end
+
+        def parent_key_param
+          parent_key.to_sym
+        end
+
         def get_resource
           if %w{show edit update destroy}.include?(self.action_name) && accepted_action?(self.action_name)
             @resource = model_class.find(params[:id])

@@ -60,11 +60,8 @@ module AdministrateMe
 
       def create
         if_available(:new) do
-          create_params = params[model_name.to_sym]
-          if parent = options[:parent]
-            create_params[parent_key.to_sym] = @parent.id
-          end
-          @resource = model_class.new(create_params)
+          associate_resource_to_parent
+          @resource = model_class.new(params[model_name.to_sym])
           save_model
           call_before_render
           unless performed?
